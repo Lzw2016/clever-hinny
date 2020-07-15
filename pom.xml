@@ -76,7 +76,17 @@
             <!--当前项目模块-->
             <dependency>
                 <groupId>org.clever</groupId>
+                <artifactId>clever-hinny-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.clever</groupId>
                 <artifactId>clever-hinny-graaljs</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.clever</groupId>
+                <artifactId>clever-hinny-j2v8</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

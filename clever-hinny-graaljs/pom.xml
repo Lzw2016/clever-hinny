@@ -8,12 +8,16 @@
     <packaging>jar</packaging>
 
     <parent>
-        <artifactId>clever-hinny</artifactId>
         <groupId>org.clever</groupId>
+        <artifactId>clever-hinny</artifactId>
         <version>${revision}</version>
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>org.clever</groupId>
+            <artifactId>clever-hinny-api</artifactId>
+        </dependency>
         <!--graaljs-->
         <dependency>
             <groupId>org.graalvm.sdk</groupId>

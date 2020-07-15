@@ -58,10 +58,17 @@
 
     <properties>
         <revision>1.0.0-SNAPSHOT</revision>
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <JAVA_HOME>C:/Program Files/Java/jdk-11.0.5</JAVA_HOME>
+        <compiler.dir>${project.build.directory}/compiler</compiler.dir>
         <clever-common.version>2.0.0-SNAPSHOT</clever-common.version>
         <clever-data.version>1.0.0-SNAPSHOT</clever-data.version>
         <graalvm.version>20.1.0</graalvm.version>
-        <j2v8.version>4.6.0</j2v8.version>
+        <j2v8-win.version>4.6.0</j2v8-win.version>
+        <j2v8-macosx.version>4.6.0</j2v8-macosx.version>
+        <j2v8-linux.version>4.8.0</j2v8-linux.version>
     </properties>
 
     <dependencyManagement>
@@ -139,39 +146,36 @@
                 <groupId>org.graalvm.js</groupId>
                 <artifactId>js</artifactId>
                 <version>${graalvm.version}</version>
-                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>org.graalvm.tools</groupId>
                 <artifactId>profiler</artifactId>
                 <version>${graalvm.version}</version>
-                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>org.graalvm.tools</groupId>
                 <artifactId>chromeinspector</artifactId>
                 <version>${graalvm.version}</version>
-                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>com.eclipsesource.j2v8</groupId>
                 <artifactId>j2v8_win32_x86_64</artifactId>
-                <version>${j2v8.version}</version>
+                <version>${j2v8-win.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.eclipsesource.j2v8</groupId>
                 <artifactId>j2v8_win32_x86</artifactId>
-                <version>${j2v8.version}</version>
+                <version>${j2v8-win.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.eclipsesource.j2v8</groupId>
                 <artifactId>j2v8_macosx_x86_64</artifactId>
-                <version>${j2v8.version}</version>
+                <version>${j2v8-macosx.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.eclipsesource.j2v8</groupId>
                 <artifactId>j2v8_linux_x86_64</artifactId>
-                <version>${j2v8.version}</version>
+                <version>${j2v8-linux.version}</version>
             </dependency>
             <!--jdbc driver-->
             <dependency>
@@ -212,4 +216,19 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

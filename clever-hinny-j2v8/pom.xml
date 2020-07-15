@@ -14,6 +14,10 @@
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>org.clever</groupId>
+            <artifactId>clever-hinny-api</artifactId>
+        </dependency>
         <!--j2v8-->
         <dependency>
             <groupId>com.eclipsesource.j2v8</groupId>

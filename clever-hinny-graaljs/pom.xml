@@ -99,6 +99,36 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <id>exec-with-graalvm</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <argument>--module-path</argument>
+                                <!-- automatically creates the module path using all project dependencies, also adding the project build directory -->
+                                <modulepath/>
+                                <argument>-classpath</argument>
+                                <!-- automatically creates the classpath using all project dependencies, also adding the project build directory -->
+                                <classpath/>
+                                <argument>-XX:+UnlockExperimentalVMOptions</argument>
+                                <argument>-XX:+EnableJVMCI</argument>
+                                <argument>--upgrade-module-path=${compiler.dir}/compiler.jar</argument>
+                                <argument>org.clever.hinny.graaljs.MainClass</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>${JAVA_HOME}/bin/java</executable>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

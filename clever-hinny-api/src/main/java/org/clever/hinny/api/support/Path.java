@@ -3,7 +3,7 @@ package org.clever.hinny.api.support;
 import java.util.List;
 
 /**
- * 脚本路径解析
+ * 脚本路径
  * <p>
  * 作者：lizw <br/>
  * 创建时间：2020/07/14 11:08 <br/>
@@ -108,4 +108,11 @@ public interface Path {
      * @param paths 子路径
      */
     Path concat(String... paths);
+
+    /**
+     * 创建 Path 对象
+     */
+    Path create(String path);
+
+    // absolutePath
 }

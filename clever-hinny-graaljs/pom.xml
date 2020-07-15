@@ -13,6 +13,8 @@
         <version>${revision}</version>
     </parent>
 
+    <dependencies>
 
+    </dependencies>
 
 </project>

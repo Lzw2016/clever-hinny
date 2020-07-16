@@ -21,6 +21,10 @@ public interface Folder {
      * 上级目录
      */
     String Parent_Path = "../";
+    /**
+     * 当前目录
+     */
+    String Current_Path = "./";
 
     /**
      * 获取根路径

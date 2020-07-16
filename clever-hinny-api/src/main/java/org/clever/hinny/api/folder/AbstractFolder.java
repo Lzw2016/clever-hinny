@@ -42,6 +42,14 @@ public abstract class AbstractFolder implements Folder {
      */
     public AbstractFolder(String basePath, String path) {
         this.baseAbsolutePath = getAbsolutePath(basePath);
+        path = StringUtils.trim(path);
+        if (StringUtils.isBlank(path)) {
+            path = Folder.Root_Path;
+        }
+        // 都处理成为相当路径
+        if (path.startsWith(Folder.Root_Path)) {
+            path = Folder.Current_Path + path.substring(1);
+        }
         String absolutePath = FilenameUtils.concat(this.baseAbsolutePath, path);
         if (absolutePath == null) {
             throw new IllegalArgumentException("属性absolutePath不能为空");

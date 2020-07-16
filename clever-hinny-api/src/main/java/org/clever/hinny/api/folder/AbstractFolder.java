@@ -32,8 +32,8 @@ public abstract class AbstractFolder implements Folder {
     public AbstractFolder(String basePath) {
         this.baseAbsolutePath = getAbsolutePath(basePath);
         this.absolutePath = this.baseAbsolutePath;
-        checkPath();
         this.fullPath = Folder.Root_Path;
+        checkPath();
     }
 
     /**
@@ -42,14 +42,18 @@ public abstract class AbstractFolder implements Folder {
      */
     public AbstractFolder(String basePath, String path) {
         this.baseAbsolutePath = getAbsolutePath(basePath);
-        this.absolutePath = FilenameUtils.concat(this.baseAbsolutePath, path);
-        checkPath();
-        path = this.absolutePath.substring(this.baseAbsolutePath.length());
+        String absolutePath = FilenameUtils.concat(this.baseAbsolutePath, path);
+        if (absolutePath == null) {
+            throw new IllegalArgumentException("属性absolutePath不能为空");
+        }
+        path = absolutePath.substring(baseAbsolutePath.length());
         path = replaceSeparate(path);
         if (path.length() > 1 && path.endsWith(Folder.Path_Separate)) {
             path = path.substring(0, path.length() - 1);
         }
+        this.absolutePath = absolutePath;
         this.fullPath = path;
+        checkPath();
     }
 
     @Override
@@ -136,6 +140,12 @@ public abstract class AbstractFolder implements Folder {
         }
         return this.create(fullPath);
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "(baseAbsolutePath=" + this.baseAbsolutePath + ", absolutePath=" + this.absolutePath + ", fullPath=" + this.fullPath + ")";
+    }
+
 
     /**
      * 获取一个路径的绝对路径

@@ -16,15 +16,15 @@ public abstract class AbstractFolder implements Folder {
     /**
      * 基础物理绝对路径(所有的文件和文件夹都在这个基础路径下)
      */
-    private final String baseAbsolutePath;
+    protected final String baseAbsolutePath;
     /**
      * 当前路径的物理绝对路径
      */
-    private final String absolutePath;
+    protected final String absolutePath;
     /**
      * 当前路径(逻辑绝对路径，使用了统一的分隔符)
      */
-    private final String fullPath;
+    protected final String fullPath;
 
     /**
      * @param basePath 基础路径
@@ -221,7 +221,7 @@ public abstract class AbstractFolder implements Folder {
     /**
      * 处理路径分隔符，使用统一的分隔符
      */
-    private static String replaceSeparate(String path) {
+    protected static String replaceSeparate(String path) {
         if (StringUtils.isBlank(path)) {
             return path;
         }

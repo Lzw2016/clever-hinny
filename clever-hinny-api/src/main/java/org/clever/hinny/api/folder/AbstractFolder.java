@@ -22,7 +22,7 @@ public abstract class AbstractFolder implements Folder {
      */
     protected final String absolutePath;
     /**
-     * 当前路径(逻辑绝对路径，使用了统一的分隔符)
+     * 当前路径的逻辑绝对路径(使用了统一的分隔符)
      */
     protected final String fullPath;
 
@@ -82,6 +82,11 @@ public abstract class AbstractFolder implements Folder {
     @Override
     public String getFullPath() {
         return fullPath;
+    }
+
+    @Override
+    public String getAbsolutePath() {
+        return absolutePath;
     }
 
     @Override

@@ -22,6 +22,7 @@ public class FileSystemFolderTest {
         log.info("### Parent        -> {}", folder.getParent());
         log.info("### Name          -> {}", folder.getName());
         log.info("### FullPath      -> {}", folder.getFullPath());
+        log.info("### AbsolutePath  -> {}", folder.getAbsolutePath());
         log.info("### FileContent   -> {}", folder.getFileContent());
         log.info("### FileContent   -> {}", folder.getFileContent("pom.xml"));
         log.info("### Children      -> {}", folder.getChildren());

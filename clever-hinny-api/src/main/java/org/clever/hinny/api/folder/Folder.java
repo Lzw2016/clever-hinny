@@ -53,7 +53,7 @@ public interface Folder {
     String getName();
 
     /**
-     * 返回全路径(结束字符不是路径分隔符，除了根路径)
+     * 返回逻辑绝对路径(结束字符不是路径分隔符，除了根路径)
      * <pre>
      *  "/"           -> "/"
      *  "/a"          -> "/a"
@@ -62,6 +62,11 @@ public interface Folder {
      * <pre>
      */
     String getFullPath();
+
+    /**
+     * 获取物理绝对路径
+     */
+    String getAbsolutePath();
 
     /**
      * 当前路径是否存在
@@ -150,6 +155,4 @@ public interface Folder {
      * @param path 子路径
      */
     Folder create(String path);
-
-    // absolutePath
 }

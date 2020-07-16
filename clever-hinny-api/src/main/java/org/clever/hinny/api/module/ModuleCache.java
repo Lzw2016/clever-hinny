@@ -1,8 +1,6 @@
-package org.clever.hinny.api.support;
+package org.clever.hinny.api.module;
 
-import org.clever.hinny.api.ModuleInstance;
 import org.clever.hinny.api.ScriptObject;
-import org.clever.hinny.api.folder.Folder;
 
 /**
  * 脚本模块缓存
@@ -17,17 +15,17 @@ public interface ModuleCache<T extends ScriptObject> {
     /**
      * 从缓存中获取脚本模块，不存在就返回null
      *
-     * @param folder 模块路径
+     * @param fullPath 模块逻辑绝对路径
      */
-    ModuleInstance<T> get(Folder folder);
+    ModuleInstance<T> get(String fullPath);
 
     /**
      * 缓存脚本模块
      *
-     * @param folder         模块路径
+     * @param fullPath       模块逻辑绝对路径
      * @param moduleInstance 脚本模块
      */
-    void put(Folder folder, ModuleInstance<T> moduleInstance);
+    void put(String fullPath, ModuleInstance<T> moduleInstance);
 
     /**
      * 清空脚本模块缓存
@@ -37,7 +35,7 @@ public interface ModuleCache<T extends ScriptObject> {
     /**
      * 删除脚本模块缓存
      *
-     * @param folder 模块路径
+     * @param fullPath 模块逻辑绝对路径
      */
-    void remove(Folder folder);
+    void remove(String fullPath);
 }

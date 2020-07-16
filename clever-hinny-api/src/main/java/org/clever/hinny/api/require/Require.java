@@ -1,4 +1,4 @@
-package org.clever.hinny.api.support;
+package org.clever.hinny.api.require;
 
 import org.clever.hinny.api.ScriptObject;
 

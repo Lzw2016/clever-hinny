@@ -1,6 +1,6 @@
 //package org.clever.hinny.graaljs;
 //
-//import org.clever.hinny.api.ModuleInstance;
+//import org.clever.hinny.api.module.ModuleInstance;
 //import org.graalvm.polyglot.Value;
 //
 //import java.util.List;

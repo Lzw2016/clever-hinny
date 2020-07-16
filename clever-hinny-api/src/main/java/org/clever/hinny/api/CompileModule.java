@@ -1,4 +1,4 @@
-package org.clever.hinny.api.support;
+package org.clever.hinny.api;
 
 /**
  * 编译脚本成ScriptModule

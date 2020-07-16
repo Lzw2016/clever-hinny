@@ -1,7 +1,7 @@
 //package org.clever.hinny.j2v8;
 //
 //import com.eclipsesource.v8.V8Object;
-//import org.clever.hinny.api.ModuleInstance;
+//import org.clever.hinny.api.module.ModuleInstance;
 //
 //import java.util.List;
 //import java.util.Set;

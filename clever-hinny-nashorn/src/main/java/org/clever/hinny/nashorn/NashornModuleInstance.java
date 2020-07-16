@@ -1,7 +1,7 @@
 //package org.clever.hinny.nashorn;
 //
 //import jdk.nashorn.api.scripting.ScriptObjectMirror;
-//import org.clever.hinny.api.ModuleInstance;
+//import org.clever.hinny.api.module.ModuleInstance;
 //
 //import java.util.List;
 //import java.util.Set;

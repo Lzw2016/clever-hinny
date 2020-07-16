@@ -1,5 +1,7 @@
 package org.clever.hinny.api;
 
+import org.clever.hinny.api.folder.Folder;
+
 /**
  * 脚本引擎实例
  * <p>
@@ -8,14 +10,19 @@ package org.clever.hinny.api;
  *
  * @param <T> script对象类型
  */
-public interface ScriptEngineInstance<T> {
+public interface ScriptEngineInstance<T extends ScriptObject> {
 
     /**
      * 获取脚本引擎上下文
      */
     ScriptEngineContext<T> getScriptEngineContext();
 
+    Folder getRootPath();
+
     T getGlobal();
+
+
+
 
 //    全局变量
 //    module    module变量代表当前模块

@@ -1,5 +1,7 @@
 package org.clever.hinny.api.support;
 
+import org.clever.hinny.api.ScriptObject;
+
 /**
  * CommonJS 接口
  * <p>
@@ -9,7 +11,7 @@ package org.clever.hinny.api.support;
  * @param <T> script对象类型
  */
 @FunctionalInterface
-public interface Require<T> {
+public interface Require<T extends ScriptObject> {
 
     /**
      * CommonJS中的require函数

@@ -1,18 +1,31 @@
-package org.clever.hinny.api.support;
+package org.clever.hinny.api.folder;
 
 import java.util.List;
 
 /**
- * 脚本路径
+ * 文件或文件夹对象
  * <p>
  * 作者：lizw <br/>
  * 创建时间：2020/07/14 11:08 <br/>
  */
-public interface Path {
+public interface Folder {
+    /**
+     * 统一使用的路径分隔符
+     */
+    String Path_Separate = "/";
+    /**
+     * 根路径字符串
+     */
+    String Root_Path = "/";
+    /**
+     * 上级目录
+     */
+    String Parent_Path = "../";
+
     /**
      * 获取根路径
      */
-    Path getRoot();
+    Folder getRoot();
 
     /**
      * 获取父路径
@@ -22,7 +35,7 @@ public interface Path {
      *  "/a/file.js"  -> "/a"
      * </pre>
      */
-    Path getParent();
+    Folder getParent();
 
     /**
      * 返回当前路径
@@ -30,12 +43,19 @@ public interface Path {
      *  "/"           -> ""
      *  "/a"          -> "a"
      *  "/a/file.js"  -> "file.js"
-     * </pre>
+     *  "/a/b/"       -> "b"
+     * <pre>
      */
     String getName();
 
     /**
-     * 返回全路径
+     * 返回全路径(结束字符不是路径分隔符，除了根路径)
+     * <pre>
+     *  "/"           -> "/"
+     *  "/a"          -> "/a"
+     *  "/a/file.js"  -> "/a/file.js"
+     *  "/a/b/"       -> "/a/b"
+     * <pre>
      */
     String getFullPath();
 
@@ -80,6 +100,18 @@ public interface Path {
     String getFileContent(String name);
 
     /**
+     * 得到当前文件的内容<br/>
+     * <pre>
+     *  不存在    -> null
+     *  文件夹    -> null
+     *  是文件    -> FileContent
+     * </pre>
+     *
+     * @return 文件不存在返回null
+     */
+    String getFileContent();
+
+    /**
      * 获取子路径列表
      * <pre>
      *  不存在    -> null
@@ -87,7 +119,7 @@ public interface Path {
      *  是文件    -> null
      * </pre>
      */
-    List<Path> getChildren();
+    List<Folder> getChildren();
 
     /**
      * 连接路径
@@ -95,24 +127,25 @@ public interface Path {
      *  /foo/ + bar          -->   /foo/bar
      *  /foo + bar           -->   /foo/bar
      *  /foo + /bar          -->   /bar
-     *  /foo + C:/bar        -->   C:/bar
-     *  /foo + C:bar         -->   C:bar (*)
      *  /foo/a/ + ../bar     -->   foo/bar
      *  /foo/ + ../../bar    -->   null
      *  /foo/ + /bar         -->   /bar
      *  /foo/.. + /bar       -->   /bar
      *  /foo + bar/c.txt     -->   /foo/bar/c.txt
-     *  /foo/c.txt + bar     -->   /foo/c.txt/bar (!)
+     *  /foo/c.txt + bar     -->   /foo/c.txt/bar
+     *  /foo/bbb + /         -->   /
      * </pre>
      *
      * @param paths 子路径
      */
-    Path concat(String... paths);
+    Folder concat(String... paths);
 
     /**
-     * 创建 Path 对象
+     * 创建Path对象(拥有相同的基础路径)
+     *
+     * @param path 子路径
      */
-    Path create(String path);
+    Folder create(String path);
 
     // absolutePath
 }

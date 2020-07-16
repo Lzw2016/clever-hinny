@@ -8,5 +8,5 @@ package org.clever.hinny.api;
  *
  * @param <T> script对象类型
  */
-public interface ScriptEngineContext<T> {
+public interface ScriptEngineContext<T extends ScriptObject> {
 }

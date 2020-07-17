@@ -10,7 +10,7 @@ import org.clever.hinny.api.folder.Folder;
  *
  * @param <T> script对象类型
  */
-public interface ScriptEngineInstance<T extends ScriptObject> {
+public interface ScriptEngineInstance<T extends ScriptObject<?>> {
 
     /**
      * 获取脚本引擎上下文

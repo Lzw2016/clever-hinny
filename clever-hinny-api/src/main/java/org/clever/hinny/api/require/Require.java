@@ -11,7 +11,7 @@ import org.clever.hinny.api.ScriptObject;
  * @param <T> script对象类型
  */
 @FunctionalInterface
-public interface Require<T extends ScriptObject> {
+public interface Require<T extends ScriptObject<?>> {
 
     /**
      * CommonJS中的require函数

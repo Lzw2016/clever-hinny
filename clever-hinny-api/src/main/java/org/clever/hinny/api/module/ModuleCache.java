@@ -10,7 +10,7 @@ import org.clever.hinny.api.ScriptObject;
  *
  * @param <T> script对象类型
  */
-public interface ModuleCache<T extends ScriptObject> {
+public interface ModuleCache<T extends ScriptObject<?>> {
 
     /**
      * 从缓存中获取脚本模块，不存在就返回null

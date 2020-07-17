@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Module 内存缓存
  */
-public class MemoryModuleCache<T extends ScriptObject> implements ModuleCache<T> {
+public class MemoryModuleCache<T extends ScriptObject<?>> implements ModuleCache<T> {
     /**
      * 缓存
      */

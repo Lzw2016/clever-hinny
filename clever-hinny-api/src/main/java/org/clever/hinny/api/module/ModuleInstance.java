@@ -13,7 +13,7 @@ import java.util.Set;
  *
  * @param <T> script对象类型
  */
-public interface ModuleInstance<T extends ScriptObject> {
+public interface ModuleInstance<T extends ScriptObject<?>> {
     /**
      * 模块的识别符，通常是带有绝对路径的模块文件名
      */

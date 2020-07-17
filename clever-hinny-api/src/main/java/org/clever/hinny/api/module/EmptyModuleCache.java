@@ -8,7 +8,7 @@ import org.clever.hinny.api.ScriptObject;
  * 作者：lizw <br/>
  * 创建时间：2019/08/27 10:35 <br/>
  */
-public class EmptyModuleCache<T extends ScriptObject> implements ModuleCache<T> {
+public class EmptyModuleCache<T extends ScriptObject<?>> implements ModuleCache<T> {
 
     @Override
     public ModuleInstance<T> get(String fullPath) {

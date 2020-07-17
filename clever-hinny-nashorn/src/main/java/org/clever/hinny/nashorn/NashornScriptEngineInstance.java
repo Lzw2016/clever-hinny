@@ -2,6 +2,7 @@ package org.clever.hinny.nashorn;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import lombok.Getter;
+import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptEngineInstance;
 import org.clever.hinny.api.folder.Folder;
@@ -9,6 +10,10 @@ import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.api.require.RequireInstance;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
+
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import java.util.Map;
 
 /**
  * 作者：lizw <br/>
@@ -32,7 +37,7 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
     /**
      * 引擎上下文
      */
-    private final ScriptEngineContext<NashornScriptObject> engineContext;
+    private final ScriptEngineContext<NashornScriptObject> context;
     /**
      * require加载其他模块
      */
@@ -46,10 +51,10 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
      */
     private final NashornScriptObject global;
 
-    public NashornScriptEngineInstance(
+    private NashornScriptEngineInstance(
             Folder rootPath,
             ModuleCache<NashornScriptObject> moduleCache,
-            ScriptEngineContext<NashornScriptObject> engineContext,
+            ScriptEngineContext<NashornScriptObject> context,
             Require<NashornScriptObject> require,
             RequireInstance requireInstance,
             NashornScriptObject global) {
@@ -57,9 +62,21 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
         this.rootPath = rootPath;
         this.moduleCache = moduleCache;
         this.require = require;
-        this.engineContext = engineContext;
+        this.context = context;
         this.global = global;
         this.requireInstance = requireInstance;
+
+
+        Bindings engineBindings = this.engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        Map<String, Object> contextMap = this.context.getContextMap();
+        if (contextMap != null) {
+            engineBindings.putAll(contextMap);
+        }
+        // TODO: Module
+        engineBindings.put(GlobalConstant.Engine_Module, "");
+        engineBindings.put(GlobalConstant.Engine_Exports, "");
+        engineBindings.put(GlobalConstant.Engine_Require, this.require);
+        engineBindings.put(GlobalConstant.Engine_Global, this.global);
     }
 
     @Override

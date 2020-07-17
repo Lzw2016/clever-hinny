@@ -1,5 +1,7 @@
 package org.clever.hinny.api;
 
+import java.util.Map;
+
 /**
  * 脚本引擎上下文
  * <p>
@@ -9,4 +11,8 @@ package org.clever.hinny.api;
  * @param <T> script对象类型
  */
 public interface ScriptEngineContext<T extends ScriptObject<?>> {
+    /**
+     * 获取Script引擎全局对象
+     */
+    Map<String, Object> getContextMap();
 }

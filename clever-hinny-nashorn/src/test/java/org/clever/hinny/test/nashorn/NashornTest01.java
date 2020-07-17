@@ -1,4 +1,4 @@
-package org.clever.hinny.nashorn;
+package org.clever.hinny.test.nashorn;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

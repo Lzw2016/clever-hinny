@@ -16,7 +16,7 @@ public interface Require<T extends ScriptObject<?>> {
     /**
      * CommonJS中的require函数
      *
-     * @param path 模块路径
+     * @param id 模块ID(模块路径)
      */
-    T require(String path) throws Exception;
+    T require(String id) throws Exception;
 }

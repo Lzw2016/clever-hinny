@@ -131,7 +131,7 @@ public interface Folder {
     List<Folder> getChildren();
 
     /**
-     * 连接路径
+     * 连接路径，可能返回 null
      * <pre>
      *  /foo/ + bar          -->   /foo/bar
      *  /foo + bar           -->   /foo/bar

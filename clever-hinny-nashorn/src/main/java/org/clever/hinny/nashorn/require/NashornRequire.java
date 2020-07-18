@@ -60,7 +60,7 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
         if (StringUtils.isBlank(id)) {
             throw new IllegalArgumentException("模块id不能为空");
         }
-        Folder moduleFile = loadModule(id);
+        Folder moduleFile = loadModuleFolder(id);
         if (moduleFile == null || !moduleFile.isFile()) {
             throw new ModuleNotFoundException("找不到模块id=" + id);
         }
@@ -125,7 +125,7 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
     /**
      * 根据加载模块路径，返回加载模块内容(解析模块步骤实现)
      */
-    protected Folder loadModule(final String path) {
+    protected Folder loadModuleFolder(final String path) {
         // 判断path是相对路径还是绝对路径
         if (path.startsWith(Folder.Root_Path)
                 || path.startsWith(Folder.Current_Path)
@@ -134,12 +134,12 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
                 || path.startsWith(".\\")
                 || path.startsWith("..\\")) {
             // 相对路径
-            return resolvedModulePath(currentModuleFolder, path);
+            return resolvedModuleFolder(currentModuleFolder, path);
         }
         // 绝对路径
         Folder nodeModules = currentModuleFolder.concat(GlobalConstant.CommonJS_Node_Modules);
         while (nodeModules != null && nodeModules.isDir()) {
-            Folder modulePath = resolvedModulePath(nodeModules, path);
+            Folder modulePath = resolvedModuleFolder(nodeModules, path);
             if (modulePath != null) {
                 return modulePath;
             }
@@ -165,7 +165,7 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
      * @param dir        当前解析目录
      * @param modulePath 模块路径
      */
-    protected Folder resolvedModulePath(final Folder dir, final String modulePath) {
+    protected Folder resolvedModuleFolder(final Folder dir, final String modulePath) {
         // 直接从文件加载
         for (String suffix : File_Suffix) {
             Folder moduleFile = dir.concat(modulePath + suffix);

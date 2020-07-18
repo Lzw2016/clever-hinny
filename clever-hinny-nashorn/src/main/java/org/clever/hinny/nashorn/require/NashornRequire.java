@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.folder.Folder;
-import org.clever.hinny.api.module.*;
 import org.clever.hinny.api.module.Module;
-import org.clever.hinny.api.require.Require;
+import org.clever.hinny.api.module.*;
+import org.clever.hinny.api.require.AbstractRequire;
 import org.clever.hinny.nashorn.module.NashornModule;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 import org.json.JSONObject;
@@ -20,7 +20,7 @@ import java.util.Map;
  * 创建时间：2020/07/16 21:40 <br/>
  */
 @Slf4j
-public class NashornRequire implements Require<ScriptObjectMirror> {
+public class NashornRequire extends AbstractRequire<ScriptObjectMirror> {
     private static final String JS_File = ".js";
     private static final String JSON_File = ".json";
     /**
@@ -37,10 +37,6 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
      */
     private final CompileModule<ScriptObjectMirror> compileModule;
     /**
-     * 当前模块缓存
-     */
-    private final ModuleCache<ScriptObjectMirror> moduleCache;
-    /**
      * 当前模块实例
      */
     private final Module<ScriptObjectMirror> currentModule;
@@ -50,8 +46,9 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
     private final Folder currentModuleFolder;
 
     public NashornRequire(CompileModule<ScriptObjectMirror> compileModule, ModuleCache<ScriptObjectMirror> moduleCache, Module<ScriptObjectMirror> currentModule, Folder currentModuleFolder) {
+        // TODO 参加校验
+        super(moduleCache);
         this.compileModule = compileModule;
-        this.moduleCache = moduleCache;
         this.currentModule = currentModule;
         this.currentModuleFolder = currentModuleFolder;
     }

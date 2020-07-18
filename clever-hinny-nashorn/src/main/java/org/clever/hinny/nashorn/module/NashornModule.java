@@ -1,6 +1,7 @@
 package org.clever.hinny.nashorn.module;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
@@ -52,6 +53,7 @@ public class NashornModule implements Module<ScriptObjectMirror> {
     private boolean removed = false;
 
     public NashornModule(String id, String filename, ScriptObjectMirror exports, Module<ScriptObjectMirror> parent, Require<ScriptObjectMirror> require) {
+        // TODO 参数校验
         this.id = id;
         this.filename = filename;
         this.exports = exports;
@@ -59,7 +61,16 @@ public class NashornModule implements Module<ScriptObjectMirror> {
         this.parent.addChildModule(this);
         this.require = require;
         this.module = ScriptEngineUtils.newObject();
-        // TODO 设置module实例成员
+        this.module.put(GlobalConstant.Module_Id, this.id);
+        this.module.put(GlobalConstant.Module_Filename, this.filename);
+        this.module.put(GlobalConstant.Module_Loaded, this.loaded);
+        this.module.put(GlobalConstant.Module_Parent, this.parent.getModule());
+        // TODO  Module_Paths
+        this.module.put(GlobalConstant.Module_Paths, ScriptEngineUtils.newArray());
+        // TODO  Module_Children
+        this.module.put(GlobalConstant.Module_Children, ScriptEngineUtils.newArray());
+        this.module.put(GlobalConstant.Module_Exports, this.exports);
+        this.module.put(GlobalConstant.Module_Require, this.require);
     }
 
     @Override
@@ -117,6 +128,8 @@ public class NashornModule implements Module<ScriptObjectMirror> {
         loaded = true;
         removed = false;
         // TODO triggerOnLoaded
+        this.module.put(GlobalConstant.Module_Loaded, true);
+
     }
 
     @Override
@@ -130,6 +143,9 @@ public class NashornModule implements Module<ScriptObjectMirror> {
 
     @Override
     public void addChildModule(Module<ScriptObjectMirror> childModule) {
-
+        if (childModule == null || childrenIds.contains(childModule.getId())) {
+            return;
+        }
+        // TODO addChildModule
     }
 }

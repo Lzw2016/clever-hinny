@@ -2,14 +2,11 @@ package org.clever.hinny.nashorn;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import lombok.Getter;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptEngineInstance;
 import org.clever.hinny.api.folder.Folder;
-import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
-import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -19,71 +16,41 @@ import java.util.Map;
  * 作者：lizw <br/>
  * 创建时间：2020/07/16 21:25 <br/>
  */
-public class NashornScriptEngineInstance implements ScriptEngineInstance<ScriptObjectMirror> {
-    /**
-     * NashornScriptEngine
-     */
-    @Getter
-    private final NashornScriptEngine engine;
-    /**
-     * 根路径文件夹
-     */
-    private final Folder rootPath;
-    /**
-     * 模块缓存
-     */
-    @Getter
-    private final ModuleCache<ScriptObjectMirror> moduleCache;
+public class NashornScriptEngineInstance implements ScriptEngineInstance<NashornScriptEngine, ScriptObjectMirror> {
     /**
      * 引擎上下文
      */
-    private final ScriptEngineContext<ScriptObjectMirror> context;
-    /**
-     * require实例
-     */
-    private final Require<ScriptObjectMirror> require;
-    /**
-     * 共享的全局变量
-     */
-    private final ScriptObjectMirror global;
+    private final ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context;
 
-    private NashornScriptEngineInstance(
-            Folder rootPath,
-            ModuleCache<ScriptObjectMirror> moduleCache,
-            ScriptEngineContext<ScriptObjectMirror> context,
-            Require<ScriptObjectMirror> require,
-            ScriptObjectMirror global) {
-        this.engine = ScriptEngineUtils.creatEngine();
-        this.rootPath = rootPath;
-        this.moduleCache = moduleCache;
-        this.require = require;
+    public NashornScriptEngineInstance(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context) {
+        // TODO 参数校验
         this.context = context;
-        this.global = global;
-
-        Bindings engineBindings = this.engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        Bindings engineBindings = this.context.getEngine().getBindings(ScriptContext.ENGINE_SCOPE);
         Map<String, Object> contextMap = this.context.getContextMap();
         if (contextMap != null) {
             engineBindings.putAll(contextMap);
         }
-        // TODO: Module
-        engineBindings.put(GlobalConstant.Engine_Module, "");
-        engineBindings.put(GlobalConstant.Engine_Exports, "");
-        engineBindings.put(GlobalConstant.Engine_Require, this.require);
-        engineBindings.put(GlobalConstant.Engine_Global, this.global);
+        engineBindings.put(GlobalConstant.Engine_Require, this.context.getRequire());
+        engineBindings.put(GlobalConstant.Engine_Global, this.context.getGlobal());
     }
 
     @Override
-    public ScriptEngineContext<ScriptObjectMirror> getScriptEngineContext() {
-        return null;
+    public ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> getContext() {
+        return context;
     }
 
     @Override
     public Folder getRootPath() {
-        return null;
+        return context.getRootPath();
     }
 
     @Override
     public ScriptObjectMirror getGlobal() {
-        return null;
+        return context.getGlobal();
+    }
+
+    @Override
+    public Require<ScriptObjectMirror> getRequire() {
+        return context.getRequire();
     }
 }

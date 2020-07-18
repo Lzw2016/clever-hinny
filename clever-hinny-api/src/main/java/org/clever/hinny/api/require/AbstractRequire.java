@@ -1,13 +1,28 @@
 package org.clever.hinny.api.require;
 
+import org.clever.hinny.api.module.ModuleCache;
+
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/07/17 09:01 <br/>
  */
 public abstract class AbstractRequire<T> implements Require<T> {
+    /**
+     * 模块缓存
+     */
+    protected final ModuleCache<T> moduleCache;
 
-// TODO 定义解析模块规则
+    public AbstractRequire(ModuleCache<T> moduleCache) {
+        this.moduleCache = moduleCache;
+    }
 
-//    require.resolve(request[, options])：    查询某个模块的完整路径，如果找不到模块，则会抛出 MODULE_NOT_FOUND 错误
-//    require.resolve.paths(request) 返回一个数组，其中包含解析 request 过程中被查询的路径，如果 request 字符串指向核心模块（例如 http 或 fs）则返回 null
+    public ModuleCache<T> getCache() {
+        return moduleCache;
+    }
 }
+
+//require():                              加载外部模块
+//(x)require.resolve()：                  将模块名解析到一个绝对路径
+//(x)require.main：                       指向主模块
+//(*)require.cache：                      指向所有缓存的模块
+//(x)require.extensions：                 根据文件的后缀名，调用不同的执行函数

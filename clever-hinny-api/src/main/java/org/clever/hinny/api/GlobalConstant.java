@@ -9,14 +9,6 @@ public interface GlobalConstant {
     // 全局变量
     // --------------------------------------------------------------------------------------------
     /**
-     * module变量代表当前模块
-     */
-    String Engine_Module = "module";
-    /**
-     * 就是module.exports
-     */
-    String Engine_Exports = "exports";
-    /**
      * require用于加载其他模块
      */
     String Engine_Require = "require";

@@ -1,6 +1,7 @@
 package org.clever.hinny.nashorn;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.Getter;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
@@ -19,7 +20,7 @@ import java.util.Map;
  * 作者：lizw <br/>
  * 创建时间：2020/07/16 21:25 <br/>
  */
-public class NashornScriptEngineInstance implements ScriptEngineInstance<NashornScriptObject> {
+public class NashornScriptEngineInstance implements ScriptEngineInstance<ScriptObjectMirror> {
     /**
      * NashornScriptEngine
      */
@@ -33,15 +34,15 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
      * 模块缓存
      */
     @Getter
-    private final ModuleCache<NashornScriptObject> moduleCache;
+    private final ModuleCache<ScriptObjectMirror> moduleCache;
     /**
      * 引擎上下文
      */
-    private final ScriptEngineContext<NashornScriptObject> context;
+    private final ScriptEngineContext<ScriptObjectMirror> context;
     /**
      * require加载其他模块
      */
-    private final Require<NashornScriptObject> require;
+    private final Require<ScriptObjectMirror> require;
     /**
      * 全局的require实例
      */
@@ -49,15 +50,15 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
     /**
      * 共享的全局变量
      */
-    private final NashornScriptObject global;
+    private final ScriptObjectMirror global;
 
     private NashornScriptEngineInstance(
             Folder rootPath,
-            ModuleCache<NashornScriptObject> moduleCache,
-            ScriptEngineContext<NashornScriptObject> context,
-            Require<NashornScriptObject> require,
+            ModuleCache<ScriptObjectMirror> moduleCache,
+            ScriptEngineContext<ScriptObjectMirror> context,
+            Require<ScriptObjectMirror> require,
             RequireInstance requireInstance,
-            NashornScriptObject global) {
+            ScriptObjectMirror global) {
         this.engine = ScriptEngineUtils.creatEngine();
         this.rootPath = rootPath;
         this.moduleCache = moduleCache;
@@ -80,7 +81,7 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
     }
 
     @Override
-    public ScriptEngineContext<NashornScriptObject> getScriptEngineContext() {
+    public ScriptEngineContext<ScriptObjectMirror> getScriptEngineContext() {
         return null;
     }
 
@@ -90,7 +91,7 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
     }
 
     @Override
-    public NashornScriptObject getGlobal() {
+    public ScriptObjectMirror getGlobal() {
         return null;
     }
 }

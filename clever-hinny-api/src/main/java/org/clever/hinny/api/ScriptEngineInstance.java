@@ -8,9 +8,9 @@ import org.clever.hinny.api.folder.Folder;
  * 作者：lizw <br/>
  * 创建时间：2020/07/14 11:15 <br/>
  *
- * @param <T> script对象类型
+ * @param <T> script引擎对象类型
  */
-public interface ScriptEngineInstance<T extends ScriptObject<?>> {
+public interface ScriptEngineInstance<T> {
 
     /**
      * 获取脚本引擎上下文

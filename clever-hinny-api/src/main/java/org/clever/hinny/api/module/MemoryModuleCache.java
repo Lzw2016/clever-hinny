@@ -2,14 +2,15 @@ package org.clever.hinny.api.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.clever.hinny.api.ScriptObject;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * Module 内存缓存
+ *
+ * @param <T> script引擎对象类型
  */
-public class MemoryModuleCache<T extends ScriptObject<?>> implements ModuleCache<T> {
+public class MemoryModuleCache<T> implements ModuleCache<T> {
     /**
      * 缓存
      */

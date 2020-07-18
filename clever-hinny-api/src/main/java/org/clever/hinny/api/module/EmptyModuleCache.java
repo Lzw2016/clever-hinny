@@ -1,14 +1,11 @@
 package org.clever.hinny.api.module;
 
-import org.clever.hinny.api.ScriptObject;
-
 /**
  * 空缓存(不使用缓存)
- * <p>
- * 作者：lizw <br/>
- * 创建时间：2019/08/27 10:35 <br/>
+ *
+ * @param <T> script引擎对象类型
  */
-public class EmptyModuleCache<T extends ScriptObject<?>> implements ModuleCache<T> {
+public class EmptyModuleCache<T> implements ModuleCache<T> {
 
     @Override
     public ModuleInstance<T> get(String fullPath) {

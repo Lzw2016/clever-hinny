@@ -1,7 +1,5 @@
 package org.clever.hinny.api.module;
 
-import org.clever.hinny.api.ScriptObject;
-
 import java.util.List;
 import java.util.Set;
 
@@ -11,9 +9,9 @@ import java.util.Set;
  * 作者：lizw <br/>
  * 创建时间：2020/07/14 11:14 <br/>
  *
- * @param <T> script对象类型
+ * @param <T> script引擎对象类型
  */
-public interface ModuleInstance<T extends ScriptObject<?>> {
+public interface ModuleInstance<T> {
     /**
      * 模块的识别符，通常是带有绝对路径的模块文件名
      */
@@ -70,4 +68,33 @@ public interface ModuleInstance<T extends ScriptObject<?>> {
      * 模块移除事件
      */
     void onRemove();
+
+
+//    /**
+//     * 获取script引擎对象
+//     */
+//    T getValue();
+//
+//    /**
+//     * @param key
+//     * @param value
+//     */
+//    void put(String key, Object value);
+//
+//    /**
+//     * @param map
+//     */
+//    void putAll(Map<String, Object> map);
+//
+//    /**
+//     * @param key
+//     * @param <T>
+//     */
+//    <T> T get(String key);
+//
+//    /**
+//     * @param key
+//     * @param <T>
+//     */
+//    <T> T remove(String key);
 }

@@ -1,12 +1,10 @@
 package org.clever.hinny.api.require;
 
-import org.clever.hinny.api.ScriptObject;
-
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/07/17 09:01 <br/>
  */
-public abstract class AbstractRequire<T extends ScriptObject<?>> implements Require<T> {
+public abstract class AbstractRequire<T> implements Require<T> {
 
 // TODO 定义解析模块规则
 

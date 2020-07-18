@@ -8,9 +8,9 @@ import java.util.Map;
  * 作者：lizw <br/>
  * 创建时间：2020/07/14 11:15 <br/>
  *
- * @param <T> script对象类型
+ * @param <T> script引擎对象类型
  */
-public interface ScriptEngineContext<T extends ScriptObject<?>> {
+public interface ScriptEngineContext<T> {
     /**
      * 获取Script引擎全局对象
      */

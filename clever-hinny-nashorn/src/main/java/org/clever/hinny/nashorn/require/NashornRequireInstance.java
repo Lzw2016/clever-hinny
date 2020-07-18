@@ -1,10 +1,10 @@
 package org.clever.hinny.nashorn.require;
 
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.module.ModuleInstance;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.api.require.RequireInstance;
-import org.clever.hinny.nashorn.NashornScriptObject;
 
 /**
  * 作者：lizw <br/>
@@ -14,17 +14,17 @@ public class NashornRequireInstance implements RequireInstance {
     /**
      * require加载其他模块
      */
-    private final Require<NashornScriptObject> require;
+    private final Require<ScriptObjectMirror> require;
     /**
      * 所有缓存的模块
      */
-    private final ModuleCache<NashornScriptObject> moduleCache;
+    private final ModuleCache<ScriptObjectMirror> moduleCache;
     /**
      * 主模块，加载的入口脚本
      */
-    private final ModuleInstance<NashornScriptObject> mainModule;
+    private final ModuleInstance<ScriptObjectMirror> mainModule;
 
-    public NashornRequireInstance(Require<NashornScriptObject> require, ModuleCache<NashornScriptObject> moduleCache, ModuleInstance<NashornScriptObject> mainModule) {
+    public NashornRequireInstance(Require<ScriptObjectMirror> require, ModuleCache<ScriptObjectMirror> moduleCache, ModuleInstance<ScriptObjectMirror> mainModule) {
         this.require = require;
         this.moduleCache = moduleCache;
         this.mainModule = mainModule;

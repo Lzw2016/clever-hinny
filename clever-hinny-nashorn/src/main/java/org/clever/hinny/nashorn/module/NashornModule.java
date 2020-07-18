@@ -1,7 +1,10 @@
 package org.clever.hinny.nashorn.module;
 
+import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.clever.hinny.api.GlobalConstant;
+import org.clever.hinny.api.ScriptEngineContext;
+import org.clever.hinny.api.module.AbstractModule;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
@@ -14,7 +17,7 @@ import java.util.Set;
  * 作者：lizw <br/>
  * 创建时间：2020/07/15 22:39 <br/>
  */
-public class NashornModule implements Module<ScriptObjectMirror> {
+public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObjectMirror> {
     /**
      * 当前模块对象对应的 module 对象
      */
@@ -52,8 +55,15 @@ public class NashornModule implements Module<ScriptObjectMirror> {
      */
     private boolean removed = false;
 
-    public NashornModule(String id, String filename, ScriptObjectMirror exports, Module<ScriptObjectMirror> parent, Require<ScriptObjectMirror> require) {
+    public NashornModule(
+            ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context,
+            String id,
+            String filename,
+            ScriptObjectMirror exports,
+            Module<ScriptObjectMirror> parent,
+            Require<ScriptObjectMirror> require) {
         // TODO 参数校验
+        super(context);
         this.id = id;
         this.filename = filename;
         this.exports = exports;

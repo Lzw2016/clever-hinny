@@ -1,23 +1,28 @@
 package org.clever.hinny.api.require;
 
+import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.module.ModuleCache;
 
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/07/17 09:01 <br/>
+ *
+ * @param <E> script引擎类型
+ * @param <T> script引擎对象类型
  */
-public abstract class AbstractRequire<T> implements Require<T> {
+public abstract class AbstractRequire<E, T> implements Require<T> {
     /**
-     * 模块缓存
+     * 引擎上下文
      */
-    protected final ModuleCache<T> moduleCache;
+    protected final ScriptEngineContext<E, T> context;
 
-    public AbstractRequire(ModuleCache<T> moduleCache) {
-        this.moduleCache = moduleCache;
+    public AbstractRequire(ScriptEngineContext<E, T> context) {
+        // TODO 参数校验
+        this.context = context;
     }
 
     public ModuleCache<T> getCache() {
-        return moduleCache;
+        return context.getModuleCache();
     }
 }
 

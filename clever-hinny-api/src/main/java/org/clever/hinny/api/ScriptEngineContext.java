@@ -1,6 +1,7 @@
 package org.clever.hinny.api;
 
 import org.clever.hinny.api.folder.Folder;
+import org.clever.hinny.api.module.CompileModule;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
 
@@ -40,6 +41,11 @@ public interface ScriptEngineContext<E, T> {
      * 全局require实例(根目录require)
      */
     Require<T> getRequire();
+
+    /**
+     * 编译ScriptModule实现
+     */
+    CompileModule<T> getCompileModule();
 
     /**
      * 引擎全局变量

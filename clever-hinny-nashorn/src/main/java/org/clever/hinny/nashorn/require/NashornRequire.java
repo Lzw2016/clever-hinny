@@ -1,9 +1,11 @@
 package org.clever.hinny.nashorn.require;
 
+import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.hinny.api.GlobalConstant;
+import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.module.*;
@@ -20,7 +22,7 @@ import java.util.Map;
  * 创建时间：2020/07/16 21:40 <br/>
  */
 @Slf4j
-public class NashornRequire extends AbstractRequire<ScriptObjectMirror> {
+public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptObjectMirror> {
     private static final String JS_File = ".js";
     private static final String JSON_File = ".json";
     /**
@@ -33,10 +35,6 @@ public class NashornRequire extends AbstractRequire<ScriptObjectMirror> {
      */
     private final ThreadLocal<Map<String, ScriptObjectMirror>> refCache = new ThreadLocal<>();
     /**
-     * 编译脚本成ScriptModule
-     */
-    private final CompileModule<ScriptObjectMirror> compileModule;
-    /**
      * 当前模块实例
      */
     private final Module<ScriptObjectMirror> currentModule;
@@ -45,10 +43,9 @@ public class NashornRequire extends AbstractRequire<ScriptObjectMirror> {
      */
     private final Folder currentModuleFolder;
 
-    public NashornRequire(CompileModule<ScriptObjectMirror> compileModule, ModuleCache<ScriptObjectMirror> moduleCache, Module<ScriptObjectMirror> currentModule, Folder currentModuleFolder) {
-        // TODO 参加校验
-        super(moduleCache);
-        this.compileModule = compileModule;
+    public NashornRequire(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context, Module<ScriptObjectMirror> currentModule, Folder currentModuleFolder) {
+        // TODO 参数校验
+        super(context);
         this.currentModule = currentModule;
         this.currentModuleFolder = currentModuleFolder;
     }
@@ -97,6 +94,8 @@ public class NashornRequire extends AbstractRequire<ScriptObjectMirror> {
      * 加载或者编译模块
      */
     protected Module<ScriptObjectMirror> loadOrCompileModule(Folder moduleFile) throws Exception {
+        ModuleCache<ScriptObjectMirror> moduleCache = context.getModuleCache();
+        CompileModule<ScriptObjectMirror> compileModule = context.getCompileModule();
         final String fullPath = moduleFile.getFullPath();
         // 从缓存中加载模块
         Module<ScriptObjectMirror> module = moduleCache.get(fullPath);
@@ -109,7 +108,7 @@ public class NashornRequire extends AbstractRequire<ScriptObjectMirror> {
         if (name.endsWith(JS_File)) {
             // json模块
             ScriptObjectMirror exports = compileModule.compileJavaScriptModule(moduleFile);
-            module = new NashornModule(fullPath, fullPath, exports, currentModule, this);
+            module = new NashornModule(context, fullPath, fullPath, exports, currentModule, this);
         } else if (name.endsWith(JSON_File)) {
             // js模块
             ScriptObjectMirror exports = refCache.get() != null ? refCache.get().get(fullPath) : null;
@@ -117,7 +116,7 @@ public class NashornRequire extends AbstractRequire<ScriptObjectMirror> {
                 exports = ScriptEngineUtils.newObject();
             }
             ScriptObjectMirror function = compileModule.compileJsonModule(moduleFile);
-            module = new NashornModule(fullPath, fullPath, exports, currentModule, this);
+            module = new NashornModule(context, fullPath, fullPath, exports, currentModule, this);
             // (function(exports, require, module, __filename, __dirname) {})
             // this         --> created
             // exports      --> created.exports

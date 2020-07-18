@@ -4,6 +4,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.folder.Folder;
+import org.clever.hinny.api.module.CompileModule;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
 
@@ -36,6 +37,10 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
      */
     private final Require<ScriptObjectMirror> require;
     /**
+     * 编译脚本成ScriptModule
+     */
+    private final CompileModule<ScriptObjectMirror> compileModule;
+    /**
      * 引擎全局变量
      */
     private final ScriptObjectMirror global;
@@ -46,6 +51,7 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
             Folder rootPath,
             ModuleCache<ScriptObjectMirror> moduleCache,
             Require<ScriptObjectMirror> require,
+            CompileModule<ScriptObjectMirror> compileModule,
             ScriptObjectMirror global) {
         // TODO 参数校验
         this.engine = engine;
@@ -55,6 +61,7 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
         this.rootPath = rootPath;
         this.moduleCache = moduleCache;
         this.require = require;
+        this.compileModule = compileModule;
         this.global = global;
     }
 
@@ -81,6 +88,11 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
     @Override
     public Require<ScriptObjectMirror> getRequire() {
         return require;
+    }
+
+    @Override
+    public CompileModule<ScriptObjectMirror> getCompileModule() {
+        return compileModule;
     }
 
     @Override

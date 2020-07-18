@@ -1,7 +1,6 @@
 package org.clever.hinny.api.module;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 脚本模块 AbstractModuleInstance
@@ -40,7 +39,7 @@ public interface ModuleInstance<T> {
     /**
      * 被该模块引用的模块对象
      */
-    Set<ModuleInstance<T>> getChildren();
+    List<ModuleInstance<T>> getChildren();
 
     /**
      * 表示模块对外输出的值
@@ -60,14 +59,21 @@ public interface ModuleInstance<T> {
     T getModuleInstance();
 
     /**
-     * 模块加载完成事件
+     * 触发模块加载完成事件
      */
-    void onLoaded();
+    void triggerOnLoaded();
 
     /**
-     * 模块移除事件
+     * 触发模块移除事件
      */
-    void onRemove();
+    void triggerOnRemove();
+
+    /**
+     * 增加子模块
+     *
+     * @param childModule 子模块
+     */
+    void addChildModule(ModuleInstance<T> childModule);
 
 
 //    /**

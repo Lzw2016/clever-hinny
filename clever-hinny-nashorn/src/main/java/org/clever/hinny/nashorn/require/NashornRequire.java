@@ -7,6 +7,7 @@ import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.*;
 import org.clever.hinny.api.require.Require;
+import org.clever.hinny.nashorn.module.NashornModuleInstance;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 import org.json.JSONObject;
 
@@ -39,13 +40,18 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
      */
     private final ModuleCache<ScriptObjectMirror> moduleCache;
     /**
+     * 当前模块实例
+     */
+    private final ModuleInstance<ScriptObjectMirror> currentModule;
+    /**
      * 当前模块所属文件夹
      */
     private final Folder currentModuleFolder;
 
-    public NashornRequire(CompileModule<ScriptObjectMirror> compileModule, ModuleCache<ScriptObjectMirror> moduleCache, Folder currentModuleFolder) {
+    public NashornRequire(CompileModule<ScriptObjectMirror> compileModule, ModuleCache<ScriptObjectMirror> moduleCache, ModuleInstance<ScriptObjectMirror> currentModule, Folder currentModuleFolder) {
         this.compileModule = compileModule;
         this.moduleCache = moduleCache;
+        this.currentModule = currentModule;
         this.currentModuleFolder = currentModuleFolder;
     }
 
@@ -77,6 +83,7 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
         // 加载 Module
         try {
             ModuleInstance<ScriptObjectMirror> moduleInstance = loadOrCompileModule(moduleFile);
+            currentModule.addChildModule(moduleInstance);
             return moduleInstance.getExports();
         } catch (Exception e) {
             throw new LoadModuleException("加载ScriptModule失败，id=" + id, e);
@@ -92,7 +99,14 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
      * 加载或者编译模块
      */
     protected ModuleInstance<ScriptObjectMirror> loadOrCompileModule(Folder moduleFile) throws Exception {
-        ScriptObjectMirror scriptObjectMirror;
+        final String fullPath = moduleFile.getFullPath();
+        // 从缓存中加载模块
+        ModuleInstance<ScriptObjectMirror> moduleInstance = moduleCache.get(fullPath);
+        if (moduleInstance != null) {
+            log.debug("# ModuleCache 命中缓存 -> {}", fullPath);
+            return moduleInstance;
+        }
+        ScriptObjectMirror scriptObjectMirror = refCache.get().get(fullPath);
         String name = moduleFile.getName();
         if (name.endsWith(JS_File)) {
             scriptObjectMirror = compileModule.compileJavaScriptModule(moduleFile);
@@ -101,9 +115,11 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
         } else {
             throw new UnSupportModuleException("不支持的ScriptModule类型，name=" + name);
         }
-
-
-        return null;
+        moduleInstance = new NashornModuleInstance(scriptObjectMirror, fullPath, fullPath, currentModule, this);
+        // 缓存当前加载的 Module
+        log.debug("# ModuleCache 加入缓存 -> {}", fullPath);
+        moduleCache.put(fullPath, moduleInstance);
+        return moduleInstance;
     }
 
     /**

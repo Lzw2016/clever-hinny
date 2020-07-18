@@ -8,12 +8,12 @@ package org.clever.hinny.api.module;
 public class EmptyModuleCache<T> implements ModuleCache<T> {
 
     @Override
-    public ModuleInstance<T> get(String fullPath) {
+    public Module<T> get(String fullPath) {
         return null;
     }
 
     @Override
-    public void put(String fullPath, ModuleInstance<T> moduleInstance) {
+    public void put(String fullPath, Module<T> module) {
     }
 
     @Override

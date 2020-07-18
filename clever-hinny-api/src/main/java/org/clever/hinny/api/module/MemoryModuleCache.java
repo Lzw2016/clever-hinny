@@ -14,7 +14,7 @@ public class MemoryModuleCache<T> implements ModuleCache<T> {
     /**
      * 缓存
      */
-    private final Cache<String, ModuleInstance<T>> modulesCache;
+    private final Cache<String, Module<T>> modulesCache;
 
     /**
      * @param clearTimeInterval 定时清除缓存的时间间隔，单位：秒(小于0表示不清除)
@@ -32,13 +32,13 @@ public class MemoryModuleCache<T> implements ModuleCache<T> {
     }
 
     @Override
-    public ModuleInstance<T> get(String fullPath) {
+    public Module<T> get(String fullPath) {
         return modulesCache.getIfPresent(fullPath);
     }
 
     @Override
-    public void put(String fullPath, ModuleInstance<T> moduleInstance) {
-        modulesCache.put(fullPath, moduleInstance);
+    public void put(String fullPath, Module<T> module) {
+        modulesCache.put(fullPath, module);
     }
 
     @Override

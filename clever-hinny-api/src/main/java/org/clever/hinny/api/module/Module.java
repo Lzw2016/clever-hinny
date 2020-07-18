@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @param <T> script引擎对象类型
  */
-public interface ModuleInstance<T> {
+public interface Module<T> {
     /**
      * 模块的识别符，通常是带有绝对路径的模块文件名
      */
@@ -29,7 +29,7 @@ public interface ModuleInstance<T> {
     /**
      * 返回一个对象，最先引用该模块的模块
      */
-    ModuleInstance<T> getParent();
+    Module<T> getParent();
 
     /**
      * 模块的搜索路径
@@ -39,7 +39,7 @@ public interface ModuleInstance<T> {
     /**
      * 被该模块引用的模块对象
      */
-    List<ModuleInstance<T>> getChildren();
+    List<Module<T>> getChildren();
 
     /**
      * 表示模块对外输出的值
@@ -66,7 +66,7 @@ public interface ModuleInstance<T> {
      *   module.require(id)  module.require() 方法提供了一种加载模块的方法，就像从原始模块调用 require() 一样
      * </pre>
      */
-    T getModuleValue();
+    T getModule();
 
     /**
      * 触发模块加载完成事件
@@ -83,7 +83,7 @@ public interface ModuleInstance<T> {
      *
      * @param childModule 子模块
      */
-    void addChildModule(ModuleInstance<T> childModule);
+    void addChildModule(Module<T> childModule);
 
 
 //    /**

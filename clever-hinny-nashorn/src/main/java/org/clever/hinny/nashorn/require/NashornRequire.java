@@ -6,8 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.*;
+import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.Require;
-import org.clever.hinny.nashorn.module.NashornModuleInstance;
+import org.clever.hinny.nashorn.module.NashornModule;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 import org.json.JSONObject;
 
@@ -42,13 +43,13 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
     /**
      * 当前模块实例
      */
-    private final ModuleInstance<ScriptObjectMirror> currentModule;
+    private final Module<ScriptObjectMirror> currentModule;
     /**
      * 当前模块所属文件夹
      */
     private final Folder currentModuleFolder;
 
-    public NashornRequire(CompileModule<ScriptObjectMirror> compileModule, ModuleCache<ScriptObjectMirror> moduleCache, ModuleInstance<ScriptObjectMirror> currentModule, Folder currentModuleFolder) {
+    public NashornRequire(CompileModule<ScriptObjectMirror> compileModule, ModuleCache<ScriptObjectMirror> moduleCache, Module<ScriptObjectMirror> currentModule, Folder currentModuleFolder) {
         this.compileModule = compileModule;
         this.moduleCache = moduleCache;
         this.currentModule = currentModule;
@@ -82,9 +83,9 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
         }
         // 加载 Module
         try {
-            ModuleInstance<ScriptObjectMirror> moduleInstance = loadOrCompileModule(moduleFile);
-            moduleInstance.triggerOnLoaded();
-            return moduleInstance.getExports();
+            Module<ScriptObjectMirror> module = loadOrCompileModule(moduleFile);
+            module.triggerOnLoaded();
+            return module.getExports();
         } catch (Exception e) {
             throw new LoadModuleException("加载ScriptModule失败，id=" + id, e);
         } finally {
@@ -98,20 +99,20 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
     /**
      * 加载或者编译模块
      */
-    protected ModuleInstance<ScriptObjectMirror> loadOrCompileModule(Folder moduleFile) throws Exception {
+    protected Module<ScriptObjectMirror> loadOrCompileModule(Folder moduleFile) throws Exception {
         final String fullPath = moduleFile.getFullPath();
         // 从缓存中加载模块
-        ModuleInstance<ScriptObjectMirror> moduleInstance = moduleCache.get(fullPath);
-        if (moduleInstance != null) {
+        Module<ScriptObjectMirror> module = moduleCache.get(fullPath);
+        if (module != null) {
             log.debug("# ModuleCache 命中缓存 -> {}", fullPath);
-            return moduleInstance;
+            return module;
         }
         // 编译加载模块
         String name = moduleFile.getName();
         if (name.endsWith(JS_File)) {
             // json模块
             ScriptObjectMirror exports = compileModule.compileJavaScriptModule(moduleFile);
-            moduleInstance = new NashornModuleInstance(fullPath, fullPath, exports, currentModule, this);
+            module = new NashornModule(fullPath, fullPath, exports, currentModule, this);
         } else if (name.endsWith(JSON_File)) {
             // js模块
             ScriptObjectMirror exports = refCache.get() != null ? refCache.get().get(fullPath) : null;
@@ -119,7 +120,7 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
                 exports = ScriptEngineUtils.newObject();
             }
             ScriptObjectMirror function = compileModule.compileJsonModule(moduleFile);
-            moduleInstance = new NashornModuleInstance(fullPath, fullPath, exports, currentModule, this);
+            module = new NashornModule(fullPath, fullPath, exports, currentModule, this);
             // (function(exports, require, module, __filename, __dirname) {})
             // this         --> created
             // exports      --> created.exports
@@ -128,14 +129,14 @@ public class NashornRequire implements Require<ScriptObjectMirror> {
             // __filename   --> filename
             // __dirname    --> dirname
             // noinspection CollectionAddedToSelf
-            function.call(function, exports, this, moduleInstance.getModuleValue(), moduleFile.getFullPath(), moduleFile.getParent().getFullPath());
+            function.call(function, exports, this, module.getModule(), moduleFile.getFullPath(), moduleFile.getParent().getFullPath());
         } else {
             throw new UnSupportModuleException("不支持的ScriptModule类型，name=" + name);
         }
         // 缓存当前加载的 Module
         log.debug("# ModuleCache 加入缓存 -> {}", fullPath);
-        moduleCache.put(fullPath, moduleInstance);
-        return moduleInstance;
+        moduleCache.put(fullPath, module);
+        return module;
     }
 
     /**

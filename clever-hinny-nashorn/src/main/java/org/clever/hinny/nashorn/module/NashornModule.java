@@ -1,7 +1,7 @@
 package org.clever.hinny.nashorn.module;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import org.clever.hinny.api.module.ModuleInstance;
+import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * 作者：lizw <br/>
  * 创建时间：2020/07/15 22:39 <br/>
  */
-public class NashornModuleInstance implements ModuleInstance<ScriptObjectMirror> {
+public class NashornModule implements Module<ScriptObjectMirror> {
     /**
      * 当前模块对象对应的 module 对象
      */
@@ -33,7 +33,7 @@ public class NashornModuleInstance implements ModuleInstance<ScriptObjectMirror>
     /**
      * 返回一个对象，最先引用该模块的模块
      */
-    private final ModuleInstance<ScriptObjectMirror> parent;
+    private final Module<ScriptObjectMirror> parent;
     /**
      * module.require() 方法提供了一种加载模块的方法，就像从原始模块调用 require() 一样
      */
@@ -51,7 +51,7 @@ public class NashornModuleInstance implements ModuleInstance<ScriptObjectMirror>
      */
     private boolean removed = false;
 
-    public NashornModuleInstance(String id, String filename, ScriptObjectMirror exports, ModuleInstance<ScriptObjectMirror> parent, Require<ScriptObjectMirror> require) {
+    public NashornModule(String id, String filename, ScriptObjectMirror exports, Module<ScriptObjectMirror> parent, Require<ScriptObjectMirror> require) {
         this.id = id;
         this.filename = filename;
         this.exports = exports;
@@ -78,7 +78,7 @@ public class NashornModuleInstance implements ModuleInstance<ScriptObjectMirror>
     }
 
     @Override
-    public ModuleInstance<ScriptObjectMirror> getParent() {
+    public Module<ScriptObjectMirror> getParent() {
         return parent;
     }
 
@@ -89,7 +89,7 @@ public class NashornModuleInstance implements ModuleInstance<ScriptObjectMirror>
     }
 
     @Override
-    public List<ModuleInstance<ScriptObjectMirror>> getChildren() {
+    public List<Module<ScriptObjectMirror>> getChildren() {
         // TODO getChildren
         return null;
     }
@@ -105,7 +105,7 @@ public class NashornModuleInstance implements ModuleInstance<ScriptObjectMirror>
     }
 
     @Override
-    public ScriptObjectMirror getModuleValue() {
+    public ScriptObjectMirror getModule() {
         return module;
     }
 
@@ -129,7 +129,7 @@ public class NashornModuleInstance implements ModuleInstance<ScriptObjectMirror>
     }
 
     @Override
-    public void addChildModule(ModuleInstance<ScriptObjectMirror> childModule) {
+    public void addChildModule(Module<ScriptObjectMirror> childModule) {
 
     }
 }

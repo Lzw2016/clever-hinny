@@ -15,15 +15,15 @@ public interface ModuleCache<T> {
      *
      * @param fullPath 模块逻辑绝对路径
      */
-    ModuleInstance<T> get(String fullPath);
+    Module<T> get(String fullPath);
 
     /**
      * 缓存脚本模块
      *
      * @param fullPath       模块逻辑绝对路径
-     * @param moduleInstance 脚本模块
+     * @param module 脚本模块
      */
-    void put(String fullPath, ModuleInstance<T> moduleInstance);
+    void put(String fullPath, Module<T> module);
 
     /**
      * 清空脚本模块缓存

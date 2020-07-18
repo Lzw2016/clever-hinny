@@ -9,7 +9,6 @@ import org.clever.hinny.api.ScriptEngineInstance;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
-import org.clever.hinny.api.require.RequireInstance;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 
 import javax.script.Bindings;
@@ -40,13 +39,9 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<ScriptO
      */
     private final ScriptEngineContext<ScriptObjectMirror> context;
     /**
-     * require加载其他模块
+     * require实例
      */
     private final Require<ScriptObjectMirror> require;
-    /**
-     * 全局的require实例
-     */
-    private final RequireInstance requireInstance;
     /**
      * 共享的全局变量
      */
@@ -57,7 +52,6 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<ScriptO
             ModuleCache<ScriptObjectMirror> moduleCache,
             ScriptEngineContext<ScriptObjectMirror> context,
             Require<ScriptObjectMirror> require,
-            RequireInstance requireInstance,
             ScriptObjectMirror global) {
         this.engine = ScriptEngineUtils.creatEngine();
         this.rootPath = rootPath;
@@ -65,8 +59,6 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<ScriptO
         this.require = require;
         this.context = context;
         this.global = global;
-        this.requireInstance = requireInstance;
-
 
         Bindings engineBindings = this.engine.getBindings(ScriptContext.ENGINE_SCOPE);
         Map<String, Object> contextMap = this.context.getContextMap();

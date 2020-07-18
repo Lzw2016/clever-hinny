@@ -2,23 +2,21 @@ package org.clever.hinny.nashorn.module;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.folder.ReadFileContentException;
-import org.clever.hinny.api.module.CompileModule;
+import org.clever.hinny.api.module.AbstractCompileModule;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/07/18 09:20 <br/>
  */
-public class NashornCompileModule implements CompileModule<ScriptObjectMirror> {
-    /**
-     * NashornScriptEngine
-     */
-    private final NashornScriptEngine engine;
+public class NashornCompileModule extends AbstractCompileModule<NashornScriptEngine, ScriptObjectMirror> {
 
-    public NashornCompileModule(NashornScriptEngine engine) {
-        this.engine = engine;
+    public NashornCompileModule(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context) {
+        // TODO 参数校验
+        super(context);
     }
 
     @Override
@@ -33,6 +31,6 @@ public class NashornCompileModule implements CompileModule<ScriptObjectMirror> {
             throw new ReadFileContentException("读取文件内容失败: path=" + path.getFullPath());
         }
         final String scriptCode = "(function(exports, require, module, __filename, __dirname) {\n" + code + "\n});";
-        return (ScriptObjectMirror) engine.eval(scriptCode);
+        return (ScriptObjectMirror) context.getEngine().eval(scriptCode);
     }
 }

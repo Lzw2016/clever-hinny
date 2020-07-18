@@ -10,11 +10,15 @@ import org.clever.hinny.api.folder.Folder;
 public interface CompileModule<T> {
     /**
      * 编译 Json Module
+     *
+     * @return 直接返回exports
      */
     T compileJsonModule(Folder path) throws Exception;
 
     /**
      * 编译 JavaScript Module
+     *
+     * @return 返回script引擎对象
      */
     T compileJavaScriptModule(Folder path) throws Exception;
 }

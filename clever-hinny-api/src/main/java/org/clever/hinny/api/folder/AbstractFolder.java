@@ -209,7 +209,7 @@ public abstract class AbstractFolder implements Folder {
             throw new IllegalArgumentException("属性absolutePath不能为空");
         }
         if (!exists(this.baseAbsolutePath)) {
-            throw new FolderNotFoundException(String.format("路径:%s不存在", this.baseAbsolutePath));
+            throw new PathNotFoundException(String.format("路径:%s不存在", this.baseAbsolutePath));
         }
         if (!this.absolutePath.startsWith(this.baseAbsolutePath)) {
             throw new IllegalArgumentException("absolutePath必须是baseAbsolutePath的子目录");

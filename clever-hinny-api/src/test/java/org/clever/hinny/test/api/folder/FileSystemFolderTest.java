@@ -5,6 +5,8 @@ import org.clever.hinny.api.folder.FileSystemFolder;
 import org.clever.hinny.api.folder.Folder;
 import org.junit.Test;
 
+import java.io.File;
+
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/07/16 13:36 <br/>
@@ -14,7 +16,9 @@ public class FileSystemFolderTest {
 
     @Test
     public void t01() {
-        FileSystemFolder folder = FileSystemFolder.createRootPath("D:\\SourceCode\\clever\\clever-hinny\\clever-hinny-api");
+        String basePath = new File("").getAbsolutePath();
+        log.info("### basePath      -> {}", basePath);
+        FileSystemFolder folder = FileSystemFolder.createRootPath(basePath);
         log.info("### toString      -> {}", folder.toString());
         log.info("### isFile        -> {}", folder.isFile());
         log.info("### isDir         -> {}", folder.isDir());

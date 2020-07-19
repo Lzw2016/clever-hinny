@@ -42,7 +42,7 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
      */
     private Require<ScriptObjectMirror> require;
     /**
-     * 编译脚本成ScriptModule
+     * 编译模块实现
      */
     private CompileModule<ScriptObjectMirror> compileModule;
     /**
@@ -121,19 +121,23 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
          * @param rootPath 根路径文件夹
          */
         public Builder(Folder rootPath) {
+            // TODO 参数校验
             this.rootPath = rootPath;
         }
 
+        public static Builder create(Folder rootPath) {
+            return new Builder(rootPath);
+        }
+
         /**
-         * @return
+         * @return NashornScriptEngine
          */
         public NashornScriptEngine getEngine() {
             return engine;
         }
 
         /**
-         * @param engine
-         * @return
+         * 设置 NashornScriptEngine
          */
         public Builder setEngine(NashornScriptEngine engine) {
             this.engine = engine;
@@ -141,15 +145,14 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
         }
 
         /**
-         * @return
+         * @return 自定义引擎全局对象
          */
         public Map<String, Object> getContextMap() {
             return contextMap;
         }
 
         /**
-         * @param contextMap
-         * @return
+         * 自定义引擎全局对象
          */
         public Builder setContextMap(Map<String, Object> contextMap) {
             this.contextMap = contextMap;
@@ -157,22 +160,21 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
         }
 
         /**
-         * @return
+         * @return 根路径文件夹
          */
         public Folder getRootPath() {
             return rootPath;
         }
 
         /**
-         * @return
+         * @return 模块缓存
          */
         public ModuleCache<ScriptObjectMirror> getModuleCache() {
             return moduleCache;
         }
 
         /**
-         * @param moduleCache
-         * @return
+         * 设置模块缓存
          */
         public Builder setModuleCache(ModuleCache<ScriptObjectMirror> moduleCache) {
             this.moduleCache = moduleCache;
@@ -180,15 +182,14 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
         }
 
         /**
-         * @return
+         * @return 全局require实例(根目录require)
          */
         public Require<ScriptObjectMirror> getRequire() {
             return require;
         }
 
         /**
-         * @param require
-         * @return
+         * 设置全局require实例(根目录require)
          */
         public Builder setRequire(Require<ScriptObjectMirror> require) {
             this.require = require;
@@ -196,15 +197,14 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
         }
 
         /**
-         * @return
+         * @return 编译模块实现
          */
         public CompileModule<ScriptObjectMirror> getCompileModule() {
             return compileModule;
         }
 
         /**
-         * @param compileModule
-         * @return
+         * 设置编译模块实现
          */
         public Builder setCompileModule(CompileModule<ScriptObjectMirror> compileModule) {
             this.compileModule = compileModule;
@@ -212,15 +212,14 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
         }
 
         /**
-         * @return
+         * @return 引擎全局变量
          */
         public ScriptObjectMirror getGlobal() {
             return global;
         }
 
         /**
-         * @param global
-         * @return
+         * 设置引擎全局变量
          */
         public Builder setGlobal(ScriptObjectMirror global) {
             this.global = global;

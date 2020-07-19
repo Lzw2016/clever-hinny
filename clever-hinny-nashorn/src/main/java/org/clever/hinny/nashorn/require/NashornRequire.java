@@ -105,17 +105,17 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
         }
         // 编译加载模块
         String name = moduleFile.getName();
-        if (name.endsWith(JS_File)) {
+        if (name.endsWith(JSON_File)) {
             // json模块
-            ScriptObjectMirror exports = compileModule.compileJavaScriptModule(moduleFile);
+            ScriptObjectMirror exports = compileModule.compileJsonModule(moduleFile);
             module = new NashornModule(context, fullPath, fullPath, exports, currentModule, this);
-        } else if (name.endsWith(JSON_File)) {
+        } else if (name.endsWith(JS_File)) {
             // js模块
             ScriptObjectMirror exports = refCache.get() != null ? refCache.get().get(fullPath) : null;
             if (exports == null) {
                 exports = ScriptEngineUtils.newObject();
             }
-            ScriptObjectMirror function = compileModule.compileJsonModule(moduleFile);
+            ScriptObjectMirror function = compileModule.compileJavaScriptModule(moduleFile);
             module = new NashornModule(context, fullPath, fullPath, exports, currentModule, this);
             // (function(exports, require, module, __filename, __dirname) {})
             // this         --> created

@@ -68,13 +68,17 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
         this.filename = filename;
         this.exports = exports;
         this.parent = parent;
-        this.parent.addChildModule(this);
+        if (this.parent != null) {
+            this.parent.addChildModule(this);
+        }
         this.require = require;
         this.module = ScriptEngineUtils.newObject();
         this.module.put(GlobalConstant.Module_Id, this.id);
         this.module.put(GlobalConstant.Module_Filename, this.filename);
         this.module.put(GlobalConstant.Module_Loaded, this.loaded);
-        this.module.put(GlobalConstant.Module_Parent, this.parent.getModule());
+        if (this.parent != null) {
+            this.module.put(GlobalConstant.Module_Parent, this.parent.getModule());
+        }
         // TODO  Module_Paths
         this.module.put(GlobalConstant.Module_Paths, ScriptEngineUtils.newArray());
         // TODO  Module_Children

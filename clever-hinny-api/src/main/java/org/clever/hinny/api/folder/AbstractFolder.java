@@ -125,8 +125,8 @@ public abstract class AbstractFolder implements Folder {
 
     @Override
     public String getFileContent() {
-        if (exists(this.baseAbsolutePath) && isFile(this.baseAbsolutePath)) {
-            return getContent(this.baseAbsolutePath);
+        if (exists(this.absolutePath) && isFile(this.absolutePath)) {
+            return getContent(this.absolutePath);
         }
         return null;
     }

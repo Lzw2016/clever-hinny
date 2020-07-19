@@ -5,7 +5,7 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.CompileModule;
-import org.clever.hinny.api.module.EmptyModuleCache;
+import org.clever.hinny.api.module.MemoryModuleCache;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.api.utils.Assert;
@@ -245,7 +245,7 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
                 contextMap = Collections.emptyMap();
             }
             if (moduleCache == null) {
-                moduleCache = new EmptyModuleCache<>();
+                moduleCache = new MemoryModuleCache<>();
             }
             if (require == null) {
                 NashornModule mainModule = NashornModule.createMainModule(context);

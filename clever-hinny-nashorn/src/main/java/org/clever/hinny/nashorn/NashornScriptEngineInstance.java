@@ -5,7 +5,10 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptEngineInstance;
+import org.clever.hinny.api.ScriptObject;
 import org.clever.hinny.api.folder.Folder;
+import org.clever.hinny.api.module.CompileModule;
+import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.api.utils.Assert;
 
@@ -36,6 +39,21 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
     }
 
     @Override
+    public String getEngineName() {
+        return context.getEngine().getFactory().getEngineName();
+    }
+
+    @Override
+    public String getEngineVersion() {
+        return context.getEngine().getFactory().getEngineVersion();
+    }
+
+    @Override
+    public String getLanguageVersion() {
+        return context.getEngine().getFactory().getLanguageVersion();
+    }
+
+    @Override
     public ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> getContext() {
         return context;
     }
@@ -55,8 +73,143 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
         return context.getRequire();
     }
 
+    @Override
+    public ScriptObject<ScriptObjectMirror> require(String id) throws Exception {
+        ScriptObjectMirror scriptObjectMirror = context.getRequire().require(id);
+        return new NashornScriptObject(scriptObjectMirror);
+    }
 
     public static class Builder {
-        // TODO 创建 NashornScriptEngineInstance 实例
+        private NashornScriptEngine engine;
+        private Map<String, Object> contextMap;
+        private final Folder rootPath;
+        private ModuleCache<ScriptObjectMirror> moduleCache;
+        private Require<ScriptObjectMirror> require;
+        private CompileModule<ScriptObjectMirror> compileModule;
+        private ScriptObjectMirror global;
+
+        /**
+         * @param rootPath 根路径文件夹
+         */
+        public Builder(Folder rootPath) {
+            Assert.notNull(rootPath, "参数rootPath不能为空");
+            this.rootPath = rootPath;
+        }
+
+        public static Builder create(Folder rootPath) {
+            return new Builder(rootPath);
+        }
+
+        /**
+         * @return NashornScriptEngine
+         */
+        public NashornScriptEngine getEngine() {
+            return engine;
+        }
+
+        /**
+         * 设置 NashornScriptEngine
+         */
+        public Builder setEngine(NashornScriptEngine engine) {
+            this.engine = engine;
+            return this;
+        }
+
+        /**
+         * @return 自定义引擎全局对象
+         */
+        public Map<String, Object> getContextMap() {
+            return contextMap;
+        }
+
+        /**
+         * 自定义引擎全局对象
+         */
+        public Builder setContextMap(Map<String, Object> contextMap) {
+            this.contextMap = contextMap;
+            return this;
+        }
+
+        /**
+         * @return 根路径文件夹
+         */
+        public Folder getRootPath() {
+            return rootPath;
+        }
+
+        /**
+         * @return 模块缓存
+         */
+        public ModuleCache<ScriptObjectMirror> getModuleCache() {
+            return moduleCache;
+        }
+
+        /**
+         * 设置模块缓存
+         */
+        public Builder setModuleCache(ModuleCache<ScriptObjectMirror> moduleCache) {
+            this.moduleCache = moduleCache;
+            return this;
+        }
+
+        /**
+         * @return 全局require实例(根目录require)
+         */
+        public Require<ScriptObjectMirror> getRequire() {
+            return require;
+        }
+
+        /**
+         * 设置全局require实例(根目录require)
+         */
+        public Builder setRequire(Require<ScriptObjectMirror> require) {
+            this.require = require;
+            return this;
+        }
+
+        /**
+         * @return 编译模块实现
+         */
+        public CompileModule<ScriptObjectMirror> getCompileModule() {
+            return compileModule;
+        }
+
+        /**
+         * 设置编译模块实现
+         */
+        public Builder setCompileModule(CompileModule<ScriptObjectMirror> compileModule) {
+            this.compileModule = compileModule;
+            return this;
+        }
+
+        /**
+         * @return 引擎全局变量
+         */
+        public ScriptObjectMirror getGlobal() {
+            return global;
+        }
+
+        /**
+         * 设置引擎全局变量
+         */
+        public Builder setGlobal(ScriptObjectMirror global) {
+            this.global = global;
+            return this;
+        }
+
+        /**
+         * 创建 ScriptEngineContext
+         */
+        public NashornScriptEngineInstance build() {
+            NashornScriptEngineContext context = NashornScriptEngineContext.Builder.create(rootPath)
+                    .setEngine(engine)
+                    .setContextMap(contextMap)
+                    .setModuleCache(moduleCache)
+                    .setRequire(require)
+                    .setCompileModule(compileModule)
+                    .setGlobal(global)
+                    .build();
+            return new NashornScriptEngineInstance(context);
+        }
     }
 }

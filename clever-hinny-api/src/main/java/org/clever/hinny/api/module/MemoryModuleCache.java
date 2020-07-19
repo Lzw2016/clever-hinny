@@ -2,6 +2,7 @@ package org.clever.hinny.api.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,7 +11,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @param <T> script引擎对象类型
  */
+@Slf4j
 public class MemoryModuleCache<T> implements ModuleCache<T> {
+    public static final int Default_Initial_Capacity = 512;
     /**
      * 缓存
      */
@@ -18,17 +21,24 @@ public class MemoryModuleCache<T> implements ModuleCache<T> {
 
     /**
      * @param clearTimeInterval 定时清除缓存的时间间隔，单位：秒(小于0表示不清除)
+     * @param initialCapacity   初始缓存容量
      */
-    public MemoryModuleCache(long clearTimeInterval) {
-        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder().initialCapacity(521);
+    public MemoryModuleCache(long clearTimeInterval, int initialCapacity) {
+        if (initialCapacity < 0) {
+            initialCapacity = Default_Initial_Capacity;
+        }
+        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder().initialCapacity(initialCapacity);
         if (clearTimeInterval >= 0) {
-            cacheBuilder.expireAfterWrite(clearTimeInterval, TimeUnit.SECONDS);
+            cacheBuilder.removalListener(notification -> {
+                Object string = notification.getKey();
+                log.debug("ModuleCache 移除缓存 -> {} | 原因: {}", string, notification.getCause());
+            }).expireAfterWrite(clearTimeInterval, TimeUnit.SECONDS);
         }
         this.modulesCache = cacheBuilder.build();
     }
 
     public MemoryModuleCache() {
-        this(-1);
+        this(-1, Default_Initial_Capacity);
     }
 
     @Override

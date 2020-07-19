@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * nashorn文档 https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/
+ * <p>
  * 作者：lizw <br/>
  * 创建时间：2019/08/21 09:26 <br/>
  */
@@ -74,19 +76,9 @@ public class ScriptEngineUtils {
      * 创建一个新的 NashornScriptEngine
      */
     public static NashornScriptEngine creatEngine() {
-        String[] stringArray = new String[]{"-doe"};
-        return (NashornScriptEngine) NASHORN_FACTORY.getScriptEngine(stringArray, getAppClassLoader(), Java_Type::contains);
-        // 支持ES6语法的 NashornScriptEngine
-        // ScriptEngineManager sm = new ScriptEngineManager();
-        // NashornScriptEngineFactory factory = null;
-        // for (ScriptEngineFactory f : sm.getEngineFactories()) {
-        //     if (f.getEngineName().equalsIgnoreCase("Oracle Nashorn")) {
-        //         factory = (NashornScriptEngineFactory) f;
-        //         break;
-        //     }
-        // }
-        // String[] stringArray = new String[]{"-doe", "--language=es6"};
-        // return factory.getScriptEngine(stringArray);
+        // options 参考 https://wiki.openjdk.java.net/display/Nashorn/Nashorn+jsr223+engine+notes
+        String[] options = new String[]{"-doe"};
+        return (NashornScriptEngine) NASHORN_FACTORY.getScriptEngine(options, getAppClassLoader(), Java_Type::contains);
     }
 
     // 参考 NashornScriptEngineFactory 实现

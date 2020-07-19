@@ -14,6 +14,21 @@ import org.clever.hinny.api.require.Require;
  */
 public interface ScriptEngineInstance<E, T> {
     /**
+     * 引擎名称
+     */
+    String getEngineName();
+
+    /**
+     * 引擎版本
+     */
+    String getEngineVersion();
+
+    /**
+     * 获取语言版本
+     */
+    String getLanguageVersion();
+
+    /**
      * 获取脚本引擎上下文
      */
     ScriptEngineContext<E, T> getContext();
@@ -32,6 +47,13 @@ public interface ScriptEngineInstance<E, T> {
      * require用于加载其他模块
      */
     Require<T> getRequire();
+
+    /**
+     * 获取模块exports包装对象
+     *
+     * @param id 模块ID(模块路径)
+     */
+    ScriptObject<T> require(String id) throws Exception;
 }
 
 //(x)module                               module变量代表当前模块

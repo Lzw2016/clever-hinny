@@ -54,9 +54,7 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
 
     @Override
     public ScriptObjectMirror require(final String id) {
-        if (StringUtils.isBlank(id)) {
-            throw new IllegalArgumentException("模块id不能为空");
-        }
+        Assert.isNotBlank(id, "参数id不能为空");
         Folder moduleFile = loadModuleFolder(id);
         if (moduleFile == null || !moduleFile.isFile()) {
             throw new ModuleNotFoundException("找不到模块id=" + id);

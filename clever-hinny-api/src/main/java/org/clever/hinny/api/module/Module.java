@@ -86,33 +86,6 @@ public interface Module<T> {
     void addChildModule(Module<T> childModule);
 
 
-//    /**
-//     * 获取script引擎对象
-//     */
-//    T getValue();
-//
-//    /**
-//     * @param key
-//     * @param value
-//     */
-//    void put(String key, Object value);
-//
-//    /**
-//     * @param map
-//     */
-//    void putAll(Map<String, Object> map);
-//
-//    /**
-//     * @param key
-//     * @param <T>
-//     */
-//    <T> T get(String key);
-//
-//    /**
-//     * @param key
-//     * @param <T>
-//     */
-//    <T> T remove(String key);
 }
 
 //module.id                               模块的识别符，通常是带有绝对路径的模块文件名。

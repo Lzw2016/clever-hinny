@@ -8,7 +8,9 @@ import org.clever.hinny.api.module.CompileModule;
 import org.clever.hinny.api.module.EmptyModuleCache;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
+import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.nashorn.module.NashornCompileModule;
+import org.clever.hinny.nashorn.module.NashornModule;
 import org.clever.hinny.nashorn.require.NashornRequire;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 
@@ -61,7 +63,12 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
             Require<ScriptObjectMirror> require,
             CompileModule<ScriptObjectMirror> compileModule,
             ScriptObjectMirror global) {
-        // TODO 参数校验
+        Assert.notNull(engine, "参数engine不能为空");
+        Assert.notNull(rootPath, "参数rootPath不能为空");
+        Assert.notNull(moduleCache, "参数moduleCache不能为空");
+        Assert.notNull(require, "参数require不能为空");
+        Assert.notNull(compileModule, "参数compileModule不能为空");
+        Assert.notNull(global, "参数global不能为空");
         this.engine = engine;
         if (contextMap != null) {
             this.contextMap.putAll(contextMap);
@@ -121,7 +128,7 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
          * @param rootPath 根路径文件夹
          */
         public Builder(Folder rootPath) {
-            // TODO 参数校验
+            Assert.notNull(rootPath, "参数rootPath不能为空");
             this.rootPath = rootPath;
         }
 
@@ -241,7 +248,8 @@ public class NashornScriptEngineContext implements ScriptEngineContext<NashornSc
                 moduleCache = new EmptyModuleCache<>();
             }
             if (require == null) {
-                require = new NashornRequire(context, null, rootPath);
+                NashornModule mainModule = NashornModule.createMainModule(context);
+                require = new NashornRequire(context, mainModule, rootPath);
             }
             if (compileModule == null) {
                 compileModule = new NashornCompileModule(context);

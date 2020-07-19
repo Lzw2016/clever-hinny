@@ -4,9 +4,11 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
+import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.AbstractModule;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.Require;
+import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 
 import java.util.HashSet;
@@ -62,17 +64,34 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
             ScriptObjectMirror exports,
             Module<ScriptObjectMirror> parent,
             Require<ScriptObjectMirror> require) {
-        // TODO 参数校验
         super(context);
+        Assert.isNotBlank(id, "参数id不能为空");
+        Assert.isNotBlank(filename, "参数filename不能为空");
+        Assert.notNull(exports, "参数exports不能为空");
+        Assert.notNull(parent, "参数parent不能为空");
+        Assert.notNull(require, "参数require不能为空");
         this.id = id;
         this.filename = filename;
         this.exports = exports;
         this.parent = parent;
-        if (this.parent != null) {
-            this.parent.addChildModule(this);
-        }
+        this.parent.addChildModule(this);
         this.require = require;
         this.module = ScriptEngineUtils.newObject();
+        initModule();
+    }
+
+    private NashornModule(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context) {
+        super(context);
+        this.id = GlobalConstant.Module_Main;
+        this.filename = Folder.Root_Path + GlobalConstant.Module_Main;
+        this.exports = ScriptEngineUtils.newObject();
+        this.parent = null;
+        this.require = context.getRequire();
+        this.module = ScriptEngineUtils.newObject();
+        initModule();
+    }
+
+    private void initModule() {
         this.module.put(GlobalConstant.Module_Id, this.id);
         this.module.put(GlobalConstant.Module_Filename, this.filename);
         this.module.put(GlobalConstant.Module_Loaded, this.loaded);
@@ -85,6 +104,13 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
         this.module.put(GlobalConstant.Module_Children, ScriptEngineUtils.newArray());
         this.module.put(GlobalConstant.Module_Exports, this.exports);
         this.module.put(GlobalConstant.Module_Require, this.require);
+    }
+
+    /**
+     * 创建主模块(根模块)
+     */
+    public static NashornModule createMainModule(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context) {
+        return new NashornModule(context);
     }
 
     @Override
@@ -161,5 +187,6 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
             return;
         }
         // TODO addChildModule
+        childrenIds.add(childModule.getId());
     }
 }

@@ -15,7 +15,6 @@ import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 public class NashornCompileModule extends AbstractCompileModule<NashornScriptEngine, ScriptObjectMirror> {
 
     public NashornCompileModule(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context) {
-        // TODO 参数校验
         super(context);
     }
 

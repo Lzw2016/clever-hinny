@@ -10,6 +10,7 @@ import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.module.*;
 import org.clever.hinny.api.require.AbstractRequire;
+import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.nashorn.module.NashornModule;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 import org.json.JSONObject;
@@ -44,8 +45,9 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
     private final Folder currentModuleFolder;
 
     public NashornRequire(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context, Module<ScriptObjectMirror> currentModule, Folder currentModuleFolder) {
-        // TODO 参数校验
         super(context);
+        Assert.notNull(currentModule, "参数currentModule不能为空");
+        Assert.notNull(currentModuleFolder, "参数currentModuleFolder不能为空");
         this.currentModule = currentModule;
         this.currentModuleFolder = currentModuleFolder;
     }

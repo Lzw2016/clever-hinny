@@ -7,6 +7,7 @@ import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptEngineInstance;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.require.Require;
+import org.clever.hinny.api.utils.Assert;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -23,7 +24,7 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
     private final ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context;
 
     public NashornScriptEngineInstance(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context) {
-        // TODO 参数校验
+        Assert.notNull(context, "参数context不能为空");
         this.context = context;
         Bindings engineBindings = this.context.getEngine().getBindings(ScriptContext.ENGINE_SCOPE);
         Map<String, Object> contextMap = this.context.getContextMap();
@@ -52,5 +53,10 @@ public class NashornScriptEngineInstance implements ScriptEngineInstance<Nashorn
     @Override
     public Require<ScriptObjectMirror> getRequire() {
         return context.getRequire();
+    }
+
+
+    public static class Builder {
+        // TODO 创建 NashornScriptEngineInstance 实例
     }
 }

@@ -2,6 +2,7 @@ package org.clever.hinny.api.require;
 
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.module.ModuleCache;
+import org.clever.hinny.api.utils.Assert;
 
 /**
  * 作者：lizw <br/>
@@ -17,7 +18,7 @@ public abstract class AbstractRequire<E, T> implements Require<T> {
     protected final ScriptEngineContext<E, T> context;
 
     public AbstractRequire(ScriptEngineContext<E, T> context) {
-        // TODO 参数校验
+        Assert.notNull(context, "参数context不能为空");
         this.context = context;
     }
 

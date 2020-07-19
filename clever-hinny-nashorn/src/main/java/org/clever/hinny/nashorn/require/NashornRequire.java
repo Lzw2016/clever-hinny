@@ -30,15 +30,15 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
      * 文件可省略的后缀名
      */
     private static final String[] File_Suffix = new String[]{"", JS_File, JSON_File};
-
     /**
      * 当前线程缓存(fullPath -> script引擎对象)
      */
-    private final ThreadLocal<Map<String, ScriptObjectMirror>> refCache = new ThreadLocal<>();
+    private static final ThreadLocal<Map<String, ScriptObjectMirror>> refCache = new ThreadLocal<>();
+
     /**
      * 当前模块实例
      */
-    private final Module<ScriptObjectMirror> currentModule;
+    private Module<ScriptObjectMirror> currentModule;
     /**
      * 当前模块所属文件夹
      */
@@ -49,6 +49,12 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
         Assert.notNull(currentModule, "参数currentModule不能为空");
         Assert.notNull(currentModuleFolder, "参数currentModuleFolder不能为空");
         this.currentModule = currentModule;
+        this.currentModuleFolder = currentModuleFolder;
+    }
+
+    private NashornRequire(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context, Folder currentModuleFolder) {
+        super(context);
+        Assert.notNull(currentModuleFolder, "参数currentModuleFolder不能为空");
         this.currentModuleFolder = currentModuleFolder;
     }
 
@@ -105,10 +111,12 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
         }
         // 编译加载模块
         String name = moduleFile.getName();
+        NashornRequire require = new NashornRequire(context, moduleFile.getParent());
         if (name.endsWith(JSON_File)) {
             // json模块
             ScriptObjectMirror exports = compileModule.compileJsonModule(moduleFile);
-            module = new NashornModule(context, fullPath, fullPath, exports, currentModule, this);
+            module = new NashornModule(context, fullPath, fullPath, exports, currentModule, require);
+            require.currentModule = module;
         } else if (name.endsWith(JS_File)) {
             // js模块
             ScriptObjectMirror exports = refCache.get() != null ? refCache.get().get(fullPath) : null;
@@ -116,7 +124,8 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
                 exports = ScriptEngineUtils.newObject();
             }
             ScriptObjectMirror function = compileModule.compileJavaScriptModule(moduleFile);
-            module = new NashornModule(context, fullPath, fullPath, exports, currentModule, this);
+            module = new NashornModule(context, fullPath, fullPath, exports, currentModule, require);
+            require.currentModule = module;
             // (function(exports, require, module, __filename, __dirname) {})
             // this         --> created
             // exports      --> created.exports
@@ -125,7 +134,7 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
             // __filename   --> filename
             // __dirname    --> dirname
             // noinspection CollectionAddedToSelf
-            function.call(function, exports, this, module.getModule(), moduleFile.getFullPath(), moduleFile.getParent().getFullPath());
+            function.call(function, exports, module.getRequire(), module.getModule(), moduleFile.getFullPath(), moduleFile.getParent().getFullPath());
         } else {
             throw new UnSupportModuleException("不支持的ScriptModule类型，name=" + name);
         }
@@ -151,10 +160,12 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
         }
         // 绝对路径
         Folder nodeModules = currentModuleFolder.concat(GlobalConstant.CommonJS_Node_Modules);
-        while (nodeModules != null && nodeModules.isDir()) {
-            Folder modulePath = resolvedModuleFolder(nodeModules, path);
-            if (modulePath != null) {
-                return modulePath;
+        while (nodeModules != null) {
+            if (nodeModules.isDir()) {
+                Folder modulePath = resolvedModuleFolder(nodeModules, path);
+                if (modulePath != null) {
+                    return modulePath;
+                }
             }
             // 向上级目录查找
             nodeModules = nodeModules.concat(Folder.Parent_Path, Folder.Parent_Path, GlobalConstant.CommonJS_Node_Modules);

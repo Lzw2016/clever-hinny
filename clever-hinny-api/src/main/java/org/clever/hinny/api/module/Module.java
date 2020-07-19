@@ -1,5 +1,8 @@
 package org.clever.hinny.api.module;
 
+import org.clever.hinny.api.ScriptObject;
+import org.clever.hinny.api.require.Require;
+
 import java.util.List;
 
 /**
@@ -47,11 +50,21 @@ public interface Module<T> {
     T getExports();
 
     /**
+     * 获取模块对外输出的值的包装类型
+     */
+    ScriptObject<T> getExportsWrapper();
+
+    /**
      * module.require() 方法提供了一种加载模块的方法，就像从原始模块调用 require() 一样
      *
      * @param id 模块ID
      */
     T require(String id) throws Exception;
+
+    /**
+     * 获取当前模块的Require对象
+     */
+    Require<T> getRequire();
 
     /**
      * 返回当前模块对象对应的 module 对象<br/>
@@ -84,8 +97,6 @@ public interface Module<T> {
      * @param childModule 子模块
      */
     void addChildModule(Module<T> childModule);
-
-
 }
 
 //module.id                               模块的识别符，通常是带有绝对路径的模块文件名。

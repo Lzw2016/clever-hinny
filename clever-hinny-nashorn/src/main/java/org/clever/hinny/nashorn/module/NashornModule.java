@@ -4,11 +4,13 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
+import org.clever.hinny.api.ScriptObject;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.AbstractModule;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.api.utils.Assert;
+import org.clever.hinny.nashorn.NashornScriptObject;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 
 import java.util.HashSet;
@@ -35,7 +37,7 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
     /**
      * 当前模块对应的script对象
      */
-    private final ScriptObjectMirror exports;
+    private ScriptObjectMirror exports;
     /**
      * 返回一个对象，最先引用该模块的模块
      */
@@ -151,8 +153,18 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
     }
 
     @Override
+    public ScriptObject<ScriptObjectMirror> getExportsWrapper() {
+        return new NashornScriptObject(exports);
+    }
+
+    @Override
     public ScriptObjectMirror require(String id) throws Exception {
         return require.require(id);
+    }
+
+    @Override
+    public Require<ScriptObjectMirror> getRequire() {
+        return require;
     }
 
     @Override
@@ -167,9 +179,13 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
         }
         loaded = true;
         removed = false;
-        // TODO triggerOnLoaded
         this.module.put(GlobalConstant.Module_Loaded, true);
-
+        // 修正导出对象
+        Object exportsObject = this.module.getMember(GlobalConstant.Module_Exports);
+        if (exportsObject instanceof ScriptObjectMirror) {
+            exports = (ScriptObjectMirror) exportsObject;
+        }
+        // TODO triggerOnLoaded
     }
 
     @Override

@@ -1,4 +1,4 @@
-var fun = function (a, b) {
+var fuc = function (a, b) {
     var sum = (a + b);
     print(a + "+" + b + " = " + sum);
     return sum;
@@ -6,4 +6,4 @@ var fun = function (a, b) {
 
 exports.a1 = "a111";
 exports.a2 = "a222";
-exports.fun = fun;
+exports.fuc = fuc;

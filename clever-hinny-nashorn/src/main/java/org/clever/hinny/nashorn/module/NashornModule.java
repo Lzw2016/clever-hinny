@@ -2,6 +2,7 @@ package org.clever.hinny.nashorn.module;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptObject;
@@ -21,6 +22,7 @@ import java.util.Set;
  * 作者：lizw <br/>
  * 创建时间：2020/07/15 22:39 <br/>
  */
+@Slf4j
 public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObjectMirror> {
     /**
      * 当前模块对象对应的 module 对象
@@ -149,6 +151,12 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
 
     @Override
     public ScriptObjectMirror getExports() {
+        Object exportsObject = module.getMember(GlobalConstant.Module_Exports);
+        if (exportsObject instanceof ScriptObjectMirror) {
+            exports = (ScriptObjectMirror) exportsObject;
+        } else {
+            module.put(GlobalConstant.Module_Exports, this.exports);
+        }
         return exports;
     }
 
@@ -181,10 +189,29 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
         removed = false;
         this.module.put(GlobalConstant.Module_Loaded, true);
         // 修正导出对象
-        Object exportsObject = this.module.getMember(GlobalConstant.Module_Exports);
-        if (exportsObject instanceof ScriptObjectMirror) {
-            exports = (ScriptObjectMirror) exportsObject;
-        }
+//        Object exportsObject = this.module.getMember(GlobalConstant.Module_Exports);
+        // TODO 判断条件有问题
+//        if (exportsObject != exports) {
+//            log.warn("模块的exports被直接赋值，filename={} | exports={}", filename, exportsObject);
+//            if (exportsObject instanceof ScriptObjectMirror) {
+//                ScriptObjectMirror scriptObjectMirror = (ScriptObjectMirror) exportsObject;
+//                ScriptObjectType type = ScriptEngineUtils.typeof(scriptObjectMirror);
+//                if (Objects.equals(type, ScriptObjectType.Object) || Objects.equals(type, ScriptObjectType.Array)) {
+//                    exports.putAll(scriptObjectMirror);
+//                } else {
+//                    exports = scriptObjectMirror;
+//                }
+//            } else if (exportsObject instanceof Number) {
+//                exports = ScriptEngineUtils.newNumber(exportsObject);
+//            } else if (exportsObject instanceof Boolean) {
+//                exports = ScriptEngineUtils.newBoolean(exportsObject);
+//            } else if (exportsObject instanceof String) {
+//                exports = ScriptEngineUtils.newString(exportsObject);
+//            } else {
+//                log.error("模块的exports被直接赋值，且是一个不支持的类型。filename={} | type={}", filename, exportsObject.getClass());
+//                exports = ScriptEngineUtils.newObject(exportsObject);
+//            }
+//        }
         // TODO triggerOnLoaded
     }
 

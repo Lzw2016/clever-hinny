@@ -134,7 +134,7 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
             // __filename   --> filename
             // __dirname    --> dirname
             // noinspection CollectionAddedToSelf
-            function.call(function, exports, module.getRequire(), module.getModule(), moduleFile.getFullPath(), moduleFile.getParent().getFullPath());
+            function.call(function, module.getExports(), module.getRequire(), module.getModule(), moduleFile.getFullPath(), moduleFile.getParent().getFullPath());
         } else {
             throw new UnSupportModuleException("不支持的ScriptModule类型，name=" + name);
         }

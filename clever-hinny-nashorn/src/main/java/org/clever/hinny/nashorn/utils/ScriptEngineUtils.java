@@ -3,6 +3,8 @@ package org.clever.hinny.nashorn.utils;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.apache.commons.lang3.StringUtils;
+import org.clever.hinny.api.ScriptObjectType;
 
 import javax.script.Bindings;
 import javax.script.ScriptEngineFactory;
@@ -14,7 +16,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * nashorn文档 https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/
+ * nashorn文档 <br/>
+ * https://www.n-k.de/riding-the-nashorn/ <br/>
+ * https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/ <br/>
  * <p>
  * 作者：lizw <br/>
  * 创建时间：2019/08/21 09:26 <br/>
@@ -55,6 +59,14 @@ public class ScriptEngineUtils {
     private static final ScriptObjectMirror Error_Constructor;
     // 用于解析JSON
     private static final ScriptObjectMirror Json_Constructor;
+    // Boolean 构造
+    private static final ScriptObjectMirror Boolean_Constructor;
+    // Number 构造
+    private static final ScriptObjectMirror Number_Constructor;
+    // String 构造
+    private static final ScriptObjectMirror String_Constructor;
+    // Object.prototype.toString 函数
+    private static final ScriptObjectMirror Object_Prototype_ToString;
 
     static {
         try {
@@ -63,6 +75,10 @@ public class ScriptEngineUtils {
             Date_Constructor = (ScriptObjectMirror) Default_Engine.eval("Date");
             Error_Constructor = (ScriptObjectMirror) Default_Engine.eval("Error");
             Json_Constructor = (ScriptObjectMirror) Default_Engine.eval("JSON");
+            Boolean_Constructor = (ScriptObjectMirror) Default_Engine.eval("Boolean");
+            Number_Constructor = (ScriptObjectMirror) Default_Engine.eval("Number");
+            String_Constructor = (ScriptObjectMirror) Default_Engine.eval("String");
+            Object_Prototype_ToString = (ScriptObjectMirror) Default_Engine.eval("Object.prototype.toString");
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
@@ -134,5 +150,78 @@ public class ScriptEngineUtils {
      */
     public static ScriptObjectMirror parseJson(String json) {
         return (ScriptObjectMirror) Json_Constructor.callMember("parse", json);
+    }
+
+    /**
+     * 新建一个js boolean对象
+     */
+    public static ScriptObjectMirror newBoolean(Object... args) {
+        return (ScriptObjectMirror) Boolean_Constructor.newObject(args);
+    }
+
+    /**
+     * 新建一个js number对象
+     */
+    public static ScriptObjectMirror newNumber(Object... args) {
+        return (ScriptObjectMirror) Number_Constructor.newObject(args);
+    }
+
+    /**
+     * 新建一个js String对象
+     */
+    public static ScriptObjectMirror newString(Object... args) {
+        return (ScriptObjectMirror) String_Constructor.newObject(args);
+    }
+
+    public static ScriptObjectType typeof(ScriptObjectMirror obj) {
+        if (obj == null) {
+            return ScriptObjectType.Null;
+        }
+        ScriptObjectType type = null;
+        String toString = String.valueOf(Object_Prototype_ToString.call(obj));
+        switch (StringUtils.lowerCase(toString)) {
+            case "[object string]":
+                type = ScriptObjectType.String;
+                break;
+            case "[object number]":
+                type = ScriptObjectType.Number;
+                break;
+            case "[object object]":
+                type = ScriptObjectType.Object;
+                break;
+            case "[object array]":
+                type = ScriptObjectType.Array;
+                break;
+            case "[object function]":
+                type = ScriptObjectType.Function;
+                break;
+            case "[object null]":
+                type = ScriptObjectType.Null;
+                break;
+            case "[object boolean]":
+                type = ScriptObjectType.Boolean;
+                break;
+            case "[object date]":
+                type = ScriptObjectType.Date;
+                break;
+            case "[object symbol]":
+                type = ScriptObjectType.Symbol;
+                break;
+            case "[object json]":
+                type = ScriptObjectType.Json;
+                break;
+            case "[object math]":
+                type = ScriptObjectType.Math;
+                break;
+            case "[object regexp]":
+                type = ScriptObjectType.Regexp;
+                break;
+            case "[object undefined]":
+                type = ScriptObjectType.Undefined;
+                break;
+            default:
+                // 无法识别
+        }
+        return type;
     }
 }

@@ -1,8 +1,7 @@
 package org.clever.hinny.nashorn;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import org.clever.hinny.api.ScriptObject;
-import org.clever.hinny.api.utils.Assert;
+import org.clever.hinny.api.AbstractScriptObject;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,20 +10,10 @@ import java.util.Collection;
  * 作者：lizw <br/>
  * 创建时间：2020/07/16 21:26 <br/>
  */
-public class NashornScriptObject implements ScriptObject<ScriptObjectMirror> {
-    /**
-     * Script引擎对应的对象值
-     */
-    public final ScriptObjectMirror original;
+public class NashornScriptObject extends AbstractScriptObject<ScriptObjectMirror> {
 
     public NashornScriptObject(ScriptObjectMirror original) {
-        Assert.notNull(original, "参数original不能为空");
-        this.original = original;
-    }
-
-    @Override
-    public ScriptObjectMirror originalValue() {
-        return original;
+        super(original);
     }
 
     @Override

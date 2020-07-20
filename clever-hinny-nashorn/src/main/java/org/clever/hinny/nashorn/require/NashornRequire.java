@@ -33,7 +33,7 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
     /**
      * 当前线程缓存(fullPath -> script引擎对象)
      */
-    private static final ThreadLocal<Map<String, ScriptObjectMirror>> refCache = new ThreadLocal<>();
+    private static final ThreadLocal<Map<String, ScriptObjectMirror>> Ref_Cache = new ThreadLocal<>();
 
     /**
      * 当前模块实例
@@ -67,19 +67,19 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
         }
         // 确保每个线程都有自己的refCache
         boolean needRemove = false;
-        if (refCache.get() == null) {
+        if (Ref_Cache.get() == null) {
             needRemove = true;
-            refCache.set(new HashMap<>());
+            Ref_Cache.set(new HashMap<>());
         }
         String fullPath = moduleFile.getFullPath();
-        ScriptObjectMirror cached = refCache.get().get(fullPath);
+        ScriptObjectMirror cached = Ref_Cache.get().get(fullPath);
         if (cached != null) {
             log.debug("# RefCache 命中缓存 -> {}", fullPath);
             return cached;
         } else {
             // 存储对当前加载模块的引用，以避免循环require
             log.debug("# RefCache 加入缓存 -> {}", fullPath);
-            refCache.get().put(fullPath, ScriptEngineUtils.newObject());
+            Ref_Cache.get().put(fullPath, ScriptEngineUtils.newObject());
         }
         // 加载 Module
         try {
@@ -90,8 +90,8 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
             throw new LoadModuleException("加载ScriptModule失败，id=" + id, e);
         } finally {
             // 需要删除refCache防止内存泄漏
-            if (needRemove && refCache.get() != null) {
-                refCache.remove();
+            if (needRemove && Ref_Cache.get() != null) {
+                Ref_Cache.remove();
             }
         }
     }
@@ -119,7 +119,7 @@ public class NashornRequire extends AbstractRequire<NashornScriptEngine, ScriptO
             require.currentModule = module;
         } else if (name.endsWith(JS_File)) {
             // js模块
-            ScriptObjectMirror exports = refCache.get() != null ? refCache.get().get(fullPath) : null;
+            ScriptObjectMirror exports = Ref_Cache.get() != null ? Ref_Cache.get().get(fullPath) : null;
             if (exports == null) {
                 exports = ScriptEngineUtils.newObject();
             }

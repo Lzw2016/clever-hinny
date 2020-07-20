@@ -29,7 +29,7 @@ public class NashornCompileModule extends AbstractCompileModule<NashornScriptEng
         if (code == null) {
             throw new ReadFileContentException("读取文件内容失败: path=" + path.getFullPath());
         }
-        final String scriptCode = "(function(exports, require, module, __filename, __dirname) {\n" + code + "\n});";
-        return (ScriptObjectMirror) context.getEngine().eval(scriptCode);
+        final String moduleScriptCode = getModuleScriptCode(code);
+        return (ScriptObjectMirror) context.getEngine().eval(moduleScriptCode);
     }
 }

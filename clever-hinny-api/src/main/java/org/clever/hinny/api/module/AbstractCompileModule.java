@@ -19,4 +19,13 @@ public abstract class AbstractCompileModule<E, T> implements CompileModule<T> {
     public ModuleCache<T> getCache() {
         return context.getModuleCache();
     }
+
+    /**
+     * 获取Script模块代码
+     *
+     * @param code Script代码
+     */
+    protected String getModuleScriptCode(String code) {
+        return "(function(exports, require, module, __filename, __dirname) {\n" + code + "\n});";
+    }
 }

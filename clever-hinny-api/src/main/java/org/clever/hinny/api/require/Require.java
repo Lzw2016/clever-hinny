@@ -18,3 +18,9 @@ public interface Require<T> {
      */
     T require(final String id) throws Exception;
 }
+
+//require():                              加载外部模块
+//(x)require.resolve()：                  将模块名解析到一个绝对路径
+//(x)require.main：                       指向主模块
+//(*)require.cache：                      指向所有缓存的模块
+//(x)require.extensions：                 根据文件的后缀名，调用不同的执行函数

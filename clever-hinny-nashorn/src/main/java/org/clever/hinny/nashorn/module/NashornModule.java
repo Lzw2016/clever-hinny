@@ -187,7 +187,7 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
         // 修正导出对象
         Object exportsObject = this.module.getMember(GlobalConstant.Module_Exports);
         if (!exports.equals(exportsObject)) {
-            log.warn("模块的exports被直接赋值，filename={} | exports={}", filename, exportsObject);
+            log.warn("模块的exports被直接赋值，filename={}", filename);
             if (exportsObject instanceof ScriptObjectMirror) {
                 ScriptObjectMirror scriptObjectMirror = (ScriptObjectMirror) exportsObject;
                 ScriptObjectType type = ScriptEngineUtils.typeof(scriptObjectMirror);

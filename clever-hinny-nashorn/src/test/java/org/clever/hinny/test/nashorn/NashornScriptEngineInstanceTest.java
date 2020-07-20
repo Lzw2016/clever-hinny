@@ -65,6 +65,9 @@ public class NashornScriptEngineInstanceTest {
         log.info("### getMembers       -> {}", scriptObject.getMembers());
         log.info("### size             -> {}", scriptObject.size());
         log.info("### callMember       -> {}", scriptObject.callMember("fuc", 1, 2));
+
+        scriptObject = engineInstance.require("/01基本使用/03.js");
+        log.info("### getMemberNames   -> {}", scriptObject.getMemberNames());
     }
 
     @Test

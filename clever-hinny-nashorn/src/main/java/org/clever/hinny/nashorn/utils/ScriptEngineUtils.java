@@ -173,6 +173,11 @@ public class ScriptEngineUtils {
         return (ScriptObjectMirror) String_Constructor.newObject(args);
     }
 
+    /**
+     * 获取Script对象类型
+     *
+     * @param obj Script对象
+     */
     public static ScriptObjectType typeof(ScriptObjectMirror obj) {
         if (obj == null) {
             return ScriptObjectType.Null;

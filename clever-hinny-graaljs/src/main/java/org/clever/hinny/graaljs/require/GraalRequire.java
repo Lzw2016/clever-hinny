@@ -5,6 +5,8 @@ import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.AbstractRequire;
 import org.clever.hinny.api.require.Require;
+import org.clever.hinny.graaljs.module.GraalModule;
+import org.clever.hinny.graaljs.utils.ScriptEngineUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 
@@ -21,16 +23,21 @@ public class GraalRequire extends AbstractRequire<Context, Value> {
         super(context, currentModule, currentModuleFolder);
     }
 
+    public GraalRequire(ScriptEngineContext<Context, Value> context, Folder currentModuleFolder) {
+        super(context, currentModuleFolder);
+    }
+
+
     @Override
     protected Value newScriptObject() {
-        return null;
+        return ScriptEngineUtils.newObject();
     }
 
     @Override
     protected AbstractRequire<Context, Value> newRequire(
             ScriptEngineContext<Context, Value> context,
             Folder currentModuleFolder) {
-        return null;
+        return new GraalRequire(context, currentModuleFolder);
     }
 
     @Override
@@ -41,7 +48,7 @@ public class GraalRequire extends AbstractRequire<Context, Value> {
             Value exports,
             Module<Value> parent,
             Require<Value> require) {
-        return null;
+        return new GraalModule(context, id, filename, exports, parent, require);
     }
 
     @Override
@@ -53,6 +60,6 @@ public class GraalRequire extends AbstractRequire<Context, Value> {
             Value module,
             String filename,
             String dirname) {
-
+        function.executeVoid(exports, require, module, filename, dirname);
     }
 }

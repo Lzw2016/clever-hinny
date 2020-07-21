@@ -1,10 +1,13 @@
 package org.clever.hinny.graaljs.module;
 
+import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptObject;
 import org.clever.hinny.api.module.AbstractModule;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.Require;
+import org.clever.hinny.graaljs.GraalScriptObject;
+import org.clever.hinny.graaljs.utils.ScriptEngineUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 
@@ -24,28 +27,50 @@ public class GraalModule extends AbstractModule<Context, Value> {
         super(context, id, filename, exports, parent, require);
     }
 
+    private GraalModule(ScriptEngineContext<Context, Value> context) {
+        super(context);
+    }
+
+    /**
+     * 创建主模块(根模块)
+     */
+    public static GraalModule createMainModule(ScriptEngineContext<Context, Value> context) {
+        return new GraalModule(context);
+    }
+
     @Override
     protected void initModule() {
-
+        this.module.putMember(GlobalConstant.Module_Id, this.id);
+        this.module.putMember(GlobalConstant.Module_Filename, this.filename);
+        this.module.putMember(GlobalConstant.Module_Loaded, this.loaded);
+        if (this.parent != null) {
+            this.module.putMember(GlobalConstant.Module_Parent, this.parent.getModule());
+        }
+        // TODO  Module_Paths
+        this.module.putMember(GlobalConstant.Module_Paths, ScriptEngineUtils.newArray());
+        // TODO  Module_Children
+        this.module.putMember(GlobalConstant.Module_Children, ScriptEngineUtils.newArray());
+        this.module.putMember(GlobalConstant.Module_Exports, this.exports);
+        this.module.putMember(GlobalConstant.Module_Require, this.require);
     }
 
     @Override
     protected Value newScriptObject() {
-        return null;
-    }
-
-    @Override
-    protected void doTriggerOnLoaded() {
-
-    }
-
-    @Override
-    protected void doTriggerOnRemove() {
-
+        return ScriptEngineUtils.newObject();
     }
 
     @Override
     public ScriptObject<Value> getExportsWrapper() {
-        return null;
+        return new GraalScriptObject(exports);
+    }
+
+    @Override
+    protected void doTriggerOnLoaded() {
+        // TODO triggerOnLoaded
+    }
+
+    @Override
+    protected void doTriggerOnRemove() {
+        // TODO triggerOnRemove
     }
 }

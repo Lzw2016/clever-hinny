@@ -35,6 +35,13 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
         super(context);
     }
 
+    /**
+     * 创建主模块(根模块)
+     */
+    public static NashornModule createMainModule(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context) {
+        return new NashornModule(context);
+    }
+
     @Override
     protected void initModule() {
         this.module.put(GlobalConstant.Module_Id, this.id);
@@ -54,13 +61,6 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
     @Override
     protected ScriptObjectMirror newScriptObject() {
         return ScriptEngineUtils.newObject();
-    }
-
-    /**
-     * 创建主模块(根模块)
-     */
-    public static NashornModule createMainModule(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context) {
-        return new NashornModule(context);
     }
 
     @Override

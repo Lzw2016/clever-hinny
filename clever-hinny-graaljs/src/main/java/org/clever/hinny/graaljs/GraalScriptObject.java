@@ -17,41 +17,44 @@ public class GraalScriptObject extends AbstractScriptObject<Value> {
 
     @Override
     public Collection<String> getMemberNames() {
-        return null;
+        return original.getMemberKeys();
     }
 
     @Override
     public Object getMember(String name) {
-        return null;
+        return original.getMember(name);
     }
 
     @Override
     public boolean hasMember(String name) {
-        return false;
+        return original.hasMember(name);
     }
 
     @Override
     public Collection<Object> getMembers() {
+        // TODO getMembers
+        // return original.getMemberKeys();
         return null;
     }
 
     @Override
     public Object callMember(String functionName, Object... args) {
-        return null;
+        return original.invokeMember(functionName, args);
     }
 
     @Override
     public void delMember(String name) {
-
+        original.removeMember(name);
     }
 
     @Override
     public void setMember(String name, Object value) {
-
+        original.putMember(name, value);
     }
 
     @Override
     public int size() {
-        return 0;
+        // TODO size
+        return original.hasArrayElements() ? (int) original.getArraySize() : original.getMemberKeys().size();
     }
 }

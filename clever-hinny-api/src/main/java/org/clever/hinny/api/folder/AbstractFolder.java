@@ -30,6 +30,7 @@ public abstract class AbstractFolder implements Folder {
      * @param basePath 基础路径
      */
     public AbstractFolder(String basePath) {
+        basePath = FilenameUtils.normalize(basePath);
         this.baseAbsolutePath = getAbsolutePath(basePath);
         this.absolutePath = this.baseAbsolutePath;
         this.fullPath = Folder.Root_Path;
@@ -41,6 +42,7 @@ public abstract class AbstractFolder implements Folder {
      * @param path     当前路径(相当路径或者绝对路径)
      */
     public AbstractFolder(String basePath, String path) {
+        basePath = FilenameUtils.normalize(basePath);
         this.baseAbsolutePath = getAbsolutePath(basePath);
         path = StringUtils.trim(path);
         if (StringUtils.isBlank(path)) {

@@ -2,6 +2,7 @@ package org.clever.hinny.nashorn.module;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.apache.commons.lang3.StringUtils;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.folder.ReadFileContentException;
@@ -20,7 +21,11 @@ public class NashornCompileModule extends AbstractCompileModule<NashornScriptEng
 
     @Override
     public ScriptObjectMirror compileJsonModule(Folder path) {
-        return ScriptEngineUtils.parseJson(path.getFileContent());
+        final String json = path.getFileContent();
+        if (StringUtils.isBlank(json)) {
+            throw new ReadFileContentException("读取文件Json内容失败: path=" + path.getFullPath());
+        }
+        return ScriptEngineUtils.parseJson(json);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class GraalRequire extends AbstractRequire<Context, Value> {
 
     @Override
     protected Value newScriptObject() {
-        return ScriptEngineUtils.newObject();
+        return ScriptEngineUtils.newObject(context.getEngine());
     }
 
     @Override
@@ -60,6 +60,8 @@ public class GraalRequire extends AbstractRequire<Context, Value> {
             Value module,
             String filename,
             String dirname) {
-        function.executeVoid(exports, require, module, filename, dirname);
+        context.getEngine().enter();
+        function.executeVoid(exports, Value.asValue(require), module, filename, dirname);
+        context.getEngine().leave();
     }
 }

@@ -1,5 +1,5 @@
 // var _trim = require('lodash/trim');
-// var lodash = require('lodash');
+var lodash = require('lodash');
 var underscore = require('underscore');
 // var Sugar = require('sugar');    // 不可用
 // var Lazy = require('lazy.js');   // 不可用
@@ -14,6 +14,7 @@ var dayjs = require('dayjs');
 var trim = function (str) {
     // print("require -> ", require.toString());
     // print("_trim -> ", _trim('  a123  '));
+    print("lodash -> ", lodash.trim('  a123  '));
     print("underscore -> ", underscore.keys({one: 1, two: 2, three: 3}));
     // print("Sugar -> ", Sugar.Array.unique([1, 2, 2, 3]));
     // print("Lazy -> ", Lazy([6, 18, 2, 49, 34]).min());
@@ -22,7 +23,6 @@ var trim = function (str) {
     // print("moment  -> ", moment("2020-07-19").toDate());
     print("dayjs   -> ", dayjs('2018-05-05').locale('zh-cn').format())
     return str.trim(str);
-    // return lodash.trim(str);
 }
 
 // exports._trim = _trim;

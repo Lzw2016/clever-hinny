@@ -1,10 +1,13 @@
 package org.clever.hinny.graaljs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.api.AbstractScriptEngineInstance;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptObject;
+import org.clever.hinny.api.folder.Folder;
 import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.Value;
 
 import java.util.Map;
@@ -13,6 +16,7 @@ import java.util.Map;
  * 作者：lizw <br/>
  * 创建时间：2020/07/20 21:58 <br/>
  */
+@Slf4j
 public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Context, Value> {
 
     public GraalScriptEngineInstance(ScriptEngineContext<Context, Value> context) {
@@ -28,7 +32,11 @@ public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Cont
 
     @Override
     public String getEngineName() {
-        return context.getEngine().getEngine().getImplementationName();
+        final String engineName = context.getEngine().getEngine().getImplementationName();
+        if (GraalConstant.Error_Engine_Name.equalsIgnoreCase(engineName)) {
+            log.error("当前GraalJs未使用GraalVM compiler功能，请使用GraalVM compiler功能以提升性能(5--100倍性能提升)!");
+        }
+        return engineName;
     }
 
     @Override
@@ -38,13 +46,42 @@ public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Cont
 
     @Override
     public String getLanguageVersion() {
-        // TODO getLanguageVersion
-        // return context.getEngine().getEngine().
-        return "??";
+        return "ECMAScript Version: " + GraalConstant.ECMAScript_Version;
     }
 
     @Override
     protected ScriptObject<Value> newScriptObject(Value scriptObject) {
         return new GraalScriptObject(scriptObject);
+    }
+
+    public static class Builder extends AbstractBuilder<Context, Value> {
+        private final Engine graalvmEngine;
+
+        /**
+         * @param rootPath 根路径文件夹
+         */
+        public Builder(Engine graalvmEngine, Folder rootPath) {
+            super(rootPath);
+            this.graalvmEngine = graalvmEngine;
+        }
+
+        public static Builder create(Engine graalvmEngine, Folder rootPath) {
+            return new Builder(graalvmEngine, rootPath);
+        }
+
+        /**
+         * 创建 ScriptEngineContext
+         */
+        public GraalScriptEngineInstance build() {
+            ScriptEngineContext<Context, Value> context = GraalScriptEngineContext.Builder.create(graalvmEngine, rootPath)
+                    .setEngine(engine)
+                    .setContextMap(contextMap)
+                    .setModuleCache(moduleCache)
+                    .setRequire(require)
+                    .setCompileModule(compileModule)
+                    .setGlobal(global)
+                    .build();
+            return new GraalScriptEngineInstance(context);
+        }
     }
 }

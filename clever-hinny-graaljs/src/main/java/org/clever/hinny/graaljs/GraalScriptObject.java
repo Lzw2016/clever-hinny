@@ -3,7 +3,9 @@ package org.clever.hinny.graaljs;
 import org.clever.hinny.api.AbstractScriptObject;
 import org.graalvm.polyglot.Value;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 作者：lizw <br/>
@@ -32,14 +34,25 @@ public class GraalScriptObject extends AbstractScriptObject<Value> {
 
     @Override
     public Collection<Object> getMembers() {
-        // TODO getMembers
-        // return original.getMemberKeys();
-        return null;
+        List<Object> list = new ArrayList<>(size());
+        if (original.hasArrayElements()) {
+            for (int i = 0; i < original.getArraySize(); i++) {
+                list.add(original.getArrayElement(i));
+            }
+        } else {
+            for (String memberKey : original.getMemberKeys()) {
+                list.add(original.getMember(memberKey));
+            }
+        }
+        return list;
     }
 
     @Override
     public Object callMember(String functionName, Object... args) {
-        return original.invokeMember(functionName, args);
+        // TODO original.getContext().enter();
+        Object res = original.invokeMember(functionName, args);
+        // TODO original.getContext().leave();
+        return res;
     }
 
     @Override
@@ -54,7 +67,7 @@ public class GraalScriptObject extends AbstractScriptObject<Value> {
 
     @Override
     public int size() {
-        // TODO size
+        // TODO ??
         return original.hasArrayElements() ? (int) original.getArraySize() : original.getMemberKeys().size();
     }
 }

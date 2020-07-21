@@ -1,5 +1,6 @@
 package org.clever.hinny.graaljs.module;
 
+import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptObject;
@@ -15,6 +16,7 @@ import org.graalvm.polyglot.Value;
  * 作者：lizw <br/>
  * 创建时间：2020/07/20 21:58 <br/>
  */
+@Slf4j
 public class GraalModule extends AbstractModule<Context, Value> {
 
     public GraalModule(
@@ -47,16 +49,16 @@ public class GraalModule extends AbstractModule<Context, Value> {
             this.module.putMember(GlobalConstant.Module_Parent, this.parent.getModule());
         }
         // TODO  Module_Paths
-        this.module.putMember(GlobalConstant.Module_Paths, ScriptEngineUtils.newArray());
+        this.module.putMember(GlobalConstant.Module_Paths, ScriptEngineUtils.newArray(context.getEngine()));
         // TODO  Module_Children
-        this.module.putMember(GlobalConstant.Module_Children, ScriptEngineUtils.newArray());
+        this.module.putMember(GlobalConstant.Module_Children, ScriptEngineUtils.newArray(context.getEngine()));
         this.module.putMember(GlobalConstant.Module_Exports, this.exports);
         this.module.putMember(GlobalConstant.Module_Require, this.require);
     }
 
     @Override
     protected Value newScriptObject() {
-        return ScriptEngineUtils.newObject();
+        return ScriptEngineUtils.newObject(context.getEngine());
     }
 
     @Override
@@ -66,6 +68,13 @@ public class GraalModule extends AbstractModule<Context, Value> {
 
     @Override
     protected void doTriggerOnLoaded() {
+        this.module.putMember(GlobalConstant.Module_Loaded, true);
+        // 修正导出对象
+        Value exportsObject = this.module.getMember(GlobalConstant.Module_Exports);
+        if (!exports.equals(exportsObject)) {
+            log.warn("模块的exports被直接赋值，filename={}", filename);
+            exports = exportsObject;
+        }
         // TODO triggerOnLoaded
     }
 

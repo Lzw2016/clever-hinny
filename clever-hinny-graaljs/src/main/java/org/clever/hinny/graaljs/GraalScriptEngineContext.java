@@ -6,11 +6,13 @@ import org.clever.hinny.api.module.CompileModule;
 import org.clever.hinny.api.module.MemoryModuleCache;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
+import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.graaljs.module.GraalCompileModule;
 import org.clever.hinny.graaljs.module.GraalModule;
 import org.clever.hinny.graaljs.require.GraalRequire;
 import org.clever.hinny.graaljs.utils.ScriptEngineUtils;
 import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.Value;
 
 import java.util.Collections;
@@ -37,12 +39,15 @@ public class GraalScriptEngineContext extends AbstractScriptEngineContext<Contex
     }
 
     public static class Builder extends AbstractBuilder<Context, Value> {
-        public Builder(Folder rootPath) {
+        private final Engine graalvmEngine;
+
+        public Builder(Engine graalvmEngine, Folder rootPath) {
             super(rootPath);
+            this.graalvmEngine = graalvmEngine;
         }
 
-        public static Builder create(Folder rootPath) {
-            return new Builder(rootPath);
+        public static Builder create(Engine graalvmEngine, Folder rootPath) {
+            return new Builder(graalvmEngine, rootPath);
         }
 
         /**
@@ -51,29 +56,30 @@ public class GraalScriptEngineContext extends AbstractScriptEngineContext<Contex
         public GraalScriptEngineContext build() {
             GraalScriptEngineContext context = new GraalScriptEngineContext();
             if (engine == null) {
-                engine = ScriptEngineUtils.creatEngine();
+                Assert.notNull(graalvmEngine, "参数graalvmEngine或者engine不能为空");
+                engine = ScriptEngineUtils.creatEngine(graalvmEngine);
             }
+            context.engine = engine;
             if (contextMap == null) {
                 contextMap = Collections.emptyMap();
             }
+            context.contextMap = contextMap;
             if (moduleCache == null) {
                 moduleCache = new MemoryModuleCache<>();
             }
+            context.moduleCache = moduleCache;
             if (require == null) {
                 GraalModule mainModule = GraalModule.createMainModule(context);
                 require = new GraalRequire(context, mainModule, rootPath);
             }
+            context.require = require;
             if (compileModule == null) {
                 compileModule = new GraalCompileModule(context);
             }
-            if (global == null) {
-                global = ScriptEngineUtils.newObject();
-            }
-            context.engine = engine;
-            context.contextMap = contextMap;
-            context.moduleCache = moduleCache;
-            context.require = require;
             context.compileModule = compileModule;
+            if (global == null) {
+                global = ScriptEngineUtils.newObject(engine);
+            }
             context.global = global;
             return context;
         }

@@ -110,7 +110,7 @@ public class GraalJsTest01 {
         long took = 0;
         for (int i = 0; i < JsSource.ITERATIONS; i++) {
             long start = System.currentTimeMillis();
-            Object sum =    context.getBindings("js").getMember("test").execute();
+            Object sum = context.getBindings("js").getMember("test").execute();
             took += System.currentTimeMillis() - start;
             log.info("耗时: {}ms | sum=[{}]", (took / (i + 1)), new BigDecimal(sum.toString()).toPlainString()); // 69ms | sum=[1000001]
         }

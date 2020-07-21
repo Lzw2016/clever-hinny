@@ -3,16 +3,16 @@ package org.clever.hinny.graaljs;
 import org.clever.hinny.api.AbstractScriptEngineInstance;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptObject;
-import org.graalvm.polyglot.Engine;
+import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/07/20 21:58 <br/>
  */
-public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Engine, Value> {
+public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Context, Value> {
 
-    public GraalScriptEngineInstance(ScriptEngineContext<Engine, Value> context) {
+    public GraalScriptEngineInstance(ScriptEngineContext<Context, Value> context) {
         super(context);
     }
 

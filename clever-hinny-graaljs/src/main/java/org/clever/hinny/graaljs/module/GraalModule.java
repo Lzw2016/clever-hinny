@@ -5,17 +5,17 @@ import org.clever.hinny.api.ScriptObject;
 import org.clever.hinny.api.module.AbstractModule;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.Require;
-import org.graalvm.polyglot.Engine;
+import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/07/20 21:58 <br/>
  */
-public class GraalModule extends AbstractModule<Engine, Value> {
+public class GraalModule extends AbstractModule<Context, Value> {
 
     public GraalModule(
-            ScriptEngineContext<Engine, Value> context,
+            ScriptEngineContext<Context, Value> context,
             String id,
             String filename,
             Value exports,

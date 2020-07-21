@@ -1,4 +1,4 @@
-package org.clever.hinny.graaljs;
+package org.clever.hinny.test.graaljs;
 
 /**
  * 作者：lizw <br/>

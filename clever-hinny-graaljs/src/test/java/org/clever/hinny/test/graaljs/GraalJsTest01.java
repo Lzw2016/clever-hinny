@@ -1,4 +1,4 @@
-package org.clever.hinny.graaljs;
+package org.clever.hinny.test.graaljs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.graalvm.polyglot.Context;

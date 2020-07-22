@@ -38,7 +38,7 @@ public class J2V8ScriptEngineInstance extends AbstractScriptEngineInstance<V8, V
 
     @Override
     public String getEngineVersion() {
-        return V8.getV8Version();
+        return "V8 Version: " + V8.getV8Version();
     }
 
     @Override

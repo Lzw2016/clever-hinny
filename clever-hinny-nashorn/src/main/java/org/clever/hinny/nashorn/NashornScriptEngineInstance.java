@@ -46,7 +46,7 @@ public class NashornScriptEngineInstance extends AbstractScriptEngineInstance<Na
 
     @Override
     protected ScriptObject<ScriptObjectMirror> newScriptObject(ScriptObjectMirror scriptObject) {
-        return new NashornScriptObject(scriptObject);
+        return new NashornScriptObject(context, scriptObject);
     }
 
     public static class Builder extends AbstractBuilder<NashornScriptEngine, ScriptObjectMirror> {

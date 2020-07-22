@@ -1,6 +1,8 @@
 package org.clever.hinny.graaljs;
 
 import org.clever.hinny.api.AbstractScriptObject;
+import org.clever.hinny.api.ScriptEngineContext;
+import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 
 import java.util.ArrayList;
@@ -11,10 +13,10 @@ import java.util.List;
  * 作者：lizw <br/>
  * 创建时间：2020/07/20 21:58 <br/>
  */
-public class GraalScriptObject extends AbstractScriptObject<Value> {
+public class GraalScriptObject extends AbstractScriptObject<Context, Value> {
 
-    public GraalScriptObject(Value original) {
-        super(original);
+    public GraalScriptObject(ScriptEngineContext<Context, Value> context, Value original) {
+        super(context, original);
     }
 
     @Override
@@ -49,9 +51,9 @@ public class GraalScriptObject extends AbstractScriptObject<Value> {
 
     @Override
     public Object callMember(String functionName, Object... args) {
-        // TODO original.getContext().enter();
+        context.getEngine().enter();
         Object res = original.invokeMember(functionName, args);
-        // TODO original.getContext().leave();
+        context.getEngine().leave();
         return res;
     }
 

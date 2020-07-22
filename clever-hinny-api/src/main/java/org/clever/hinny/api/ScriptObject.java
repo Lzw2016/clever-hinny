@@ -6,13 +6,13 @@ import java.util.Collection;
  * 作者：lizw <br/>
  * 创建时间：2020/07/16 09:59 <br/>
  *
- * @param <V> script引擎对象类型
+ * @param <T> script引擎对象类型
  */
-public interface ScriptObject<V> {
+public interface ScriptObject<T> {
     /**
      * 获取原始script引擎对象
      */
-    V originalValue();
+    T originalValue();
 
     /**
      * 获取script对象所有成员名称

@@ -63,7 +63,7 @@ public class GraalModule extends AbstractModule<Context, Value> {
 
     @Override
     public ScriptObject<Value> getExportsWrapper() {
-        return new GraalScriptObject(exports);
+        return new GraalScriptObject(context, exports);
     }
 
     @Override

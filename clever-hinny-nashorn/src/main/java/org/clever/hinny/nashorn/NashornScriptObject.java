@@ -1,7 +1,9 @@
 package org.clever.hinny.nashorn;
 
+import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.clever.hinny.api.AbstractScriptObject;
+import org.clever.hinny.api.ScriptEngineContext;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,10 +12,10 @@ import java.util.Collection;
  * 作者：lizw <br/>
  * 创建时间：2020/07/16 21:26 <br/>
  */
-public class NashornScriptObject extends AbstractScriptObject<ScriptObjectMirror> {
+public class NashornScriptObject extends AbstractScriptObject<NashornScriptEngine, ScriptObjectMirror> {
 
-    public NashornScriptObject(ScriptObjectMirror original) {
-        super(original);
+    public NashornScriptObject(ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context, ScriptObjectMirror original) {
+        super(context, original);
     }
 
     @Override

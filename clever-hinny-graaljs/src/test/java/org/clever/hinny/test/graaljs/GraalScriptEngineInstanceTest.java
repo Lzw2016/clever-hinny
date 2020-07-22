@@ -47,10 +47,7 @@ public class GraalScriptEngineInstanceTest {
         log.info("### hasMember        -> {}", scriptObject.hasMember("a3"));
         log.info("### getMembers       -> {}", scriptObject.getMembers());
         log.info("### size             -> {}", scriptObject.size());
-        // TODO ??
-        engineInstance.getContext().getEngine().enter();
         log.info("### callMember       -> {}", scriptObject.callMember("fuc", 1, 2));
-        engineInstance.getContext().getEngine().leave();
     }
 
     @Test

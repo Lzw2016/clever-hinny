@@ -51,18 +51,18 @@ public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Cont
 
     @Override
     protected ScriptObject<Value> newScriptObject(Value scriptObject) {
-        return new GraalScriptObject(scriptObject);
+        return new GraalScriptObject(context, scriptObject);
     }
 
     public static class Builder extends AbstractBuilder<Context, Value> {
-        private final Engine graalvmEngine;
+        private final Engine graalEngine;
 
         /**
          * @param rootPath 根路径文件夹
          */
-        public Builder(Engine graalvmEngine, Folder rootPath) {
+        public Builder(Engine graalEngine, Folder rootPath) {
             super(rootPath);
-            this.graalvmEngine = graalvmEngine;
+            this.graalEngine = graalEngine;
         }
 
         public static Builder create(Engine graalvmEngine, Folder rootPath) {
@@ -73,7 +73,7 @@ public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Cont
          * 创建 ScriptEngineContext
          */
         public GraalScriptEngineInstance build() {
-            ScriptEngineContext<Context, Value> context = GraalScriptEngineContext.Builder.create(graalvmEngine, rootPath)
+            ScriptEngineContext<Context, Value> context = GraalScriptEngineContext.Builder.create(graalEngine, rootPath)
                     .setEngine(engine)
                     .setContextMap(contextMap)
                     .setModuleCache(moduleCache)

@@ -65,7 +65,7 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
 
     @Override
     public ScriptObject<ScriptObjectMirror> getExportsWrapper() {
-        return new NashornScriptObject(exports);
+        return new NashornScriptObject(context, exports);
     }
 
     @Override

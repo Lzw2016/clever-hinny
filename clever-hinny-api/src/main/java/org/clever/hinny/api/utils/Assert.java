@@ -21,6 +21,18 @@ public class Assert {
         }
     }
 
+    public static void isFalse(boolean expression, String message) {
+        if (expression) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void isFalse(boolean expression, Supplier<String> messageSupplier) {
+        if (expression) {
+            throw new IllegalArgumentException(nullSafeGet(messageSupplier));
+        }
+    }
+
     public static void isNull(Object object, String message) {
         if (object != null) {
             throw new IllegalArgumentException(message);

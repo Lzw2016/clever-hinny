@@ -61,7 +61,7 @@ public class GraalRequire extends AbstractRequire<Context, Value> {
             String filename,
             String dirname) {
         context.getEngine().enter();
-        function.executeVoid(exports, Value.asValue(require), module, filename, dirname);
+        function.executeVoid(exports, require, module, filename, dirname);
         context.getEngine().leave();
     }
 }

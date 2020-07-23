@@ -67,8 +67,8 @@ public class J2V8Require extends AbstractRequire<V8, V8Object> implements JavaCa
         parameters.push(filename);
         parameters.push(dirname);
         ((V8Function) function).call(that, parameters);
-        parameters.release();
-        requireFunction.release();
+        // parameters.release();
+        // requireFunction.release();
     }
 
     @Override

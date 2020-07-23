@@ -24,7 +24,7 @@ public class ScriptEngineUtils {
             }
         }
         V8Object v8Object = v8.executeObjectFunction("Object", parameters);
-        parameters.release();
+        // parameters.release();
         return v8Object;
     }
 
@@ -40,7 +40,7 @@ public class ScriptEngineUtils {
             }
         }
         V8Object v8Object = v8.executeObjectFunction("Array", parameters);
-        parameters.release();
+        // parameters.release();
         return v8Object;
     }
 
@@ -53,8 +53,8 @@ public class ScriptEngineUtils {
         V8Array parameters = new V8Array(v8);
         parameters.push(json);
         V8Object res = v8JSON.executeObjectFunction("parse", parameters);
-        parameters.release();
-        v8JSON.release();
+        // parameters.release();
+        // v8JSON.release();
         return res;
     }
 }

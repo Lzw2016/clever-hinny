@@ -8,10 +8,7 @@ import com.eclipsesource.v8.utils.V8ObjectUtils;
 import org.clever.hinny.api.AbstractScriptObject;
 import org.clever.hinny.api.ScriptEngineContext;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 作者：lizw <br/>
@@ -25,7 +22,7 @@ public class J2V8ScriptObject extends AbstractScriptObject<V8, V8Object> {
 
     @Override
     public Collection<String> getMemberNames() {
-        return null;
+        return Arrays.asList(original.getKeys());
     }
 
     @Override
@@ -85,7 +82,7 @@ public class J2V8ScriptObject extends AbstractScriptObject<V8, V8Object> {
         } else {
             throw new UnsupportedOperationException("不支持的操作");
         }
-        parameters.release();
+        // parameters.release();
     }
 
     @Override

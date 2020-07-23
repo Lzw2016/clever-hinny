@@ -2,6 +2,7 @@ package org.clever.hinny.j2v8;
 
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
+import com.eclipsesource.v8.utils.MemoryManager;
 import org.clever.hinny.api.AbstractScriptEngineInstance;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
@@ -16,9 +17,12 @@ import java.util.Map;
  */
 public class J2V8ScriptEngineInstance extends AbstractScriptEngineInstance<V8, V8Object> {
 
+    private final MemoryManager memoryManager;
+
     public J2V8ScriptEngineInstance(ScriptEngineContext<V8, V8Object> context) {
         super(context);
         V8 engineBindings = this.context.getEngine();
+        memoryManager = new MemoryManager(engineBindings);
         Map<String, Object> contextMap = this.context.getContextMap();
         if (contextMap != null) {
             for (Map.Entry<String, Object> entry : contextMap.entrySet()) {

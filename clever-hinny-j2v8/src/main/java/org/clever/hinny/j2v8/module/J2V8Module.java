@@ -75,7 +75,7 @@ public class J2V8Module extends AbstractModule<V8, V8Object> {
         this.module.add(GlobalConstant.Module_Loaded, true);
         // 修正导出对象
         V8Object exportsObject = this.module.getObject(GlobalConstant.Module_Exports);
-        if (!exports.equals(exportsObject)) {
+        if (exports.isReleased() || !exports.equals(exportsObject)) {
             log.warn("模块的exports被直接赋值，filename={}", filename);
             exports = exportsObject;
         }

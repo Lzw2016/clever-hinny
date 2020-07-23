@@ -35,6 +35,6 @@ public class J2V8CompileModule extends AbstractCompileModule<V8, V8Object> {
             throw new ReadFileContentException("读取文件内容失败: path=" + path.getFullPath());
         }
         final String moduleScriptCode = getModuleScriptCode(code);
-        return context.getEngine().executeObjectScript(moduleScriptCode, path.getFullPath(), 1);
+        return context.getEngine().executeObjectScript(moduleScriptCode, path.getFullPath(), -1);
     }
 }

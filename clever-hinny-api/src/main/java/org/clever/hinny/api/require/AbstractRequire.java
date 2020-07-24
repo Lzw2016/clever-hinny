@@ -105,13 +105,18 @@ public abstract class AbstractRequire<E, T> implements Require<T> {
         if (moduleFile == null || !moduleFile.isFile()) {
             throw new ModuleNotFoundException("找不到模块id=" + id);
         }
+        final String fullPath = moduleFile.getFullPath();
+        // 从缓存中加载模块
+        Module<T> module = loadModuleForCache(fullPath);
+        if (module != null) {
+            return module.getExports();
+        }
         // 确保每个线程都有自己的refCache
         boolean needRemove = false;
         if (Ref_Cache.get() == null) {
             needRemove = true;
             Ref_Cache.set(new HashMap<>());
         }
-        String fullPath = moduleFile.getFullPath();
         // noinspection unchecked
         T cached = (T) Ref_Cache.get().get(fullPath);
         if (cached != null) {
@@ -124,7 +129,7 @@ public abstract class AbstractRequire<E, T> implements Require<T> {
         }
         // 加载 Module
         try {
-            Module<T> module = loadOrCompileModule(moduleFile);
+            module = compileModule(moduleFile);
             module.triggerOnLoaded();
             return module.getExports();
         } catch (Exception e) {
@@ -138,16 +143,28 @@ public abstract class AbstractRequire<E, T> implements Require<T> {
     }
 
     /**
-     * 加载或者编译模块
+     * 从缓存中加载模块
+     *
+     * @param fullPath 全路径
      */
-    protected Module<T> loadOrCompileModule(Folder moduleFile) throws Exception {
+    protected Module<T> loadModuleForCache(String fullPath) {
         ModuleCache<T> moduleCache = context.getModuleCache();
-        CompileModule<T> compileModule = context.getCompileModule();
-        final String fullPath = moduleFile.getFullPath();
-        // 从缓存中加载模块
         Module<T> module = moduleCache.get(fullPath);
         if (module != null) {
             log.debug("# ModuleCache 命中缓存 -> {}", fullPath);
+        }
+        return module;
+    }
+
+    /**
+     * 加载或者编译模块
+     */
+    protected Module<T> compileModule(Folder moduleFile) throws Exception {
+        final String fullPath = moduleFile.getFullPath();
+        CompileModule<T> compileModule = context.getCompileModule();
+        // 从缓存中加载模块
+        Module<T> module = loadModuleForCache(fullPath);
+        if (module != null) {
             return module;
         }
         // 编译加载模块
@@ -181,7 +198,7 @@ public abstract class AbstractRequire<E, T> implements Require<T> {
         }
         // 缓存当前加载的 Module
         log.debug("# ModuleCache 加入缓存 -> {}", fullPath);
-        moduleCache.put(fullPath, module);
+        context.getModuleCache().put(fullPath, module);
         return module;
     }
 

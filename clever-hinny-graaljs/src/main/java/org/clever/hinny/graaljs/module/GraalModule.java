@@ -41,7 +41,7 @@ public class GraalModule extends AbstractModule<Context, Value> {
     }
 
     @Override
-    protected void initModule() {
+    protected void initModule(Value exports) {
         this.module.putMember(GlobalConstant.Module_Id, this.id);
         this.module.putMember(GlobalConstant.Module_Filename, this.filename);
         this.module.putMember(GlobalConstant.Module_Loaded, this.loaded);
@@ -52,7 +52,7 @@ public class GraalModule extends AbstractModule<Context, Value> {
         this.module.putMember(GlobalConstant.Module_Paths, ScriptEngineUtils.newArray(context.getEngine()));
         // TODO  Module_Children
         this.module.putMember(GlobalConstant.Module_Children, ScriptEngineUtils.newArray(context.getEngine()));
-        this.module.putMember(GlobalConstant.Module_Exports, this.exports);
+        this.module.putMember(GlobalConstant.Module_Exports, exports);
         this.module.putMember(GlobalConstant.Module_Require, this.require);
     }
 
@@ -62,19 +62,18 @@ public class GraalModule extends AbstractModule<Context, Value> {
     }
 
     @Override
+    public Value getExports() {
+        return this.module.getMember(GlobalConstant.Module_Exports);
+    }
+
+    @Override
     public ScriptObject<Value> getExportsWrapper() {
-        return new GraalScriptObject(context, exports);
+        return new GraalScriptObject(context, getExports());
     }
 
     @Override
     protected void doTriggerOnLoaded() {
         this.module.putMember(GlobalConstant.Module_Loaded, true);
-        // 修正导出对象
-        Value exportsObject = this.module.getMember(GlobalConstant.Module_Exports);
-        if (!exports.equals(exportsObject)) {
-            log.warn("模块的exports被直接赋值，filename={}", filename);
-            exports = exportsObject;
-        }
         // TODO triggerOnLoaded
     }
 

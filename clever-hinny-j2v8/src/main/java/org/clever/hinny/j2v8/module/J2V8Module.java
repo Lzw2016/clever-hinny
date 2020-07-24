@@ -44,7 +44,7 @@ public class J2V8Module extends AbstractModule<V8, V8Object> {
     }
 
     @Override
-    protected void initModule() {
+    protected void initModule(V8Object exports) {
         this.module.add(GlobalConstant.Module_Id, this.id);
         this.module.add(GlobalConstant.Module_Filename, this.filename);
         this.module.add(GlobalConstant.Module_Loaded, this.loaded);
@@ -55,7 +55,7 @@ public class J2V8Module extends AbstractModule<V8, V8Object> {
         this.module.add(GlobalConstant.Module_Paths, ScriptEngineUtils.newArray(context.getEngine()));
         // TODO  Module_Children
         this.module.add(GlobalConstant.Module_Children, ScriptEngineUtils.newArray(context.getEngine()));
-        this.module.add(GlobalConstant.Module_Exports, this.exports);
+        this.module.add(GlobalConstant.Module_Exports, exports);
         // Assert.isTrue(this.require instanceof JavaCallback, "参数require必须实现JavaCallback接口");
         // this.module.registerJavaMethod((JavaCallback) this.require, GlobalConstant.Module_Require);
     }
@@ -66,19 +66,18 @@ public class J2V8Module extends AbstractModule<V8, V8Object> {
     }
 
     @Override
+    public V8Object getExports() {
+        return this.module.getObject(GlobalConstant.Module_Exports);
+    }
+
+    @Override
     public ScriptObject<V8Object> getExportsWrapper() {
-        return new J2V8ScriptObject(context, exports);
+        return new J2V8ScriptObject(context, getExports());
     }
 
     @Override
     protected void doTriggerOnLoaded() {
         this.module.add(GlobalConstant.Module_Loaded, true);
-        // 修正导出对象
-        V8Object exportsObject = this.module.getObject(GlobalConstant.Module_Exports);
-        if (exports.isReleased() || !exports.equals(exportsObject)) {
-            log.warn("模块的exports被直接赋值，filename={}", filename);
-            exports = exportsObject;
-        }
         // TODO triggerOnLoaded
     }
 

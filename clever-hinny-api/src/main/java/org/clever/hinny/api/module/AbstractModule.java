@@ -35,10 +35,6 @@ public abstract class AbstractModule<E, T> implements Module<T> {
      */
     protected final String filename;
     /**
-     * 当前模块对应的script对象
-     */
-    protected T exports;
-    /**
      * 返回一个对象，最先引用该模块的模块
      */
     protected final Module<T> parent;
@@ -75,12 +71,12 @@ public abstract class AbstractModule<E, T> implements Module<T> {
         this.context = context;
         this.id = id;
         this.filename = filename;
-        this.exports = exports;
+        // this.exports = exports;
         this.parent = parent;
         this.parent.addChildModule(this);
         this.require = require;
         this.module = newScriptObject();
-        initModule();
+        initModule(exports);
     }
 
     protected AbstractModule(ScriptEngineContext<E, T> context) {
@@ -88,17 +84,19 @@ public abstract class AbstractModule<E, T> implements Module<T> {
         this.context = context;
         this.id = GlobalConstant.Module_Main;
         this.filename = Folder.Root_Path + GlobalConstant.Module_Main;
-        this.exports = newScriptObject();
+        // this.exports = newScriptObject();
         this.parent = null;
         this.require = context.getRequire();
         this.module = newScriptObject();
-        initModule();
+        initModule(newScriptObject());
     }
 
     /**
      * 初始化ScriptModule
+     *
+     * @param exports 当前模块对应的script对象
      */
-    protected abstract void initModule();
+    protected abstract void initModule(T exports);
 
     /**
      * 创建ScriptObject
@@ -135,11 +133,6 @@ public abstract class AbstractModule<E, T> implements Module<T> {
     public List<Module<T>> getChildren() {
         // TODO getChildren
         return null;
-    }
-
-    @Override
-    public T getExports() {
-        return exports;
     }
 
     @Override

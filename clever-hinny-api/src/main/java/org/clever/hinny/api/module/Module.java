@@ -4,6 +4,7 @@ import org.clever.hinny.api.ScriptObject;
 import org.clever.hinny.api.require.Require;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 脚本模块 AbstractModuleInstance
@@ -42,7 +43,7 @@ public interface Module<T> {
     /**
      * 被该模块引用的模块对象
      */
-    List<Module<T>> getChildren();
+    Set<String> getChildren();
 
     /**
      * 表示模块对外输出的值

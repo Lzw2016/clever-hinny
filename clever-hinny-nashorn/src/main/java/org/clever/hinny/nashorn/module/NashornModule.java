@@ -6,14 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptObject;
-import org.clever.hinny.api.ScriptObjectType;
 import org.clever.hinny.api.module.AbstractModule;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.nashorn.NashornScriptObject;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
-
-import java.util.Objects;
 
 /**
  * 作者：lizw <br/>
@@ -50,10 +47,8 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
         if (this.parent != null) {
             this.module.put(GlobalConstant.Module_Parent, this.parent.getModule());
         }
-        // TODO  Module_Paths
-        this.module.put(GlobalConstant.Module_Paths, ScriptEngineUtils.newArray());
-        // TODO  Module_Children
-        this.module.put(GlobalConstant.Module_Children, ScriptEngineUtils.newArray());
+        this.module.put(GlobalConstant.Module_Paths, this.paths);
+        this.module.put(GlobalConstant.Module_Children, this.childrenIds);
         this.module.put(GlobalConstant.Module_Exports, exports);
         this.module.put(GlobalConstant.Module_Require, this.require);
     }
@@ -76,11 +71,9 @@ public class NashornModule extends AbstractModule<NashornScriptEngine, ScriptObj
     @Override
     protected void doTriggerOnLoaded() {
         this.module.put(GlobalConstant.Module_Loaded, true);
-        // TODO triggerOnLoaded
     }
 
     @Override
     protected void doTriggerOnRemove() {
-        // TODO triggerOnRemove
     }
 }

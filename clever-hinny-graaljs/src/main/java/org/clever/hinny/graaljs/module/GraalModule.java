@@ -48,10 +48,8 @@ public class GraalModule extends AbstractModule<Context, Value> {
         if (this.parent != null) {
             this.module.putMember(GlobalConstant.Module_Parent, this.parent.getModule());
         }
-        // TODO  Module_Paths
-        this.module.putMember(GlobalConstant.Module_Paths, ScriptEngineUtils.newArray(context.getEngine()));
-        // TODO  Module_Children
-        this.module.putMember(GlobalConstant.Module_Children, ScriptEngineUtils.newArray(context.getEngine()));
+        this.module.putMember(GlobalConstant.Module_Paths, this.paths);
+        this.module.putMember(GlobalConstant.Module_Children, this.childrenIds);
         this.module.putMember(GlobalConstant.Module_Exports, exports);
         this.module.putMember(GlobalConstant.Module_Require, this.require);
     }
@@ -74,11 +72,9 @@ public class GraalModule extends AbstractModule<Context, Value> {
     @Override
     protected void doTriggerOnLoaded() {
         this.module.putMember(GlobalConstant.Module_Loaded, true);
-        // TODO triggerOnLoaded
     }
 
     @Override
     protected void doTriggerOnRemove() {
-        // TODO triggerOnRemove
     }
 }

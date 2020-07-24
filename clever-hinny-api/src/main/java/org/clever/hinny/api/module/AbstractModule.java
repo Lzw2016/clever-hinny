@@ -39,6 +39,10 @@ public abstract class AbstractModule<E, T> implements Module<T> {
      */
     protected final Module<T> parent;
     /**
+     * 模块的搜索路径
+     */
+    protected final List<String> paths;
+    /**
      * module.require() 方法提供了一种加载模块的方法，就像从原始模块调用 require() 一样
      */
     protected final Require<T> require;
@@ -74,6 +78,7 @@ public abstract class AbstractModule<E, T> implements Module<T> {
         // this.exports = exports;
         this.parent = parent;
         this.parent.addChildModule(this);
+        this.paths = List.of(filename);
         this.require = require;
         this.module = newScriptObject();
         initModule(exports);
@@ -86,6 +91,7 @@ public abstract class AbstractModule<E, T> implements Module<T> {
         this.filename = Folder.Root_Path + GlobalConstant.Module_Main;
         // this.exports = newScriptObject();
         this.parent = null;
+        this.paths = List.of(this.filename);
         this.require = context.getRequire();
         this.module = newScriptObject();
         initModule(newScriptObject());
@@ -125,14 +131,12 @@ public abstract class AbstractModule<E, T> implements Module<T> {
 
     @Override
     public List<String> paths() {
-        // TODO paths
-        return null;
+        return paths;
     }
 
     @Override
-    public List<Module<T>> getChildren() {
-        // TODO getChildren
-        return null;
+    public Set<String> getChildren() {
+        return Set.copyOf(childrenIds);
     }
 
     @Override
@@ -184,7 +188,6 @@ public abstract class AbstractModule<E, T> implements Module<T> {
         if (childModule == null || childrenIds.contains(childModule.getId())) {
             return;
         }
-        // TODO addChildModule
         childrenIds.add(childModule.getId());
     }
 

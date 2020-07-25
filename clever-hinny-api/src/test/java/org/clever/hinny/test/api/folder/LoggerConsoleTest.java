@@ -31,11 +31,11 @@ public class LoggerConsoleTest {
     @Test
     public void t02() {
         LoggerConsole console = LoggerConsole.Instance;
-        console.log("123");
-        console.trace("123");
-        console.debug("123");
-        console.info("123");
-        console.warn("123");
-        console.error("123");
+        console.log("111");
+        console.trace("222");
+        console.debug("333");
+        console.info("444");
+        console.warn("555");
+        console.error("666");
     }
 }

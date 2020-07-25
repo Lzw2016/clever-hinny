@@ -16,7 +16,9 @@ import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.Value;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 作者：lizw <br/>
@@ -39,6 +41,7 @@ public class GraalScriptEngineContext extends AbstractScriptEngineContext<Contex
     }
 
     public static class Builder extends AbstractBuilder<Context, Value> {
+        private Set<Class<?>> allowAccessClass = new HashSet<>();
         private final Engine graalvmEngine;
 
         public Builder(Engine graalvmEngine, Folder rootPath) {
@@ -48,6 +51,24 @@ public class GraalScriptEngineContext extends AbstractScriptEngineContext<Contex
 
         public static Builder create(Engine graalvmEngine, Folder rootPath) {
             return new Builder(graalvmEngine, rootPath);
+        }
+
+        /**
+         * 增加JavaScript可以访问的Class
+         */
+        public Builder addAllowAccessClass(Class<?> clazz) {
+            if (allowAccessClass != null && clazz != null) {
+                allowAccessClass.add(clazz);
+            }
+            return this;
+        }
+
+        /**
+         * 设置JavaScript可以访问的Class
+         */
+        public Builder setAllowAccessClass(Set<Class<?>> allowAccessClass) {
+            this.allowAccessClass = allowAccessClass;
+            return this;
         }
 
         /**

@@ -1,10 +1,10 @@
 
-clever-hinny-nashorn 75%
-clever-hinny-graaljs 55%
-clever-hinny-j2v8    40%
+clever-hinny-j2v8    45%
+clever-hinny-nashorn 80%
+clever-hinny-graaljs 80%
 
 - 2020-07-24
-[  ] 01.解决所有TODO
+[OK] 01.解决所有TODO
 [  ] 02.加入全局对象console、log等
 [  ] 03.全局在所有模块统一注入对象机制
 [  ] 04.线程基本的日志输出收集支持

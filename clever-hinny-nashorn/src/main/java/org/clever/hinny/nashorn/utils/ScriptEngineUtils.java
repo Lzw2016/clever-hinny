@@ -5,15 +5,17 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.hinny.api.ScriptObjectType;
+import org.clever.hinny.api.folder.AbstractFolder;
+import org.clever.hinny.api.module.AbstractModule;
+import org.clever.hinny.api.module.MemoryModuleCache;
+import org.clever.hinny.api.require.AbstractRequire;
+import org.clever.hinny.nashorn.utils.support.CustomClassFilter;
 
 import javax.script.Bindings;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * nashorn文档 <br/>
@@ -24,8 +26,18 @@ import java.util.Set;
  * 创建时间：2019/08/21 09:26 <br/>
  */
 public class ScriptEngineUtils {
-    private static final Set<String> Java_Type = new HashSet<>();
     private static final NashornScriptEngineFactory NASHORN_FACTORY;
+
+    public static final Set<Class<?>> Default_Allow_Access_Class = Collections.unmodifiableSet(
+            new HashSet<>(
+                    Arrays.asList(
+                            AbstractFolder.class,
+                            AbstractModule.class,
+                            MemoryModuleCache.class,
+                            AbstractRequire.class
+                    )
+            )
+    );
 
     static {
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
@@ -40,11 +52,6 @@ public class ScriptEngineUtils {
             throw new RuntimeException("当前Java版本没有NashornJS引擎，建议使用Java1.8.0_211以上版本");
         }
         NASHORN_FACTORY = nashornFactory;
-        // TODO 这里要改
-        Java_Type.add("org.clever.nashorn.internal.CommonUtils");
-        Java_Type.add("org.apache.commons.lang3.StringUtils");
-        Java_Type.add("org.clever.nashorn.entity.JsCodeFile");
-        Java_Type.add("org.clever.nashorn.internal.TestInternal");
     }
 
     // 默认的 NashornScriptEngine
@@ -90,11 +97,25 @@ public class ScriptEngineUtils {
 
     /**
      * 创建一个新的 NashornScriptEngine
+     *
+     * @param allowAccessClass 允许访问的Class
      */
-    public static NashornScriptEngine creatEngine() {
+    public static NashornScriptEngine creatEngine(Set<Class<?>> allowAccessClass) {
+        if (allowAccessClass == null) {
+            allowAccessClass = Default_Allow_Access_Class;
+        } else {
+            allowAccessClass.addAll(Default_Allow_Access_Class);
+        }
         // options 参考 https://wiki.openjdk.java.net/display/Nashorn/Nashorn+jsr223+engine+notes
         String[] options = new String[]{"-doe"};
-        return (NashornScriptEngine) NASHORN_FACTORY.getScriptEngine(options, getAppClassLoader(), Java_Type::contains);
+        return (NashornScriptEngine) NASHORN_FACTORY.getScriptEngine(options, getAppClassLoader(), new CustomClassFilter(allowAccessClass));
+    }
+
+    /**
+     * 创建一个新的 NashornScriptEngine
+     */
+    public static NashornScriptEngine creatEngine() {
+        return creatEngine(null);
     }
 
     // 参考 NashornScriptEngineFactory 实现

@@ -1,10 +1,17 @@
 package org.clever.hinny.graaljs.utils;
 
+import org.clever.hinny.api.folder.AbstractFolder;
+import org.clever.hinny.api.module.AbstractModule;
+import org.clever.hinny.api.module.MemoryModuleCache;
+import org.clever.hinny.api.require.AbstractRequire;
 import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.graaljs.GraalConstant;
 import org.graalvm.polyglot.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 作者：lizw <br/>
@@ -18,32 +25,98 @@ public class ScriptEngineUtils {
             "js.ecmascript-version", GraalConstant.ECMAScript_Version
     );
 
+    /**
+     * 默认允许访问的class
+     */
+    public static final Set<Class<?>> Default_Allow_Access_Class = Set.of(
+            AbstractFolder.class,
+            AbstractModule.class,
+            MemoryModuleCache.class,
+            AbstractRequire.class
+    );
+
     private static final Source Object_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "Object", "Unnamed").cached(true).buildLiteral();
     private static final Source Array_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "Array", "Unnamed").cached(true).buildLiteral();
     private static final Source Json_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "JSON", "Unnamed").cached(true).buildLiteral();
 
     /**
      * 创建一个新的 Context
+     *
+     * @param engine           Engine对象
+     * @param allowAccessClass 允许访问的Class
+     */
+    public static Context creatEngine(Engine engine, Set<Class<?>> allowAccessClass) {
+        Assert.notNull(engine, "参数engine不能为空");
+        Context.Builder contextBuilder = Context.newBuilder(GraalConstant.Js_Language_Id)
+                .engine(engine)
+                .options(Context_Default_Options)
+                // 不允许使用实验特性
+                .allowExperimentalOptions(false)
+                // 不允许多语言访问
+                .allowPolyglotAccess(PolyglotAccess.NONE)
+                // 默认不允许所有行为
+                .allowAllAccess(false)
+                // 不允许JavaScript创建进程
+                .allowCreateProcess(false)
+                // 不允许JavaScript创建线程
+                .allowCreateThread(false)
+                // 不允许JavaScript访问环境变量
+                .allowEnvironmentAccess(EnvironmentAccess.NONE)
+                // 不允许JavaScript对主机的IO操作
+                .allowIO(false)
+                // 不允许JavaScript访问本机接口
+                .allowNativeAccess(false)
+                // 不允许JavaScript加载Class
+                .allowHostClassLoading(false)
+                // 定义JavaScript可以加载的Class
+                // .allowHostClassLookup()
+                // 定义JavaScript可以访问的Class
+                // .allowHostAccess(HostAccess.ALL)
+                // 限制JavaScript的资源使用(CPU)
+                // .resourceLimits()
+                ;
+        // 沙箱环境控制 - 定义JavaScript可以访问的Class
+        HostAccess.Builder hostAccessBuilder = HostAccess.newBuilder();
+        hostAccessBuilder.allowArrayAccess(true);
+        hostAccessBuilder.allowListAccess(true);
+        // hostAccessBuilder.allowPublicAccess(true);
+        // hostAccessBuilder.allowAllImplementations(true);
+        if (allowAccessClass == null) {
+            allowAccessClass = Default_Allow_Access_Class;
+        } else {
+            allowAccessClass.addAll(Default_Allow_Access_Class);
+        }
+        addAllowAccess(hostAccessBuilder, allowAccessClass);
+        contextBuilder.allowHostAccess(hostAccessBuilder.build());
+        // 沙箱环境控制 - 限制JavaScript的资源使用
+        // ResourceLimits resourceLimits = ResourceLimits.newBuilder().statementLimit()
+        return contextBuilder.build();
+    }
+
+    /**
+     * 创建一个新的 Context
+     *
+     * @param engine Engine对象
      */
     public static Context creatEngine(Engine engine) {
-        Assert.notNull(engine, "参数engine不能为空");
-        // TODO 沙箱环境控制
-        return Context.newBuilder(GraalConstant.Js_Language_Id)
-//                .allowHostAccess(HostAccess.NONE)
-//                .allowNativeAccess(false)
-//                .allowCreateThread(false)
-                .allowAllAccess(true)
-//                .allowHostClassLoading(false)
-//                // .allowHostClassLookup()
-//                .allowExperimentalOptions(false)
-//                .allowPolyglotAccess(PolyglotAccess.NONE)
-//                .allowIO(false)
-//                .allowCreateProcess(false)
-//                .allowEnvironmentAccess(EnvironmentAccess.NONE)
-                // .resourceLimits()
-                .options(Context_Default_Options)
-                .engine(engine)
-                .build();
+        return creatEngine(engine, null);
+    }
+
+    /**
+     * 定义JavaScript可以访问的Class
+     */
+    private static void addAllowAccess(HostAccess.Builder builder, Set<Class<?>> allowAccessClass) {
+        for (Class<?> aClass : allowAccessClass) {
+            if (aClass == null) {
+                continue;
+            }
+            for (Field field : aClass.getFields()) {
+                builder.allowAccess(field);
+            }
+            for (Method method : aClass.getMethods()) {
+                builder.allowAccess(method);
+            }
+        }
     }
 
     /**

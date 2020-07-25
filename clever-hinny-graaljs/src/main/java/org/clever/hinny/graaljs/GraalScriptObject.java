@@ -69,7 +69,6 @@ public class GraalScriptObject extends AbstractScriptObject<Context, Value> {
 
     @Override
     public int size() {
-        // TODO ??
         return original.hasArrayElements() ? (int) original.getArraySize() : original.getMemberKeys().size();
     }
 }

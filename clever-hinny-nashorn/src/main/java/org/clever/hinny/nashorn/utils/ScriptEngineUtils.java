@@ -6,6 +6,10 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.hinny.api.ScriptObjectType;
 import org.clever.hinny.api.folder.AbstractFolder;
+import org.clever.hinny.api.folder.FileSystemFolder;
+import org.clever.hinny.api.internal.AbstractConsole;
+import org.clever.hinny.api.internal.LoggerConsole;
+import org.clever.hinny.api.internal.OutputStreamConsole;
 import org.clever.hinny.api.module.AbstractModule;
 import org.clever.hinny.api.module.MemoryModuleCache;
 import org.clever.hinny.api.require.AbstractRequire;
@@ -32,9 +36,13 @@ public class ScriptEngineUtils {
             new HashSet<>(
                     Arrays.asList(
                             AbstractFolder.class,
+                            FileSystemFolder.class,
                             AbstractModule.class,
                             MemoryModuleCache.class,
-                            AbstractRequire.class
+                            AbstractRequire.class,
+                            AbstractConsole.class,
+                            LoggerConsole.class,
+                            OutputStreamConsole.class
                     )
             )
     );

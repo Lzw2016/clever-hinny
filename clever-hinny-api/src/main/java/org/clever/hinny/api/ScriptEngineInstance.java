@@ -3,6 +3,8 @@ package org.clever.hinny.api;
 import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.require.Require;
 
+import java.io.Closeable;
+
 /**
  * 脚本引擎实例
  * <p>
@@ -12,7 +14,7 @@ import org.clever.hinny.api.require.Require;
  * @param <E> script引擎类型
  * @param <T> script引擎对象类型
  */
-public interface ScriptEngineInstance<E, T> {
+public interface ScriptEngineInstance<E, T> extends Closeable {
     /**
      * 引擎名称
      */

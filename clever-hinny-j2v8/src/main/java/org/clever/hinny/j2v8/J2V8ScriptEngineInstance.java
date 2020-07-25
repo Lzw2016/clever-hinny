@@ -55,6 +55,16 @@ public class J2V8ScriptEngineInstance extends AbstractScriptEngineInstance<V8, V
         return new J2V8ScriptObject(context, scriptObject);
     }
 
+    @Override
+    public void close() {
+        if (!memoryManager.isReleased()) {
+            memoryManager.release();
+        }
+        if (!context.getEngine().isReleased()) {
+            context.getEngine().release();
+        }
+    }
+
     public static class Builder extends AbstractBuilder<V8, V8Object> {
         /**
          * @param rootPath 根路径文件夹

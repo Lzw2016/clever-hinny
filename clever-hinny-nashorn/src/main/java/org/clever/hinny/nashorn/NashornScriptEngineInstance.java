@@ -49,6 +49,10 @@ public class NashornScriptEngineInstance extends AbstractScriptEngineInstance<Na
         return new NashornScriptObject(context, scriptObject);
     }
 
+    @Override
+    public void close() {
+    }
+
     public static class Builder extends AbstractBuilder<NashornScriptEngine, ScriptObjectMirror> {
         /**
          * @param rootPath 根路径文件夹

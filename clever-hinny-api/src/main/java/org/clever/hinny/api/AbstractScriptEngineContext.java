@@ -6,6 +6,7 @@ import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.api.utils.Assert;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -111,7 +112,7 @@ public abstract class AbstractScriptEngineContext<E, T> implements ScriptEngineC
 
     public static abstract class AbstractBuilder<E, T> {
         protected E engine;
-        protected Map<String, Object> contextMap;
+        protected Map<String, Object> contextMap = new HashMap<>();
         protected final Folder rootPath;
         protected ModuleCache<T> moduleCache;
         protected Require<T> require;
@@ -153,6 +154,14 @@ public abstract class AbstractScriptEngineContext<E, T> implements ScriptEngineC
          */
         public AbstractBuilder<E, T> setContextMap(Map<String, Object> contextMap) {
             this.contextMap = contextMap;
+            return this;
+        }
+
+        /**
+         * 添加引擎全局对象
+         */
+        public AbstractBuilder<E, T> putContextMap(String name, Object object) {
+            this.contextMap.put(name, object);
             return this;
         }
 

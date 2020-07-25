@@ -5,6 +5,7 @@ import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.module.Module;
 import org.clever.hinny.api.require.AbstractRequire;
 import org.clever.hinny.api.require.Require;
+import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.graaljs.module.GraalModule;
 import org.clever.hinny.graaljs.utils.ScriptEngineUtils;
 import org.graalvm.polyglot.Context;
@@ -60,6 +61,7 @@ public class GraalRequire extends AbstractRequire<Context, Value> {
             Value module,
             String filename,
             String dirname) {
+        Assert.isTrue(function.canExecute(), "参数function必须是一个可执行函数ScriptObject");
         context.getEngine().enter();
         function.executeVoid(exports, require, module, filename, dirname);
         context.getEngine().leave();

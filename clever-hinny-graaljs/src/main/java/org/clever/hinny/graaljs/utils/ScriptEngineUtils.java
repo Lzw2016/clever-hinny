@@ -1,6 +1,10 @@
 package org.clever.hinny.graaljs.utils;
 
 import org.clever.hinny.api.folder.AbstractFolder;
+import org.clever.hinny.api.folder.FileSystemFolder;
+import org.clever.hinny.api.internal.AbstractConsole;
+import org.clever.hinny.api.internal.LoggerConsole;
+import org.clever.hinny.api.internal.OutputStreamConsole;
 import org.clever.hinny.api.module.AbstractModule;
 import org.clever.hinny.api.module.MemoryModuleCache;
 import org.clever.hinny.api.require.AbstractRequire;
@@ -30,9 +34,13 @@ public class ScriptEngineUtils {
      */
     public static final Set<Class<?>> Default_Allow_Access_Class = Set.of(
             AbstractFolder.class,
+            FileSystemFolder.class,
             AbstractModule.class,
             MemoryModuleCache.class,
-            AbstractRequire.class
+            AbstractRequire.class,
+            AbstractConsole.class,
+            LoggerConsole.class,
+            OutputStreamConsole.class
     );
 
     private static final Source Object_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "Object", "Unnamed").cached(true).buildLiteral();

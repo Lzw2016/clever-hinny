@@ -56,6 +56,11 @@ public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Cont
         return new GraalScriptObject(context, scriptObject);
     }
 
+    @Override
+    public void close() {
+        context.getEngine().close(true);
+    }
+
     public static class Builder extends AbstractBuilder<Context, Value> {
         private Set<Class<?>> allowAccessClass = new HashSet<>();
         private final Engine graalEngine;

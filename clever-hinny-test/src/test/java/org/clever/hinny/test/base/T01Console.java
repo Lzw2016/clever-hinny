@@ -26,7 +26,7 @@ public class T01Console {
 
     private ScriptEngineInstance<?, ?> engineInstance;
 
-    //@Before
+    @Before
     public void before1() {
         // clever-hinny-graaljs
         log.info("### rootFolder -> {}", rootFolder);
@@ -36,7 +36,7 @@ public class T01Console {
         engineInstance = GraalScriptEngineInstance.Builder.create(engine, rootFolder).build();
     }
 
-    @Before
+    //@Before
     public void before2() {
         // clever-hinny-nashorn
         engineInstance = NashornScriptEngineInstance.Builder.create(rootFolder).build();
@@ -57,5 +57,8 @@ public class T01Console {
         scriptObject.callMember("time_1");
         log.info("#-----------------------------------------------------------------------------------");
         scriptObject.callMember("log_2");
+
+        log.info("#-----------------------------------------------------------------------------------");
+        scriptObject.callMember("log_3");
     }
 }

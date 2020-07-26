@@ -4,10 +4,13 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.clever.hinny.api.AbstractScriptEngineContext;
 import org.clever.hinny.api.folder.Folder;
+import org.clever.hinny.api.internal.LoggerConsole;
 import org.clever.hinny.api.module.CompileModule;
 import org.clever.hinny.api.module.MemoryModuleCache;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
+import org.clever.hinny.nashorn.internal.NashornLoggerFactory;
+import org.clever.hinny.nashorn.internal.support.NashornObjectToString;
 import org.clever.hinny.nashorn.module.NashornCompileModule;
 import org.clever.hinny.nashorn.module.NashornModule;
 import org.clever.hinny.nashorn.require.NashornRequire;
@@ -40,6 +43,11 @@ public class NashornScriptEngineContext extends AbstractScriptEngineContext<Nash
     public static class Builder extends AbstractBuilder<NashornScriptEngine, ScriptObjectMirror> {
         public Builder(Folder rootPath) {
             super(rootPath);
+            // 自定义 contextMap
+            LoggerConsole.Instance.setObjectToString(NashornObjectToString.Instance);
+            contextMap.put("console", LoggerConsole.Instance);
+            contextMap.put("print", LoggerConsole.Instance);
+            contextMap.put("LoggerFactory", NashornLoggerFactory.Instance);
         }
 
         public static Builder create(Folder rootPath) {

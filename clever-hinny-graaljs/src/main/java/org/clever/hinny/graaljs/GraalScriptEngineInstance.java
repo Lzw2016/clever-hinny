@@ -71,6 +71,7 @@ public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Cont
         public Builder(Engine graalEngine, Folder rootPath) {
             super(rootPath);
             this.graalEngine = graalEngine;
+            // 自定义 contextMap
         }
 
         public static Builder create(Engine graalvmEngine, Folder rootPath) {

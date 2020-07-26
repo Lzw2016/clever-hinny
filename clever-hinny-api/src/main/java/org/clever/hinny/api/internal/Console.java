@@ -42,13 +42,6 @@ public interface Console {
     void time(String label);
 
     /**
-     * 对于先前通过调用 console.time() 启动的计时器，将经过时间和其他 data 参数打印到 stdout (label = “default”)
-     *
-     * @param args 输出数据
-     */
-    void timeLog(Object... args);
-
-    /**
      * 对于先前通过调用 console.time() 启动的计时器，将经过时间和其他 data 参数打印到 stdout
      *
      * @param label label值，默认“default”

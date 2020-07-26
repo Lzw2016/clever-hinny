@@ -2,7 +2,8 @@ package org.clever.hinny.api.internal;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.clever.hinny.api.utils.StrFormatter;
+import org.clever.hinny.api.internal.support.ObjectToString;
+import org.clever.hinny.api.utils.Assert;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,6 +34,17 @@ public abstract class AbstractConsole implements PrintOutput, Console {
     @Setter
     @Getter
     protected boolean overflowEnable = true;
+
+    /**
+     * toString实现
+     */
+    @Getter
+    protected ObjectToString objectToString = ObjectToString.Instance;
+
+    public void setObjectToString(ObjectToString objectToString) {
+        Assert.notNull(objectToString, "参数objectToString不能为空");
+        this.objectToString = objectToString;
+    }
 
     @Override
     public void count() {
@@ -74,11 +86,6 @@ public abstract class AbstractConsole implements PrintOutput, Console {
             label = Default_Label;
         }
         Label_Time_Map.computeIfAbsent(label, s -> System.currentTimeMillis());
-    }
-
-    @Override
-    public void timeLog(Object... args) {
-        timeLog(null, args);
     }
 
     @Override
@@ -194,7 +201,7 @@ public abstract class AbstractConsole implements PrintOutput, Console {
         }
         StringBuilder sb = new StringBuilder(args.length * 32);
         for (Object arg : args) {
-            String str = toString(arg);
+            String str = objectToString.toString(arg);
             sb.append(str);
             if (overflowEnable && overflow(sb)) {
                 break;
@@ -215,15 +222,6 @@ public abstract class AbstractConsole implements PrintOutput, Console {
             overflow = true;
         }
         return overflow;
-    }
-
-    /**
-     * 把对象转换成字符串
-     *
-     * @param obj 目标对象
-     */
-    protected String toString(Object obj) {
-        return StrFormatter.toString(obj);
     }
 
     /**

@@ -64,7 +64,25 @@ var log_2 = function () {
     console.log("打印JS变量 | JSON.stringify ", JSON.stringify({date: new Date()}), " | 行尾");
 }
 
+var log_3 = function () {
+    console.log("Java ---> getByte ", TestInternal.getByte(), " | 行尾");
+    console.log("Java ---> getShort ", TestInternal.getShort(), " | 行尾");
+    console.log("Java ---> getInt ", TestInternal.getInt(), " | 行尾");
+    console.log("Java ---> getLong ", TestInternal.getLong(), " | 行尾");
+    console.log("Java ---> getFloat ", TestInternal.getFloat(), " | 行尾");
+    console.log("Java ---> getDouble ", TestInternal.getDouble(), " | 行尾");
+    console.log("Java ---> getBoolean ", TestInternal.getBoolean(), " | 行尾");
+    console.log("Java ---> getChar ", TestInternal.getChar());
+    console.log("Java ---> getString ", TestInternal.getString(), " | length=", TestInternal.getString().length(), " | 行尾");
+    console.log("Java ---> getDate ", TestInternal.getDate());
+    console.log("Java ---> getArray ", TestInternal.getArray(), " | 下标访问: ", TestInternal.getArray()[0], " | 行尾");
+    console.log("Java ---> getList ", TestInternal.getList(), " | 下标访问: ", TestInternal.getList()[1], " | 行尾");
+    console.log("Java ---> getSet ", TestInternal.getSet(), " | 下标访问: ", TestInternal.getSet()[2], " | 行尾");
+    console.log("Java ---> getMap ", TestInternal.getMap(), " | key访问: ", TestInternal.getMap().long, " | 行尾");
+}
+
 exports.log_1 = log_1;
 exports.count_1 = count_1;
 exports.time_1 = time_1;
 exports.log_2 = log_2;
+exports.log_3 = log_3;

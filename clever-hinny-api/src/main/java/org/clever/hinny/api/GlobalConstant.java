@@ -2,14 +2,10 @@ package org.clever.hinny.api;
 
 import org.clever.hinny.api.folder.AbstractFolder;
 import org.clever.hinny.api.folder.FileSystemFolder;
-import org.clever.hinny.api.internal.AbstractConsole;
-import org.clever.hinny.api.internal.LoggerConsole;
-import org.clever.hinny.api.internal.LoggerFactory;
-import org.clever.hinny.api.internal.OutputStreamConsole;
+import org.clever.hinny.api.internal.*;
 import org.clever.hinny.api.module.AbstractModule;
 import org.clever.hinny.api.module.MemoryModuleCache;
 import org.clever.hinny.api.require.AbstractRequire;
-import org.slf4j.Logger;
 
 import java.util.*;
 
@@ -18,6 +14,11 @@ import java.util.*;
  * 创建时间：2020/07/17 21:13 <br/>
  */
 public interface GlobalConstant {
+    /**
+     * JS时间默认格式
+     */
+    String JS_Default_Format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
     // --------------------------------------------------------------------------------------------
     // 全局变量
     // --------------------------------------------------------------------------------------------
@@ -106,12 +107,16 @@ public interface GlobalConstant {
                             LoggerConsole.class,
                             OutputStreamConsole.class,
                             LoggerFactory.class,
-                            Logger.class
+                            Logger.class,
+                            org.slf4j.Logger.class,
+                            CommonUtils.class
                     )
             )
     );
 
     Map<String, Object> Default_Context_Map = Collections.unmodifiableMap(new HashMap<String, Object>() {{
+        put("CommonUtils", CommonUtils.Instance);
+        put("TestInternal", TestInternal.Instance);
         put("console", LoggerConsole.Instance);
         put("print", LoggerConsole.Instance);
         put("LoggerFactory", LoggerFactory.Instance);

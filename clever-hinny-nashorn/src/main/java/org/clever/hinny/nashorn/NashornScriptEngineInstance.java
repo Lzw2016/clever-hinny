@@ -7,6 +7,9 @@ import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineContext;
 import org.clever.hinny.api.ScriptObject;
 import org.clever.hinny.api.folder.Folder;
+import org.clever.hinny.api.internal.LoggerConsole;
+import org.clever.hinny.nashorn.internal.NashornLoggerFactory;
+import org.clever.hinny.nashorn.internal.support.NashornObjectToString;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -59,6 +62,11 @@ public class NashornScriptEngineInstance extends AbstractScriptEngineInstance<Na
          */
         public Builder(Folder rootPath) {
             super(rootPath);
+            // 自定义 contextMap
+            LoggerConsole.Instance.setObjectToString(NashornObjectToString.Instance);
+            contextMap.put("console", LoggerConsole.Instance);
+            contextMap.put("print", LoggerConsole.Instance);
+            contextMap.put("LoggerFactory", NashornLoggerFactory.Instance);
         }
 
         public static Builder create(Folder rootPath) {

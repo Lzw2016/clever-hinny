@@ -15,7 +15,7 @@ public class GraalObjectToString extends ObjectToString {
 
     @Override
     public String toString(Object obj) {
-        if (obj != null && "com.oracle.truffle.polyglot.PolyglotMap".equals(obj.getClass().getName())) {
+        if (obj != null && obj.getClass().getName().startsWith("com.oracle.truffle.polyglot.")) {
             return obj.toString();
         } else if (obj instanceof Value) {
             //return JSTools.inspect((Value) obj);

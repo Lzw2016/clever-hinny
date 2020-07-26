@@ -62,4 +62,9 @@ public class Tmp {
         Logger logger = LoggerFactory.getLogger(StringUtils.EMPTY);
         logger.info("###111");
     }
+
+    @Test
+    public void t04() {
+
+    }
 }

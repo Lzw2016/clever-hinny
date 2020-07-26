@@ -57,7 +57,6 @@ public class T01Console {
         scriptObject.callMember("time_1");
         log.info("#-----------------------------------------------------------------------------------");
         scriptObject.callMember("log_2");
-
         log.info("#-----------------------------------------------------------------------------------");
         scriptObject.callMember("log_3");
     }

@@ -73,7 +73,7 @@ var log_3 = function () {
     console.log("Java ---> getDouble ", TestInternal.getDouble(), " | 行尾");
     console.log("Java ---> getBoolean ", TestInternal.getBoolean(), " | 行尾");
     console.log("Java ---> getChar ", TestInternal.getChar());
-    console.log("Java ---> getString ", TestInternal.getString(), " | length=", TestInternal.getString().length(), " | 行尾");
+    console.log("Java ---> getString ", TestInternal.getString(), " | length=", TestInternal.getString().length, " | 行尾");
     console.log("Java ---> getDate ", TestInternal.getDate());
     console.log("Java ---> getArray ", TestInternal.getArray(), " | 下标访问: ", TestInternal.getArray()[0], " | 行尾");
     console.log("Java ---> getList ", TestInternal.getList(), " | 下标访问: ", TestInternal.getList()[1], " | 行尾");

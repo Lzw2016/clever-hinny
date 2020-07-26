@@ -1,6 +1,6 @@
 // noinspection JSUnresolvedVariable
-var CommonUtilsClass = Java.type("org.clever.hinny.api.internal.CommonUtils");
-var CommonUtils = CommonUtilsClass.Instance;
+// var CommonUtilsClass = Java.type("org.clever.hinny.api.internal.CommonUtils");
+// var CommonUtils = CommonUtilsClass.Instance;
 
 // -------------------------------------------------------------------------------------------------------
 

@@ -5,7 +5,8 @@ clever-hinny-graaljs 80%
 
 - 2020-07-24
 [OK] 01.解决所有TODO
-[80] 02.加入全局对象console、log等
+[90] 02.加入全局对象console、log等
+    graaljs JS对象输出问题
 [NO] 03.全局在所有模块统一注入对象机制
 [  ] 04.线程基本的日志输出收集支持
 [  ] 05.JavaScript执行错误能有提示行位置

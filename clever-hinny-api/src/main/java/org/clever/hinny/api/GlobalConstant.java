@@ -98,6 +98,8 @@ public interface GlobalConstant {
     Set<Class<?>> Default_Allow_Access_Class = Collections.unmodifiableSet(
             new HashSet<>(
                     Arrays.asList(
+                            TestInternal.class,
+                            CommonUtils.class,
                             AbstractFolder.class,
                             FileSystemFolder.class,
                             AbstractModule.class,
@@ -108,15 +110,14 @@ public interface GlobalConstant {
                             OutputStreamConsole.class,
                             LoggerFactory.class,
                             Logger.class,
-                            org.slf4j.Logger.class,
-                            CommonUtils.class
+                            org.slf4j.Logger.class
                     )
             )
     );
 
     Map<String, Object> Default_Context_Map = Collections.unmodifiableMap(new HashMap<String, Object>() {{
-        put("CommonUtils", CommonUtils.Instance);
         put("TestInternal", TestInternal.Instance);
+        put("CommonUtils", CommonUtils.Instance);
         put("console", LoggerConsole.Instance);
         put("print", LoggerConsole.Instance);
         put("LoggerFactory", LoggerFactory.Instance);

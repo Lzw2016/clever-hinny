@@ -4,6 +4,7 @@ import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.commons.io.IOUtils;
+import org.clever.hinny.api.internal.CommonUtils;
 import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.api.utils.ExceptionUtils;
 
@@ -35,6 +36,7 @@ public class JSTools {
         Assert.isNotBlank(jsCode, "JSTools初始化失败，javascript/BaseUtils.js 文件读取失败");
         BaseUtils = ScriptEngineUtils.newObject();
         engine.getBindings(ScriptContext.ENGINE_SCOPE).put("exports", BaseUtils);
+        engine.getBindings(ScriptContext.ENGINE_SCOPE).put("CommonUtils", CommonUtils.Instance);
         try {
             engine.eval(jsCode);
         } catch (ScriptException e) {

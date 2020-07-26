@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 作者：lizw <br/>
  * 创建时间：2020/07/25 20:39 <br/>
  */
-public abstract class AbstractConsole implements Console {
+public abstract class AbstractConsole implements PrintOutput, Console {
     /**
      * 输出最大长度
      */
@@ -170,6 +170,21 @@ public abstract class AbstractConsole implements Console {
         doError(logsText, args);
     }
 
+    @Override
+    public void print(Object... args) {
+        String logsText;
+        if (args != null && args.length > 0 && args[0] instanceof String) {
+            int length = args.length - 1;
+            Object[] array = new Object[length];
+            System.arraycopy(args, 1, array, 0, length);
+            String format = (String) args[0];
+            logsText = String.format(format, array);
+        } else {
+            logsText = logString(args);
+        }
+        doPrint(logsText, args);
+    }
+
     /**
      * 根据日志输出参数得到日志字符串
      */
@@ -271,4 +286,10 @@ public abstract class AbstractConsole implements Console {
      * @param args     原始参数
      */
     protected abstract void doError(String logsText, Object[] args);
+
+    /**
+     * @param logsText 已处理的输出字符串
+     * @param args     原始参数
+     */
+    protected abstract void doPrint(String logsText, Object[] args);
 }

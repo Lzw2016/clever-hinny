@@ -1,5 +1,18 @@
 package org.clever.hinny.api;
 
+import org.clever.hinny.api.folder.AbstractFolder;
+import org.clever.hinny.api.folder.FileSystemFolder;
+import org.clever.hinny.api.internal.AbstractConsole;
+import org.clever.hinny.api.internal.LoggerConsole;
+import org.clever.hinny.api.internal.LoggerFactory;
+import org.clever.hinny.api.internal.OutputStreamConsole;
+import org.clever.hinny.api.module.AbstractModule;
+import org.clever.hinny.api.module.MemoryModuleCache;
+import org.clever.hinny.api.require.AbstractRequire;
+import org.slf4j.Logger;
+
+import java.util.*;
+
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/07/17 21:13 <br/>
@@ -77,4 +90,28 @@ public interface GlobalConstant {
      */
     String CommonJS_Node_Modules = "node_modules";
 
+    // --------------------------------------------------------------------------------------------
+    // 默认允许访问的class和全局对象
+    // --------------------------------------------------------------------------------------------
+
+    Set<Class<?>> Default_Allow_Access_Class = Collections.unmodifiableSet(
+            new HashSet<>(
+                    Arrays.asList(
+                            AbstractFolder.class,
+                            FileSystemFolder.class,
+                            AbstractModule.class,
+                            MemoryModuleCache.class,
+                            AbstractRequire.class,
+                            AbstractConsole.class,
+                            LoggerConsole.class,
+                            OutputStreamConsole.class,
+                            LoggerFactory.class,
+                            Logger.class
+                    )
+            )
+    );
+
+    Map<String, Object> Default_Context_Map = Collections.unmodifiableMap(new HashMap<String, Object>() {{
+        put("console", LoggerConsole.Instance);
+    }});
 }

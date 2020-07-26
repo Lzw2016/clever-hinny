@@ -6,6 +6,7 @@ import org.clever.hinny.api.folder.Folder;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.api.utils.Assert;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -78,7 +79,7 @@ public abstract class AbstractModule<E, T> implements Module<T> {
         // this.exports = exports;
         this.parent = parent;
         this.parent.addChildModule(this);
-        this.paths = List.of(filename);
+        this.paths = Collections.singletonList(filename);
         this.require = require;
         this.module = newScriptObject();
         initModule(exports);
@@ -91,7 +92,7 @@ public abstract class AbstractModule<E, T> implements Module<T> {
         this.filename = Folder.Root_Path + GlobalConstant.Module_Main;
         // this.exports = newScriptObject();
         this.parent = null;
-        this.paths = List.of(this.filename);
+        this.paths = Collections.singletonList(this.filename);
         this.require = context.getRequire();
         this.module = newScriptObject();
         initModule(newScriptObject());
@@ -136,7 +137,7 @@ public abstract class AbstractModule<E, T> implements Module<T> {
 
     @Override
     public Set<String> getChildren() {
-        return Set.copyOf(childrenIds);
+        return Collections.unmodifiableSet(childrenIds);
     }
 
     @Override

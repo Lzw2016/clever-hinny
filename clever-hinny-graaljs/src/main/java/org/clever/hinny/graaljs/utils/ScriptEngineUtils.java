@@ -1,13 +1,6 @@
 package org.clever.hinny.graaljs.utils;
 
-import org.clever.hinny.api.folder.AbstractFolder;
-import org.clever.hinny.api.folder.FileSystemFolder;
-import org.clever.hinny.api.internal.AbstractConsole;
-import org.clever.hinny.api.internal.LoggerConsole;
-import org.clever.hinny.api.internal.OutputStreamConsole;
-import org.clever.hinny.api.module.AbstractModule;
-import org.clever.hinny.api.module.MemoryModuleCache;
-import org.clever.hinny.api.require.AbstractRequire;
+import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.graaljs.GraalConstant;
 import org.graalvm.polyglot.*;
@@ -27,20 +20,6 @@ public class ScriptEngineUtils {
      */
     public static final Map<String, String> Context_Default_Options = Map.of(
             "js.ecmascript-version", GraalConstant.ECMAScript_Version
-    );
-
-    /**
-     * 默认允许访问的class
-     */
-    public static final Set<Class<?>> Default_Allow_Access_Class = Set.of(
-            AbstractFolder.class,
-            FileSystemFolder.class,
-            AbstractModule.class,
-            MemoryModuleCache.class,
-            AbstractRequire.class,
-            AbstractConsole.class,
-            LoggerConsole.class,
-            OutputStreamConsole.class
     );
 
     private static final Source Object_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "Object", "Unnamed").cached(true).buildLiteral();
@@ -90,9 +69,9 @@ public class ScriptEngineUtils {
         // hostAccessBuilder.allowPublicAccess(true);
         // hostAccessBuilder.allowAllImplementations(true);
         if (allowAccessClass == null) {
-            allowAccessClass = Default_Allow_Access_Class;
+            allowAccessClass = GlobalConstant.Default_Allow_Access_Class;
         } else {
-            allowAccessClass.addAll(Default_Allow_Access_Class);
+            allowAccessClass.addAll(GlobalConstant.Default_Allow_Access_Class);
         }
         addAllowAccess(hostAccessBuilder, allowAccessClass);
         contextBuilder.allowHostAccess(hostAccessBuilder.build());

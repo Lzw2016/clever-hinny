@@ -77,4 +77,9 @@ public class LoggerConsole extends AbstractConsole {
     protected void doError(String logsText, Object[] args) {
         logger.error(logsText);
     }
+
+    @Override
+    protected void doPrint(String logsText, Object[] args) {
+        logger.info(logsText);
+    }
 }

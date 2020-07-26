@@ -7,6 +7,7 @@ import org.clever.hinny.api.utils.Assert;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -24,7 +25,7 @@ public class OutputStreamConsole extends AbstractConsole implements Closeable {
     /**
      * 换行符
      */
-    public static final String Line_Break = "\n";
+    public static final String Line_Break = "\r\n";
     /**
      * 输出流
      */
@@ -70,57 +71,56 @@ public class OutputStreamConsole extends AbstractConsole implements Closeable {
         return true;
     }
 
-    @SneakyThrows
     @Override
     protected void doLog(String logsText, Object[] args) {
-        IOUtils.write(logsText, out, CHARSET);
-        IOUtils.write(Line_Break, out, CHARSET);
-        out.flush();
+        println(out, logsText, args);
     }
 
-    @SneakyThrows
     @Override
     protected void doTrace(String logsText, Object[] args) {
-        IOUtils.write(logsText, out, CHARSET);
-        IOUtils.write(Line_Break, out, CHARSET);
-        out.flush();
+        println(out, logsText, args);
     }
 
-    @SneakyThrows
     @Override
     protected void doDebug(String logsText, Object[] args) {
-        IOUtils.write(logsText, out, CHARSET);
-        IOUtils.write(Line_Break, out, CHARSET);
-        out.flush();
+        println(out, logsText, args);
     }
 
-    @SneakyThrows
     @Override
     protected void doInfo(String logsText, Object[] args) {
-        IOUtils.write(logsText, out, CHARSET);
-        IOUtils.write(Line_Break, out, CHARSET);
-        out.flush();
+        println(out, logsText, args);
     }
 
-    @SneakyThrows
     @Override
     protected void doWarn(String logsText, Object[] args) {
-        IOUtils.write(logsText, err, CHARSET);
-        IOUtils.write(Line_Break, err, CHARSET);
-        err.flush();
+        println(err, logsText, args);
     }
 
-    @SneakyThrows
     @Override
     protected void doError(String logsText, Object[] args) {
-        IOUtils.write(logsText, err, CHARSET);
-        IOUtils.write(Line_Break, err, CHARSET);
-        err.flush();
+        println(err, logsText, args);
+    }
+
+    @Override
+    protected void doPrint(String logsText, Object[] args) {
+        println(out, logsText, args);
     }
 
     @Override
     public void close() throws IOException {
         out.close();
         err.close();
+    }
+
+    @SneakyThrows
+    protected void println(OutputStream stream, String logsText, Object[] args) {
+        if (stream instanceof PrintStream) {
+            PrintStream printStream = (PrintStream) stream;
+            printStream.println(logsText);
+        } else {
+            IOUtils.write(logsText, stream, CHARSET);
+            IOUtils.write(Line_Break, stream, CHARSET);
+            stream.flush();
+        }
     }
 }

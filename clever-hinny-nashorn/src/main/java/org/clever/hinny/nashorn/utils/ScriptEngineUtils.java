@@ -4,22 +4,17 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.commons.lang3.StringUtils;
+import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptObjectType;
-import org.clever.hinny.api.folder.AbstractFolder;
-import org.clever.hinny.api.folder.FileSystemFolder;
-import org.clever.hinny.api.internal.AbstractConsole;
-import org.clever.hinny.api.internal.LoggerConsole;
-import org.clever.hinny.api.internal.OutputStreamConsole;
-import org.clever.hinny.api.module.AbstractModule;
-import org.clever.hinny.api.module.MemoryModuleCache;
-import org.clever.hinny.api.require.AbstractRequire;
 import org.clever.hinny.nashorn.utils.support.CustomClassFilter;
 
 import javax.script.Bindings;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * nashorn文档 <br/>
@@ -32,20 +27,6 @@ import java.util.*;
 public class ScriptEngineUtils {
     private static final NashornScriptEngineFactory NASHORN_FACTORY;
 
-    public static final Set<Class<?>> Default_Allow_Access_Class = Collections.unmodifiableSet(
-            new HashSet<>(
-                    Arrays.asList(
-                            AbstractFolder.class,
-                            FileSystemFolder.class,
-                            AbstractModule.class,
-                            MemoryModuleCache.class,
-                            AbstractRequire.class,
-                            AbstractConsole.class,
-                            LoggerConsole.class,
-                            OutputStreamConsole.class
-                    )
-            )
-    );
 
     static {
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
@@ -110,9 +91,9 @@ public class ScriptEngineUtils {
      */
     public static NashornScriptEngine creatEngine(Set<Class<?>> allowAccessClass) {
         if (allowAccessClass == null) {
-            allowAccessClass = Default_Allow_Access_Class;
+            allowAccessClass = GlobalConstant.Default_Allow_Access_Class;
         } else {
-            allowAccessClass.addAll(Default_Allow_Access_Class);
+            allowAccessClass.addAll(GlobalConstant.Default_Allow_Access_Class);
         }
         // options 参考 https://wiki.openjdk.java.net/display/Nashorn/Nashorn+jsr223+engine+notes
         String[] options = new String[]{"-doe"};

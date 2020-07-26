@@ -113,5 +113,7 @@ public interface GlobalConstant {
 
     Map<String, Object> Default_Context_Map = Collections.unmodifiableMap(new HashMap<String, Object>() {{
         put("console", LoggerConsole.Instance);
+        put("print", LoggerConsole.Instance);
+        put("LoggerFactory", LoggerFactory.Instance);
     }});
 }

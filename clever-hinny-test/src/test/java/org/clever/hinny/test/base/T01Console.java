@@ -20,9 +20,9 @@ import java.io.IOException;
  * 创建时间：2020/07/26 09:00 <br/>
  */
 @Slf4j
-public class ConsoleTest {
+public class T01Console {
 
-    private Folder rootFolder = FileSystemFolder.createRootPath(new File("src/test/resources/base").getAbsolutePath());
+    private final Folder rootFolder = FileSystemFolder.createRootPath(new File("src/test/resources/base").getAbsolutePath());
 
     private ScriptEngineInstance<?, ?> engineInstance;
 
@@ -49,7 +49,13 @@ public class ConsoleTest {
 
     @Test
     public void t01() throws Exception {
-        ScriptObject<?> scriptObject = engineInstance.require("/01ConsoleTest");
-        scriptObject.callMember("print_1");
+        ScriptObject<?> scriptObject = engineInstance.require("/T01Console");
+        scriptObject.callMember("log_1");
+        log.info("#-----------------------------------------------------------------------------------");
+        scriptObject.callMember("count_1");
+        log.info("#-----------------------------------------------------------------------------------");
+        scriptObject.callMember("time_1");
+        log.info("#-----------------------------------------------------------------------------------");
+        scriptObject.callMember("log_2");
     }
 }

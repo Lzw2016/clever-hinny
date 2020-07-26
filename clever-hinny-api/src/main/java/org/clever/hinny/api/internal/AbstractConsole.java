@@ -172,16 +172,16 @@ public abstract class AbstractConsole implements PrintOutput, Console {
 
     @Override
     public void print(Object... args) {
-        String logsText;
-        if (args != null && args.length > 0 && args[0] instanceof String) {
-            int length = args.length - 1;
-            Object[] array = new Object[length];
-            System.arraycopy(args, 1, array, 0, length);
-            String format = (String) args[0];
-            logsText = String.format(format, array);
-        } else {
-            logsText = logString(args);
-        }
+        String logsText = logString(args);
+        // if (args != null && args.length > 0 && args[0] instanceof String) {
+        //     String format = (String) args[0];
+        //     int length = args.length - 1;
+        //     Object[] array = new Object[length];
+        //     System.arraycopy(args, 1, array, 0, length);
+        //     logsText = String.format(format, array);
+        // } else {
+        //     logsText = logString(args);
+        // }
         doPrint(logsText, args);
     }
 

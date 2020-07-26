@@ -39,6 +39,7 @@ public class T01Console {
     //@Before
     public void before2() {
         // clever-hinny-nashorn
+        log.info("### rootFolder -> {}", rootFolder);
         engineInstance = NashornScriptEngineInstance.Builder.create(rootFolder).build();
     }
 

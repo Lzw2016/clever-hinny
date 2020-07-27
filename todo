@@ -7,10 +7,10 @@ clever-hinny-graaljs 80%
 [OK] 01.解决所有TODO
 [OK] 02.加入全局对象console、log等
 [NO] 03.全局为所有模块统一注入对象机制
-[  ] 04.线程基本的日志输出收集支持
+[  ] 04.基于线程维度的日志输出收集支持
 [  ] 05.JavaScript执行错误能有提示行位置
 [  ] 06.SourceMap支持
-[  ] 07.彻底解决循环依赖问题
+[  ] 07.彻底解决CommonJS循环依赖问题
 [  ] 08.CommonJS规范实现单元测试
 [  ] 09.各种极端场景健壮性测试
 [  ] 10.基准性能测试
@@ -18,11 +18,11 @@ clever-hinny-graaljs 80%
 [  ] 12.TypeScript支持(TSC工具)
 [  ] 13.根据Java代码自动生成d.ts文件工具
 [  ] 14.Java与JavaScript的Date格式统一(值也要统一)
-[  ] 15.代码迁移、同步工具
-[  ] 16.
-[  ] 17.
-[  ] 18.
-[  ] 19.
+[  ] 15.代码同步工具组件
+[  ] 16.JavaScript引擎对象池实现
+[  ] 17.@types/clever-hinny-api(@types/clever-hinny-core)
+[  ] 18.clever-hinny-data模块(@types/clever-hinny-data)
+[  ] 19.clever-hinny-server模块(@types/clever-hinny-server)
 [  ] 20.
 [  ] 21.
 [  ] 22.
@@ -30,7 +30,7 @@ clever-hinny-graaljs 80%
 
 
 - 里程碑事件
-[OK] 01.稳定clever-hinny-api，并实现clever-hinny-graaljs、clever-hinny-j2v8、clever-hinny-nashorn。JavaScript引擎核心封装完成，JavaScript引擎达到基本可用状态
+[OK] 01.clever-hinny-api稳定，并实现clever-hinny-graaljs、clever-hinny-j2v8、clever-hinny-nashorn。JavaScript引擎核心封装完成，JavaScript引擎达到基本可用状态
 [OK] 02.clever-data 项目基本完成，达到基本可用状态
 [  ] 03.接入clever-data
 [  ] 04.封装/接入Spring MVC

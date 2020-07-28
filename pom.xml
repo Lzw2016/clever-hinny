@@ -9,7 +9,7 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <description>clever框架数据库操作模块</description>
+    <description>使用Java + JavaScript(或TypeScript)混合开发框架</description>
     <url>https://github.com/Lzw2016/clever-hinny.git</url>
 
     <licenses>

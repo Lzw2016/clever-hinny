@@ -120,32 +120,6 @@
                 <artifactId>clever-common-client</artifactId>
                 <version>${clever-common.version}</version>
             </dependency>
-            <!--clever-data-->
-            <dependency>
-                <groupId>org.clever</groupId>
-                <artifactId>clever-data-jdbc</artifactId>
-                <version>${clever-data.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.clever</groupId>
-                <artifactId>clever-data-redis</artifactId>
-                <version>${clever-data.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.clever</groupId>
-                <artifactId>clever-data-elasticsearch</artifactId>
-                <version>${clever-data.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.clever</groupId>
-                <artifactId>clever-data-rabbitmq</artifactId>
-                <version>${clever-data.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.clever</groupId>
-                <artifactId>clever-data-kafka</artifactId>
-                <version>${clever-data.version}</version>
-            </dependency>
             <!--javascript engine-->
             <dependency>
                 <groupId>org.graalvm.sdk</groupId>

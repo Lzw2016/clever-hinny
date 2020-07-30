@@ -19,7 +19,9 @@ public class ScriptEngineUtils {
      * Context 默认选项
      */
     public static final Map<String, String> Context_Default_Options = Map.of(
-            "js.ecmascript-version", GraalConstant.ECMAScript_Version
+            "js.ecmascript-version", GraalConstant.ECMAScript_Version,
+            // TODO EXPERIMENTAL | js.nashorn-compat -> 实验性特性需要删除
+            "js.nashorn-compat", "true"
     );
 
     private static final Source Object_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "Object", "Unnamed").cached(true).buildLiteral();

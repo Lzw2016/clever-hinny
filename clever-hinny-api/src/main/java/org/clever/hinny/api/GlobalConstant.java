@@ -118,6 +118,9 @@ public interface GlobalConstant {
             )
     );
 
+    /**
+     * TODO 允许自定义加入Context
+     */
     Map<String, Object> Default_Context_Map = Collections.unmodifiableMap(new HashMap<String, Object>() {{
         put("TestInternal", TestInternal.Instance);
         put("CommonUtils", CommonUtils.Instance);

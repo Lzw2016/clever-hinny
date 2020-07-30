@@ -39,8 +39,8 @@ public class ScriptEngineUtils {
         Context.Builder contextBuilder = Context.newBuilder(GraalConstant.Js_Language_Id)
                 .engine(engine)
                 .options(Context_Default_Options)
-                // 不允许使用实验特性
-                .allowExperimentalOptions(false)
+                // 不允许使用实验特性 TODO 实验特性需要关闭
+                .allowExperimentalOptions(true)
                 // 不允许多语言访问
                 .allowPolyglotAccess(PolyglotAccess.NONE)
                 // 默认不允许所有行为

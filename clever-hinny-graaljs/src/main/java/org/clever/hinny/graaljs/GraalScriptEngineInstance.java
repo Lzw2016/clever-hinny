@@ -65,7 +65,7 @@ public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Cont
     }
 
     public static class Builder extends AbstractBuilder<Context, Value> {
-        private Set<Class<?>> allowAccessClass = new HashSet<>();
+        private Set<Class<?>> denyAccessClass = new HashSet<>();
         private final Engine graalEngine;
 
         /**
@@ -86,20 +86,20 @@ public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Cont
         }
 
         /**
-         * 增加JavaScript可以访问的Class
+         * 增加JavaScript不允许访问的Class
          */
-        public Builder addAllowAccessClass(Class<?> clazz) {
-            if (allowAccessClass != null && clazz != null) {
-                allowAccessClass.add(clazz);
+        public Builder addDenyAccessClass(Class<?> clazz) {
+            if (denyAccessClass != null && clazz != null) {
+                denyAccessClass.add(clazz);
             }
             return this;
         }
 
         /**
-         * 设置JavaScript可以访问的Class
+         * 设置JavaScript不允许访问的Class
          */
-        public Builder setAllowAccessClass(Set<Class<?>> allowAccessClass) {
-            this.allowAccessClass = allowAccessClass;
+        public Builder setDenyAccessClass(Set<Class<?>> denyAccessClass) {
+            this.denyAccessClass = denyAccessClass;
             return this;
         }
 
@@ -108,7 +108,7 @@ public class GraalScriptEngineInstance extends AbstractScriptEngineInstance<Cont
          */
         public GraalScriptEngineInstance build() {
             ScriptEngineContext<Context, Value> context = GraalScriptEngineContext.Builder.create(graalEngine, rootPath)
-                    .setAllowAccessClass(allowAccessClass)
+                    .setDenyAccessClass(denyAccessClass)
                     .setEngine(engine)
                     .setContextMap(contextMap)
                     .setModuleCache(moduleCache)

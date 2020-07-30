@@ -5,8 +5,6 @@ import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.graaljs.GraalConstant;
 import org.graalvm.polyglot.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,9 +17,8 @@ public class ScriptEngineUtils {
      * Context 默认选项
      */
     public static final Map<String, String> Context_Default_Options = Map.of(
-            "js.ecmascript-version", GraalConstant.ECMAScript_Version,
-            // TODO EXPERIMENTAL | js.nashorn-compat -> 实验性特性需要删除
-            "js.nashorn-compat", "true"
+            "js.ecmascript-version", GraalConstant.ECMAScript_Version
+            // "js.nashorn-compat", "true", // EXPERIMENTAL | js.nashorn-compat -> 实验性特性需要删除
     );
 
     private static final Source Object_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "Object", "Unnamed").cached(true).buildLiteral();
@@ -31,19 +28,19 @@ public class ScriptEngineUtils {
     /**
      * 创建一个新的 Context
      *
-     * @param engine           Engine对象
-     * @param allowAccessClass 允许访问的Class
+     * @param engine          Engine对象
+     * @param denyAccessClass 不允许访问的Class
      */
-    public static Context creatEngine(Engine engine, Set<Class<?>> allowAccessClass) {
+    public static Context creatEngine(Engine engine, Set<Class<?>> denyAccessClass) {
         Assert.notNull(engine, "参数engine不能为空");
         Context.Builder contextBuilder = Context.newBuilder(GraalConstant.Js_Language_Id)
                 .engine(engine)
                 .options(Context_Default_Options)
-                // 不允许使用实验特性 TODO 实验特性需要关闭
-                .allowExperimentalOptions(true)
+                // 不允许使用实验特性
+                .allowExperimentalOptions(false)
                 // 不允许多语言访问
                 .allowPolyglotAccess(PolyglotAccess.NONE)
-                // 默认不允许所有行为 TODO 需要关闭
+                // 默认允许所有行为
                 .allowAllAccess(true)
                 // 不允许JavaScript创建进程
                 .allowCreateProcess(false)
@@ -64,19 +61,18 @@ public class ScriptEngineUtils {
                 // 限制JavaScript的资源使用(CPU)
                 // .resourceLimits()
                 ;
-        // 沙箱环境控制 - 定义JavaScript可以访问的Class(TODO 需要使用黑名单机制)
+        // 沙箱环境控制 - 定义JavaScript可以访问的Class(使用黑名单机制)
         HostAccess.Builder hostAccessBuilder = HostAccess.newBuilder();
         hostAccessBuilder.allowArrayAccess(true);
         hostAccessBuilder.allowListAccess(true);
-        // TODO 关闭？
         hostAccessBuilder.allowPublicAccess(true);
         hostAccessBuilder.allowAllImplementations(true);
-        if (allowAccessClass == null) {
-            allowAccessClass = GlobalConstant.Default_Allow_Access_Class;
+        if (denyAccessClass == null) {
+            denyAccessClass = GlobalConstant.Default_Deny_Access_Class;
         } else {
-            allowAccessClass.addAll(GlobalConstant.Default_Allow_Access_Class);
+            denyAccessClass.addAll(GlobalConstant.Default_Deny_Access_Class);
         }
-        addAllowAccess(hostAccessBuilder, allowAccessClass);
+        addDenyAccess(hostAccessBuilder, denyAccessClass);
         contextBuilder.allowHostAccess(hostAccessBuilder.build());
         // 沙箱环境控制 - 限制JavaScript的资源使用
         // ResourceLimits resourceLimits = ResourceLimits.newBuilder().statementLimit()
@@ -93,21 +89,21 @@ public class ScriptEngineUtils {
     }
 
     /**
-     * 定义JavaScript可以访问的Class
+     * 定义JavaScript不允许访问的Class
      */
-    private static void addAllowAccess(HostAccess.Builder builder, Set<Class<?>> allowAccessClass) {
-        for (Class<?> aClass : allowAccessClass) {
+    private static void addDenyAccess(HostAccess.Builder builder, Set<Class<?>> denyAccessClass) {
+        for (Class<?> aClass : denyAccessClass) {
             if (aClass == null) {
                 continue;
             }
-            for (Field field : aClass.getFields()) {
-                builder.allowAccess(field);
-            }
-            for (Method method : aClass.getMethods()) {
-                builder.allowAccess(method);
-            }
+            builder.denyAccess(aClass);
+            // for (Field field : aClass.getFields()) {
+            //     builder.allowAccess(field);
+            // }
+            // for (Method method : aClass.getMethods()) {
+            //     builder.allowAccess(method);
+            // }
         }
-        // builder.denyAccess()
     }
 
     /**

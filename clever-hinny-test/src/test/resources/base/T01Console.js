@@ -1,3 +1,7 @@
+// console.log(Java.type('org.clever.hinny.api.internal.LoggerFactory'))
+// console.log(Java.type('java.lang.System').exit(1))
+// console.log(Java.type('java.lang.Thread'))
+
 var log_1 = function () {
     console.log("#console.log Test");
     console.trace("#console.log Test");

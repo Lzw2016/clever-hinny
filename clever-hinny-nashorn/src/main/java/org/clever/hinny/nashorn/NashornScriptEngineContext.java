@@ -43,7 +43,7 @@ public class NashornScriptEngineContext extends AbstractScriptEngineContext<Nash
     }
 
     public static class Builder extends AbstractBuilder<NashornScriptEngine, ScriptObjectMirror> {
-        private Set<Class<?>> allowAccessClass = new HashSet<>();
+        private Set<Class<?>> denyAccessClass = new HashSet<>();
 
         public Builder(Folder rootPath) {
             super(rootPath);
@@ -59,20 +59,20 @@ public class NashornScriptEngineContext extends AbstractScriptEngineContext<Nash
         }
 
         /**
-         * 增加JavaScript可以访问的Class
+         * 增加JavaScript不允许访问的Class
          */
-        public Builder addAllowAccessClass(Class<?> clazz) {
-            if (allowAccessClass != null && clazz != null) {
-                allowAccessClass.add(clazz);
+        public Builder addDenyAccessClass(Class<?> clazz) {
+            if (denyAccessClass != null && clazz != null) {
+                denyAccessClass.add(clazz);
             }
             return this;
         }
 
         /**
-         * 设置JavaScript可以访问的Class
+         * 设置JavaScript不允许访问的Class
          */
-        public Builder setAllowAccessClass(Set<Class<?>> allowAccessClass) {
-            this.allowAccessClass = allowAccessClass;
+        public Builder setDenyAccessClass(Set<Class<?>> denyAccessClass) {
+            this.denyAccessClass = denyAccessClass;
             return this;
         }
 
@@ -82,7 +82,7 @@ public class NashornScriptEngineContext extends AbstractScriptEngineContext<Nash
         public NashornScriptEngineContext build() {
             NashornScriptEngineContext context = new NashornScriptEngineContext();
             if (engine == null) {
-                engine = ScriptEngineUtils.creatEngine(allowAccessClass);
+                engine = ScriptEngineUtils.creatEngine(denyAccessClass);
             }
             context.engine = engine;
             if (contextMap == null) {

@@ -1,13 +1,12 @@
 package org.clever.hinny.api;
 
-import org.clever.hinny.api.folder.AbstractFolder;
-import org.clever.hinny.api.folder.FileSystemFolder;
-import org.clever.hinny.api.internal.*;
-import org.clever.hinny.api.module.AbstractModule;
-import org.clever.hinny.api.module.MemoryModuleCache;
-import org.clever.hinny.api.require.AbstractRequire;
+import org.clever.hinny.api.internal.CommonUtils;
+import org.clever.hinny.api.internal.LoggerConsole;
+import org.clever.hinny.api.internal.LoggerFactory;
+import org.clever.hinny.api.internal.TestInternal;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 作者：lizw <br/>
@@ -95,31 +94,20 @@ public interface GlobalConstant {
     // 默认允许访问的class和全局对象
     // --------------------------------------------------------------------------------------------
 
-    Set<Class<?>> Default_Allow_Access_Class = Collections.unmodifiableSet(
+    /**
+     * 默认不允许访问的Class
+     */
+    Set<Class<?>> Default_Deny_Access_Class = Collections.unmodifiableSet(
             new HashSet<>(
                     Arrays.asList(
-                            Map.class,
-                            List.class,
-                            Set.class,
-                            TestInternal.class,
-                            CommonUtils.class,
-                            AbstractFolder.class,
-                            FileSystemFolder.class,
-                            AbstractModule.class,
-                            MemoryModuleCache.class,
-                            AbstractRequire.class,
-                            AbstractConsole.class,
-                            LoggerConsole.class,
-                            OutputStreamConsole.class,
-                            LoggerFactory.class,
-                            Logger.class,
-                            org.slf4j.Logger.class
+                            System.class,
+                            Thread.class
                     )
             )
     );
 
     /**
-     * TODO 允许自定义加入Context
+     * 默认注入的全局对象
      */
     Map<String, Object> Default_Context_Map = Collections.unmodifiableMap(new HashMap<String, Object>() {{
         put("TestInternal", TestInternal.Instance);
@@ -128,4 +116,9 @@ public interface GlobalConstant {
         put("print", LoggerConsole.Instance);
         put("LoggerFactory", LoggerFactory.Instance);
     }});
+
+    /**
+     * 自定义注入的全局对象
+     */
+    Map<String, Object> Custom_Context_Map = new ConcurrentHashMap<>(16);
 }

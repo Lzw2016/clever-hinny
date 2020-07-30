@@ -18,7 +18,10 @@ import java.util.Map;
  */
 public abstract class AbstractBuilder<E, T, EI> {
     protected E engine;
-    protected Map<String, Object> contextMap = new HashMap<>(GlobalConstant.Default_Context_Map);
+    protected Map<String, Object> contextMap = new HashMap<String, Object>(){{
+        putAll(GlobalConstant.Default_Context_Map);
+        putAll(GlobalConstant.Custom_Context_Map);
+    }};
     protected final Folder rootPath;
     protected ModuleCache<T> moduleCache;
     protected Require<T> require;

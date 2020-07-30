@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
  * 创建时间：2020/07/25 10:10 <br/>
  */
 public class CustomClassFilter implements ClassFilter {
-    public final Set<String> allowAccessClass;
+    public final Set<String> denyAccessClass;
 
-    public CustomClassFilter(Set<Class<?>> allowAccessClass) {
-        this.allowAccessClass = allowAccessClass == null ? Collections.emptySet() : allowAccessClass.stream().map(Class::getName).collect(Collectors.toSet());
+    public CustomClassFilter(Set<Class<?>> denyAccessClass) {
+        this.denyAccessClass = denyAccessClass == null ? Collections.emptySet() : denyAccessClass.stream().map(Class::getName).collect(Collectors.toSet());
     }
 
     @Override
     public boolean exposeToScripts(String className) {
-        return allowAccessClass.contains(className);
+        return !denyAccessClass.contains(className);
     }
 }

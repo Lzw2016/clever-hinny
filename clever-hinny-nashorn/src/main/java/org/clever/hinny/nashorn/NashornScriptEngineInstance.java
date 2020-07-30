@@ -59,7 +59,7 @@ public class NashornScriptEngineInstance extends AbstractScriptEngineInstance<Na
     }
 
     public static class Builder extends AbstractBuilder<NashornScriptEngine, ScriptObjectMirror> {
-        private Set<Class<?>> allowAccessClass = new HashSet<>();
+        private Set<Class<?>> denyAccessClass = new HashSet<>();
 
         /**
          * @param rootPath 根路径文件夹
@@ -78,20 +78,20 @@ public class NashornScriptEngineInstance extends AbstractScriptEngineInstance<Na
         }
 
         /**
-         * 增加JavaScript可以访问的Class
+         * 增加JavaScript不允许访问的Class
          */
-        public Builder addAllowAccessClass(Class<?> clazz) {
-            if (allowAccessClass != null && clazz != null) {
-                allowAccessClass.add(clazz);
+        public Builder addDenyAccessClass(Class<?> clazz) {
+            if (denyAccessClass != null && clazz != null) {
+                denyAccessClass.add(clazz);
             }
             return this;
         }
 
         /**
-         * 设置JavaScript可以访问的Class
+         * 设置JavaScript不允许访问的Class
          */
-        public Builder setAllowAccessClass(Set<Class<?>> allowAccessClass) {
-            this.allowAccessClass = allowAccessClass;
+        public Builder setDenyAccessClass(Set<Class<?>> denyAccessClass) {
+            this.denyAccessClass = denyAccessClass;
             return this;
         }
 
@@ -100,7 +100,7 @@ public class NashornScriptEngineInstance extends AbstractScriptEngineInstance<Na
          */
         public NashornScriptEngineInstance build() {
             ScriptEngineContext<NashornScriptEngine, ScriptObjectMirror> context = NashornScriptEngineContext.Builder.create(rootPath)
-                    .setAllowAccessClass(allowAccessClass)
+                    .setDenyAccessClass(denyAccessClass)
                     .setEngine(engine)
                     .setContextMap(contextMap)
                     .setModuleCache(moduleCache)

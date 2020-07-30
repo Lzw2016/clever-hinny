@@ -87,17 +87,17 @@ public class ScriptEngineUtils {
     /**
      * 创建一个新的 NashornScriptEngine
      *
-     * @param allowAccessClass 允许访问的Class
+     * @param denyAccessClass 不允许访问的Class
      */
-    public static NashornScriptEngine creatEngine(Set<Class<?>> allowAccessClass) {
-        if (allowAccessClass == null) {
-            allowAccessClass = GlobalConstant.Default_Allow_Access_Class;
+    public static NashornScriptEngine creatEngine(Set<Class<?>> denyAccessClass) {
+        if (denyAccessClass == null) {
+            denyAccessClass = GlobalConstant.Default_Deny_Access_Class;
         } else {
-            allowAccessClass.addAll(GlobalConstant.Default_Allow_Access_Class);
+            denyAccessClass.addAll(GlobalConstant.Default_Deny_Access_Class);
         }
         // options 参考 https://wiki.openjdk.java.net/display/Nashorn/Nashorn+jsr223+engine+notes
         String[] options = new String[]{"-doe"};
-        return (NashornScriptEngine) NASHORN_FACTORY.getScriptEngine(options, getAppClassLoader(), new CustomClassFilter(allowAccessClass));
+        return (NashornScriptEngine) NASHORN_FACTORY.getScriptEngine(options, getAppClassLoader(), new CustomClassFilter(denyAccessClass));
     }
 
     /**

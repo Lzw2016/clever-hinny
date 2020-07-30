@@ -32,6 +32,11 @@ public class MemoryModuleCache<T> implements ModuleCache<T> {
             cacheBuilder.removalListener(notification -> {
                 Object string = notification.getKey();
                 log.debug("ModuleCache 移除缓存 -> {} | 原因: {}", string, notification.getCause());
+                Object value = notification.getValue();
+                if (value instanceof Module) {
+                    Module<?> module = (Module<?>) value;
+                    module.triggerOnRemove();
+                }
             }).expireAfterWrite(clearTimeInterval, TimeUnit.SECONDS);
         }
         this.modulesCache = cacheBuilder.build();

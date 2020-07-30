@@ -68,8 +68,9 @@ public class ScriptEngineUtils {
         HostAccess.Builder hostAccessBuilder = HostAccess.newBuilder();
         hostAccessBuilder.allowArrayAccess(true);
         hostAccessBuilder.allowListAccess(true);
-        // hostAccessBuilder.allowPublicAccess(true);
-        // hostAccessBuilder.allowAllImplementations(true);
+        // TODO 关闭？
+        hostAccessBuilder.allowPublicAccess(true);
+        hostAccessBuilder.allowAllImplementations(true);
         if (allowAccessClass == null) {
             allowAccessClass = GlobalConstant.Default_Allow_Access_Class;
         } else {

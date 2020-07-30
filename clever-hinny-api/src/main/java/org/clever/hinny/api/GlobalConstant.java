@@ -98,6 +98,9 @@ public interface GlobalConstant {
     Set<Class<?>> Default_Allow_Access_Class = Collections.unmodifiableSet(
             new HashSet<>(
                     Arrays.asList(
+                            Map.class,
+                            List.class,
+                            Set.class,
                             TestInternal.class,
                             CommonUtils.class,
                             AbstractFolder.class,

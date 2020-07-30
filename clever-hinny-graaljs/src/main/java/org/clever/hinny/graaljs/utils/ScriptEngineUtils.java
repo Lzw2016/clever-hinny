@@ -64,7 +64,7 @@ public class ScriptEngineUtils {
                 // 限制JavaScript的资源使用(CPU)
                 // .resourceLimits()
                 ;
-        // 沙箱环境控制 - 定义JavaScript可以访问的Class
+        // 沙箱环境控制 - 定义JavaScript可以访问的Class(TODO 需要使用黑名单机制)
         HostAccess.Builder hostAccessBuilder = HostAccess.newBuilder();
         hostAccessBuilder.allowArrayAccess(true);
         hostAccessBuilder.allowListAccess(true);
@@ -107,6 +107,7 @@ public class ScriptEngineUtils {
                 builder.allowAccess(method);
             }
         }
+        // builder.denyAccess()
     }
 
     /**

@@ -15,14 +15,19 @@ public class GraalObjectToString extends ObjectToString {
 
     @Override
     public String toString(Object obj) {
-        if (obj != null && obj.getClass().getName().startsWith("com.oracle.truffle.polyglot.")) {
+        if (null == obj) {
+            return null;
+        }
+        if (obj instanceof Value) {
+            //return JSTools.inspect((Value) obj);
+            return obj.toString();
+        }
+        String className = obj.getClass().getName();
+        if (className.startsWith("com.oracle.truffle.") || className.startsWith("org.graalvm.")) {
             return obj.toString();
             // Context context = Context.getCurrent();
             // Value function = context.eval(GraalConstant.Js_Language_Id, "(function(obj) { return JSON.stringify(obj); });");
             // return String.valueOf(function.execute(obj));
-        } else if (obj instanceof Value) {
-            //return JSTools.inspect((Value) obj);
-            return obj.toString();
         }
         return super.toString(obj);
     }

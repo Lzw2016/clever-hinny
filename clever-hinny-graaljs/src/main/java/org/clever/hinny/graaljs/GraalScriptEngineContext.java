@@ -86,7 +86,7 @@ public class GraalScriptEngineContext extends AbstractScriptEngineContext<Contex
             GraalScriptEngineContext context = new GraalScriptEngineContext();
             if (engine == null) {
                 Assert.notNull(graalvmEngine, "参数graalvmEngine或者engine不能为空");
-                engine = ScriptEngineUtils.creatEngine(graalvmEngine);
+                engine = ScriptEngineUtils.creatEngine(graalvmEngine, allowAccessClass);
             }
             context.engine = engine;
             if (contextMap == null) {

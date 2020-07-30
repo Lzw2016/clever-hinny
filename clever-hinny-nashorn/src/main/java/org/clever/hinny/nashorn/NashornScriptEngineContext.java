@@ -17,7 +17,9 @@ import org.clever.hinny.nashorn.require.NashornRequire;
 import org.clever.hinny.nashorn.utils.ScriptEngineUtils;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 作者：lizw <br/>
@@ -41,6 +43,8 @@ public class NashornScriptEngineContext extends AbstractScriptEngineContext<Nash
     }
 
     public static class Builder extends AbstractBuilder<NashornScriptEngine, ScriptObjectMirror> {
+        private Set<Class<?>> allowAccessClass = new HashSet<>();
+
         public Builder(Folder rootPath) {
             super(rootPath);
             // 自定义 contextMap
@@ -55,12 +59,30 @@ public class NashornScriptEngineContext extends AbstractScriptEngineContext<Nash
         }
 
         /**
+         * 增加JavaScript可以访问的Class
+         */
+        public Builder addAllowAccessClass(Class<?> clazz) {
+            if (allowAccessClass != null && clazz != null) {
+                allowAccessClass.add(clazz);
+            }
+            return this;
+        }
+
+        /**
+         * 设置JavaScript可以访问的Class
+         */
+        public Builder setAllowAccessClass(Set<Class<?>> allowAccessClass) {
+            this.allowAccessClass = allowAccessClass;
+            return this;
+        }
+
+        /**
          * 创建 ScriptEngineContext
          */
         public NashornScriptEngineContext build() {
             NashornScriptEngineContext context = new NashornScriptEngineContext();
             if (engine == null) {
-                engine = ScriptEngineUtils.creatEngine();
+                engine = ScriptEngineUtils.creatEngine(allowAccessClass);
             }
             context.engine = engine;
             if (contextMap == null) {

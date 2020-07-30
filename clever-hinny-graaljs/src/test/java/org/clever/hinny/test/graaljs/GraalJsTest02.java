@@ -25,16 +25,16 @@ public class GraalJsTest02 {
         log.info("-----------------------------------------------------------------------------------------------------------------------------------");
 
         context.getEngine().getOptions().forEach(option -> {
-            log.info("### {} | {} | {}", option.getStability(), option.getName(), option.getHelp());
+            log.info("###1 {} | {} | {}", option.getStability(), option.getName(), option.getHelp());
         });
         context.getEngine().getLanguages().entrySet().forEach(entry -> {
             entry.getValue().getOptions().forEach(option -> {
-                log.info("### {} | {} | {} | {}", option.getStability(), option.getName(), option.getHelp(), option.getCategory());
+                log.info("###2 {} | {} | {} | {}", option.getStability(), option.getName(), option.getHelp(), option.getCategory());
             });
         });
         context.getEngine().getInstruments().entrySet().forEach(entry -> {
             entry.getValue().getOptions().forEach(option -> {
-                log.info("### {} | {} | {}", option.getStability(), option.getName(), option.getHelp());
+                log.info("###3 {} | {} | {}", option.getStability(), option.getName(), option.getHelp());
             });
         });
         context.close();

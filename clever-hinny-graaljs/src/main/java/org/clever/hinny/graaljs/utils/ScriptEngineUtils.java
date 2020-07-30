@@ -43,8 +43,8 @@ public class ScriptEngineUtils {
                 .allowExperimentalOptions(true)
                 // 不允许多语言访问
                 .allowPolyglotAccess(PolyglotAccess.NONE)
-                // 默认不允许所有行为
-                .allowAllAccess(false)
+                // 默认不允许所有行为 TODO 需要关闭
+                .allowAllAccess(true)
                 // 不允许JavaScript创建进程
                 .allowCreateProcess(false)
                 // 不允许JavaScript创建线程

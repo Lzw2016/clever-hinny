@@ -8,6 +8,7 @@ import org.clever.hinny.api.module.MemoryModuleCache;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.api.utils.Assert;
+import org.clever.hinny.graaljs.internal.GraalJObject;
 import org.clever.hinny.graaljs.internal.GraalLoggerFactory;
 import org.clever.hinny.graaljs.internal.support.GraalObjectToString;
 import org.clever.hinny.graaljs.module.GraalCompileModule;
@@ -55,6 +56,7 @@ public class GraalScriptEngineContext extends AbstractScriptEngineContext<Contex
             contextMap.put("console", LoggerConsole.Instance);
             contextMap.put("print", LoggerConsole.Instance);
             contextMap.put("LoggerFactory", GraalLoggerFactory.Instance);
+            contextMap.put("JObject", GraalJObject.Instance);
         }
 
         public static Builder create(Engine graalvmEngine, Folder rootPath) {

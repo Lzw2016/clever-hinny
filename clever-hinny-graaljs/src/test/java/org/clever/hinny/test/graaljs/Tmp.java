@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -64,12 +65,13 @@ public class Tmp {
         Logger logger = LoggerFactory.getLogger(StringUtils.EMPTY);
         // Object arr = new String[]{"111", "222", "333"};
         Object arr = new int[]{111, 222, 333};
-        Collection<?> collection = Arrays.asList((Object[])arr);
+        Collection<?> collection = Arrays.asList((int[])arr);
         logger.info("### collection -> {}", collection.size());
         for (Object o : collection) {
             logger.info("### o -> {}", o);
         }
         logger.info("###111 -> {}", collection);
+        logger.info("###111 -> {}", new Date().toString());
     }
 
     @Test

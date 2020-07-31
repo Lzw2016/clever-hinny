@@ -1,5 +1,9 @@
 package org.clever.hinny.api.internal;
 
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -10,58 +14,89 @@ import java.util.Date;
  * @param <T> script引擎对象类型
  */
 public abstract class JObject<T> {
-    public byte jByte(byte b) {
+    private static final String[] Date_Patterns = {"yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "EEE MMM dd HH:mm:ss zzz yyyy", "yyyy-MM-dd", "HH:mm:ss",};
+
+    public byte asJByte(byte b) {
         return b;
     }
 
-    public short jShort(short s) {
+    public byte asJByte(String b) {
+        return Byte.parseByte(b);
+    }
+
+    public short asJShort(short s) {
         return s;
     }
 
-    public int jInt(int i) {
+    public short asJShort(String s) {
+        return Short.parseShort(s);
+    }
+
+    public int asJInt(int i) {
         return i;
     }
 
-    public long jLong(long l) {
+    public int asJInt(String i) {
+        return Integer.parseInt(i);
+    }
+
+    public long asJLong(long l) {
         return l;
     }
 
-    public float jLong(float f) {
-        return f;
+    public long asJLong(String l) {
+        return Long.parseLong(l);
     }
 
-    public double jDouble(double d) {
+    public float asJLong(float f) {
+        return Float.valueOf(f).longValue();
+    }
+
+    public double asJDouble(double d) {
         return d;
     }
 
-    public boolean jBoolean(boolean b) {
+    public double asJDouble(String d) {
+        return Double.parseDouble(d);
+    }
+
+    public boolean asJBoolean(boolean b) {
         return b;
     }
 
-    public char jChar(char c) {
+    public boolean asJBoolean(String b) {
+        return Boolean.parseBoolean(b);
+    }
+
+    public char asJChar(char c) {
         return c;
     }
 
-    public String jStr(String str) {
+    public String asJString(String str) {
         return str;
     }
 
-    public Date jDate(String arg) {
-        // TODO Date
-        return null;
+    /**
+     * 创建Java java.util.Date 对象,支持以下格式<br />
+     * "yyyy-MM-dd HH:mm:ss" <br />
+     * "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" <br />
+     * "EEE MMM dd HH:mm:ss zzz yyyy" <br />
+     * "yyyy-MM-dd" <br />
+     * "HH:mm:ss" <br />
+     */
+    @SneakyThrows
+    public Date asJDate(String arg) {
+        if (StringUtils.isBlank(arg)) {
+            return null;
+        }
+        return DateUtils.parseDate(arg, Date_Patterns);
     }
 
-    public abstract Date jDate(T arg);
+    public abstract Date asJDate(T arg);
 
-    public BigDecimal jBigDecimal(String arg) {
-        // TODO BigDecimal
-        return null;
+    public BigDecimal asJBigDecimal(String arg) {
+        return new BigDecimal(arg);
     }
 
-    public BigDecimal jBigDecimal(double arg) {
-        // TODO BigDecimal
-        return null;
-    }
-
-    // TODO ...更多
+    // TODO 补充常用类型
 }

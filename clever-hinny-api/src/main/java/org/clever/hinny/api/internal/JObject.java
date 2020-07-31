@@ -6,6 +6,9 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 作者：lizw <br/>
@@ -14,7 +17,13 @@ import java.util.Date;
  * @param <T> script引擎对象类型
  */
 public abstract class JObject<T> {
-    private static final String[] Date_Patterns = {"yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "EEE MMM dd HH:mm:ss zzz yyyy", "yyyy-MM-dd", "HH:mm:ss",};
+    private static final String[] Date_Patterns = {
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss.SSS",
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            "EEE MMM dd HH:mm:ss zzz yyyy",
+            "yyyy-MM-dd", "HH:mm:ss",
+    };
 
     public byte asJByte(byte b) {
         return b;
@@ -101,6 +110,20 @@ public abstract class JObject<T> {
     public BigDecimal asJBigDecimal(String arg) {
         return new BigDecimal(arg);
     }
+
+//    public List<Object> asJList(Object... args) {
+//        return null;
+//    }
+//
+//    public abstract List<Object> asJList(T arg);
+//
+//    public Set<Object> asJSet(Object... args) {
+//        return null;
+//    }
+//
+//    public abstract Set<Object> asJSet(T arg);
+//
+//    public abstract Map<Object, Object> asJMap(T arg);
 
     // TODO 补充常用类型
 }

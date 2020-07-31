@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -60,7 +62,14 @@ public class Tmp {
     @Test
     public void t03() {
         Logger logger = LoggerFactory.getLogger(StringUtils.EMPTY);
-        logger.info("###111");
+        // Object arr = new String[]{"111", "222", "333"};
+        Object arr = new int[]{111, 222, 333};
+        Collection<?> collection = Arrays.asList((Object[])arr);
+        logger.info("### collection -> {}", collection.size());
+        for (Object o : collection) {
+            logger.info("### o -> {}", o);
+        }
+        logger.info("###111 -> {}", collection);
     }
 
     @Test

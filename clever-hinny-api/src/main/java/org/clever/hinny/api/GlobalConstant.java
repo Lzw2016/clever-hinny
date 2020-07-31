@@ -3,7 +3,6 @@ package org.clever.hinny.api;
 import org.clever.hinny.api.internal.CommonUtils;
 import org.clever.hinny.api.internal.LoggerConsole;
 import org.clever.hinny.api.internal.LoggerFactory;
-import org.clever.hinny.api.internal.TestInternal;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -110,7 +109,6 @@ public interface GlobalConstant {
      * 默认注入的全局对象
      */
     Map<String, Object> Default_Context_Map = Collections.unmodifiableMap(new HashMap<String, Object>() {{
-        put("TestInternal", TestInternal.Instance);
         put("CommonUtils", CommonUtils.Instance);
         put("console", LoggerConsole.Instance);
         put("print", LoggerConsole.Instance);

@@ -92,6 +92,10 @@ public abstract class JObject<T> {
         return DateUtils.parseDate(arg, Date_Patterns);
     }
 
+    public Date asJDate(long arg) {
+        return new Date(arg);
+    }
+
     public abstract Date asJDate(T arg);
 
     public BigDecimal asJBigDecimal(String arg) {

@@ -5,10 +5,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 作者：lizw <br/>
@@ -107,6 +107,20 @@ public abstract class JObject<T> {
 
     public abstract Date asJDate(T arg);
 
+    public Date toJDate(Timestamp arg) {
+        if (arg == null) {
+            return null;
+        }
+        return new Date(arg.getTime());
+    }
+
+    public Date toJDate(Time arg) {
+        if (arg == null) {
+            return null;
+        }
+        return new Date(arg.getTime());
+    }
+
     public BigDecimal asJBigDecimal(String arg) {
         return new BigDecimal(arg);
     }
@@ -126,4 +140,18 @@ public abstract class JObject<T> {
 //    public abstract Map<Object, Object> asJMap(T arg);
 
     // TODO 补充常用类型
+
+    public Date toJDate(java.sql.Date arg) {
+        if (arg == null) {
+            return null;
+        }
+        return new Date(arg.getTime());
+    }
+
+    public Integer toJInt(BigInteger arg) {
+        if (arg == null) {
+            return null;
+        }
+        return arg.intValue();
+    }
 }

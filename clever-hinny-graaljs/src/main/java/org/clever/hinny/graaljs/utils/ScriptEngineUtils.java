@@ -118,6 +118,16 @@ public class ScriptEngineUtils {
     }
 
     /**
+     * 新建一个js 普通对象
+     */
+    public static Value newObject(Object... args) {
+        Context context = Context.getCurrent();
+        Assert.notNull(context, "参数context不能为空");
+        Value constructor = context.eval(Object_Constructor_Source);
+        return constructor.newInstance(args);
+    }
+
+    /**
      * 新建一个js 数组对象
      */
     public static Value newArray(Context context, Object... args) {
@@ -125,6 +135,16 @@ public class ScriptEngineUtils {
         context.enter();
         Value constructor = context.eval(Array_Constructor_Source);
         context.leave();
+        return constructor.newInstance(args);
+    }
+
+    /**
+     * 新建一个js 数组对象
+     */
+    public static Value newArray(Object... args) {
+        Context context = Context.getCurrent();
+        Assert.notNull(context, "参数context不能为空");
+        Value constructor = context.eval(Array_Constructor_Source);
         return constructor.newInstance(args);
     }
 

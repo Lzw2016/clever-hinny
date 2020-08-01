@@ -132,7 +132,17 @@ public abstract class JObject<T> {
         return Arrays.asList(args);
     }
 
-    public abstract List<Object> asJList(T arg);
+    public List<Object> asJList(Object arg) {
+        if (arg == null) {
+            return null;
+        }
+        if (arg.getClass().isArray()) {
+            Object[] array = (Object[]) arg;
+            return Arrays.asList(array);
+        } else {
+            return Collections.singletonList(arg);
+        }
+    }
 
     public Set<Object> asJSet(Object... args) {
         if (args == null) {
@@ -143,7 +153,19 @@ public abstract class JObject<T> {
         return set;
     }
 
-    public abstract Set<Object> asJSet(T arg);
+    public Set<Object> asJSet(Object arg) {
+        if (arg == null) {
+            return null;
+        }
+        if (arg.getClass().isArray()) {
+            Object[] array = (Object[]) arg;
+            Set<Object> set = new HashSet<>(array.length);
+            set.addAll(Arrays.asList(array));
+            return set;
+        } else {
+            return Collections.singleton(arg);
+        }
+    }
 
     public abstract Map<Object, Object> asJMap(T arg);
 

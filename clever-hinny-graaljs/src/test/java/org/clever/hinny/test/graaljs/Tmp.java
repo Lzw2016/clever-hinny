@@ -3,15 +3,15 @@ package org.clever.hinny.test.graaljs;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.hinny.graaljs.GraalConstant;
+import org.clever.hinny.graaljs.utils.ScriptEngineUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -65,7 +65,7 @@ public class Tmp {
         Logger logger = LoggerFactory.getLogger(StringUtils.EMPTY);
         // Object arr = new String[]{"111", "222", "333"};
         Object arr = new int[]{111, 222, 333};
-        Collection<?> collection = Arrays.asList((int[])arr);
+        Collection<?> collection = Arrays.asList((int[]) arr);
         logger.info("### collection -> {}", collection.size());
         for (Object o : collection) {
             logger.info("### o -> {}", o);
@@ -82,5 +82,66 @@ public class Tmp {
         Value fuc = context_2.eval(GraalConstant.Js_Language_Id, "(function(obj) { return JSON.stringify(obj); });");
         Object object = fuc.execute(value);
         log.info("# -> {}", object);
+    }
+
+    @Test
+    public void t05() {
+        Context context = Context.newBuilder(GraalConstant.Js_Language_Id).build();
+        byte a = 1;
+        short b = 2;
+        int c = 3;
+        long d = 4;
+        double e = 5;
+        boolean f = false;
+        char g = 'a';
+        String h = "abcd";
+        Date i = new Date();
+        BigDecimal j = new BigDecimal("1354741344987654323456765434567564564568989.564948989745189789454894894864");
+        List<String> k = new ArrayList<>() {{
+            add("111");
+            add("222");
+            add("333");
+        }};
+        Set<String> l = new HashSet<>() {{
+            add("111");
+            add("222");
+            add("333");
+        }};
+        Map<String, Object> m = new HashMap<>() {{
+            put("int", 1);
+            put("boolean", false);
+            put("str", "asdfghjkl");
+        }};
+        log.info("## -> {}", context.asValue(a));
+        log.info("## -> {}", context.asValue(b));
+        log.info("## -> {}", context.asValue(c));
+        log.info("## -> {}", context.asValue(d));
+        log.info("## -> {}", context.asValue(e));
+        log.info("## -> {}", context.asValue(f));
+        log.info("## -> {}", context.asValue(g));
+        log.info("## -> {}", context.asValue(h));
+        log.info("## -> {}", context.asValue(i));
+        log.info("## -> {}", context.asValue(j));
+        log.info("## -> {}", context.asValue(k));
+        log.info("## -> {}", context.asValue(l));
+        log.info("## -> {}", context.asValue(m));
+        log.info("## -> {}", context.asValue(m).getMemberKeys().size()); // size=0
+    }
+
+    @Test
+    public void t06() {
+        Context context = Context.newBuilder(GraalConstant.Js_Language_Id).build();
+        Value value = ScriptEngineUtils.newArray(context, "aaa", 111, false);
+        log.info("## -> {}", value);
+
+        Object[] object = new Object[]{"aaa", 111, false};
+        value = ScriptEngineUtils.newArray(context, object);
+        log.info("## -> {}", value);
+
+        log.info("## -> {}", object);
+
+//        Map<Integer, Boolean> map = new HashMap<>();
+//        TypeVariable<? extends Class<?>>[] parameters = map.getClass().getTypeParameters();
+//        log.info("## parameters -> {}", parameters);
     }
 }

@@ -1,13 +1,13 @@
 package org.clever.hinny.graaljs.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.clever.hinny.api.utils.ExceptionUtils;
 import org.clever.hinny.graaljs.internal.GraalJObject;
 import org.graalvm.polyglot.Value;
-import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * JavaScript 与 Java 相互交互工具
@@ -21,273 +21,143 @@ public class JavaInteropUtils {
      */
     private static final Set<String> Java_Base_Type = Set.of("long", "int", "short", "char", "byte", "boolean", "float", "double");
 
-    /**
-     * 递归深度 32；集合大小 10000
-     */
-    public static final JavaInteropUtils Instance = new JavaInteropUtils(32, 1001);
+    public static final JavaInteropUtils Instance = new JavaInteropUtils();
 
-    private static final NumberFormat Number_Format;
-
-    static {
-        Number_Format = NumberFormat.getInstance();
-        Number_Format.setGroupingUsed(false);
+    private JavaInteropUtils() {
     }
 
-    /**
-     * 递归深度
-     */
-    private final int recursiveMaxDeep;
-    /**
-     * 集合大小
-     */
-    private final int collectionMaxSize;
-    /**
-     * 当前递归深度-线程槽
-     */
-    private final ThreadLocal<Integer> deepSlot = new ThreadLocal<>();
-    /**
-     * 递归最大深度-线程槽
-     */
-    private final ThreadLocal<Integer> deepMaxSlot = new ThreadLocal<>();
-    /**
-     * 已经转换了的对象缓存 - 解决循环依赖问题
-     */
-    private final ThreadLocal<List<Object>> cacheSlot = new ThreadLocal<>();
+    // ------------------------------------------------------------------------------------------------------------------ toScriptObject
 
     /**
-     * @param recursiveMaxDeep  递归深度
-     * @param collectionMaxSize 集合大小
+     * 把Java Map对象转换成JavaScript Object对象<br />
+     * <strong>注意: key会被强制转换成String</strong> <br />
+     *
+     * @param map Java Map对象
      */
-    public JavaInteropUtils(int recursiveMaxDeep, int collectionMaxSize) {
-        this.recursiveMaxDeep = recursiveMaxDeep;
-        this.collectionMaxSize = collectionMaxSize;
-    }
-
-    /**
-     * Java对象转换成JavaScript对象(慎用: 性能较差)
-     */
-    public Object toScriptObject(Object obj) {
-        if (obj == null) {
+    public Value toScriptObject(Map<?, ?> map) {
+        if (map == null) {
             return null;
         }
-        final long startTime = System.currentTimeMillis();
-        cacheSlot.set(new ArrayList<>(512));
-        deepSlot.set(0);
-        deepMaxSlot.set(0);
-        Object res = null;
-        try {
-//            res = doToScriptObject(obj);
-        } catch (Throwable e) {
-            throw ExceptionUtils.unchecked(e);
-        } finally {
-            log.debug("[Java对象转换成JS对象] 递归深度：{} | 耗时：{}ms", deepMaxSlot.get(), System.currentTimeMillis() - startTime);
-            cacheSlot.remove();
-            deepSlot.remove();
-            deepMaxSlot.remove();
+        Value value = ScriptEngineUtils.newObject();
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            value.putMember(String.valueOf(entry.getKey()), entry.getValue());
         }
-        return res;
-    }
-
-//    private Object doToScriptObject(Object obj) {
-//        if (obj != null && !isBaseType(obj)) {
-//            for (Object cache : cacheSlot.get()) {
-//                if (cache == obj) {
-//                    return "Cycle Reference";
-//                }
-//            }
-//            cacheSlot.get().add(obj);
-//        }
-//        Object result;
-//        // 递归深度加 1
-//        Integer deep = deepSlot.get();
-//        if (deep == null) {
-//            deep = 0;
-//        }
-//        deep++;
-//        deepSlot.set(deep);
-//        Integer maxDeep = deepMaxSlot.get();
-//        if (maxDeep == null) {
-//            maxDeep = 0;
-//        }
-//        if (maxDeep < deep) {
-//            deepMaxSlot.set(deep);
-//        }
-//        // 超过了最大递归深度
-//        if (deep >= recursiveMaxDeep) {
-//            result = obj;
-//        } else if (obj instanceof ScriptObjectMirror) {
-//            // TODO 需要当Map处理？
-//            result = obj;
-//        } else if (obj == null) {// ------------------------------------------------------------------- null
-//            result = null;
-//        } else if (obj instanceof Byte) {// ----------------------------------------------------------- Number
-//            Byte val = (Byte) obj;
-//            result = val.intValue();
-//        } else if (obj instanceof Short) {
-//            Short val = (Short) obj;
-//            result = val.intValue();
-//        } else if (obj instanceof Integer) {
-//            result = obj;
-//        } else if (obj instanceof Long) {
-//            Long raw = (Long) obj;
-//            // js number 最大值 9007199254740992
-//            if (raw > 9007199254740992L) {
-//                result = Number_Format.format(raw);
-//            } else {
-//                result = raw.doubleValue();
-//            }
-//        } else if (obj instanceof Float) {
-//            Float val = (Float) obj;
-//            result = val.doubleValue();
-//        } else if (obj instanceof Double) {
-//            result = obj;
-//        } else if (obj instanceof BigInteger) {
-//            BigInteger bigInteger = (BigInteger) obj;
-//            result = bigInteger.doubleValue();
-//        } else if (obj instanceof BigDecimal) {
-//            BigDecimal bigDecimal = (BigDecimal) obj;
-//            result = bigDecimal.doubleValue();
-//        } else if (obj instanceof Boolean) {// -------------------------------------------------------- Boolean
-//            result = obj;
-//        } else if (obj instanceof String) {// --------------------------------------------------------- String
-//            result = obj;
-//        } else if (obj instanceof Character) {
-//            result = obj.toString();
-//        } else if (obj instanceof CharSequence) {
-//            result = obj.toString();
-//        } else if (obj instanceof Date) {// ----------------------------------------------------------- Date
-//            double val = (double) ((Date) obj).getTime();
-//            result = ScriptEngineUtils.newDate(val);
-//        } else if (obj instanceof DateTime) {
-//            double val = (double) ((DateTime) obj).toDate().getTime();
-//            result = ScriptEngineUtils.newDate(val);
-//        } else if (obj.getClass().isArray()) {// ------------------------------------------------------ Array
-//            ScriptObjectMirror nativeArray;
-//            Object[] array = (Object[]) obj;
-//            if (array.length < collectionMaxSize) {
-//                List<Object> list = new ArrayList<>(array.length);
-//                for (Object o : array) {
-//                    list.add(doJavaToJSObject(o));
-//                }
-//                nativeArray = ScriptEngineUtils.newArray(list);
-//            } else {
-//                nativeArray = ScriptEngineUtils.newArray(array);
-//            }
-//            // result = ScriptEngineUtils.newObject(nativeArray);
-//            result = nativeArray;
-//        } else if (obj instanceof Collection) {
-//            ScriptObjectMirror nativeArray;
-//            Collection collection = (Collection) obj;
-//            if (collection.size() < collectionMaxSize) {
-//                List<Object> list = new ArrayList<>(collection.size());
-//                for (Object o : collection) {
-//                    list.add(doJavaToJSObject(o));
-//                }
-//                nativeArray = ScriptEngineUtils.newArray(list);
-//            } else {
-//                nativeArray = ScriptEngineUtils.newArray(collection);
-//            }
-//            // result = ScriptEngineUtils.newObject(nativeArray);
-//            result = nativeArray;
-//        } else if (obj instanceof Map) {// ------------------------------------------------------------ Object
-//            Map<?, ?> map = (Map) obj;
-//            boolean flag = map.size() < collectionMaxSize;
-//            ScriptObjectMirror scriptObjectMirror = ScriptEngineUtils.newObject();
-//            int index = 0;
-//            for (Map.Entry<?, ?> entry : map.entrySet()) {
-//                String key;
-//                if (entry.getKey() instanceof String) {
-//                    key = (String) entry.getKey();
-//                } else if (entry.getKey() == null) {
-//                    key = String.valueOf(index);
-//                } else {
-//                    key = entry.getKey().getClass().getName() + "@" + Integer.toHexString(entry.getKey().hashCode());
-//                }
-//                scriptObjectMirror.put(key, flag ? doJavaToJSObject(entry.getValue()) : entry.getValue());
-//                index++;
-//            }
-//            result = scriptObjectMirror;
-//        } else {
-//            Map<String, Object> map = BeanMapConverter.toMap(obj);
-//            if (map.size() > 0) {
-//                ScriptObjectMirror scriptObjectMirror = ScriptEngineUtils.newObject();
-//                if (map.size() < collectionMaxSize) {
-//                    for (Map.Entry<String, Object> entry : map.entrySet()) {
-//                        scriptObjectMirror.put(entry.getKey(), doJavaToJSObject(entry.getValue()));
-//                    }
-//                } else {
-//                    scriptObjectMirror.putAll(map);
-//                }
-//                result = scriptObjectMirror;
-//            } else {
-//                result = obj;
-//            }
-//        }
-//        deep--;
-//        deepSlot.set(deep);
-//        return result;
-//    }
-
-    /**
-     * 是否是基本类型(不会有循环依赖问题的)
-     */
-    private boolean isBaseType(Object obj) {
-        return obj instanceof String
-                || obj instanceof Character
-                || obj instanceof Boolean
-                || obj instanceof Number
-                || obj instanceof Date
-                || obj instanceof DateTime
-                || obj instanceof Class;
+        return value;
     }
 
     /**
-     * JavaScript对象转换成Java对象
+     * 把Java 集合对象转换成JavaScript Array对象<br />
+     * <strong>注意: 集合元素如果是Java Map类型会做进一步转换(JavaScript Object对象)</strong> <br />
+     *
+     * @param list Java 集合对象
      */
-    public Object toJavaObject(Object obj) {
-        if (null == obj) {
+    public Value toScriptArray(Collection<?> list) {
+        if (list == null) {
             return null;
         }
-        if (obj instanceof Collection) {
-            return toJavaObject((Collection<?>) obj);
+        Object[] paramsArray = list.toArray();
+        return toScriptArray(paramsArray);
+    }
+
+    /**
+     * 把Java数组装换成JavaScript Array对象<br />
+     * * <strong>注意: 集合元素如果是Java Map类型会做进一步转换(JavaScript Object对象)</strong> <br />
+     *
+     * @param array Java数组
+     */
+    public Value toScriptArray(Object[] array) {
+        if (array == null) {
+            return null;
         }
-        if (obj instanceof Map) {
-            return toJavaObject((Map<?, ?>) obj);
-        }
-        if (obj.getClass().isArray()) {
-            final String className = obj.getClass().getComponentType().getName();
-            if (!Java_Base_Type.contains(className)) {
-                return toJavaObject((Object[]) obj);
+        Object[] resArray = new Object[array.length];
+        for (int i = 0; i < array.length; i++) {
+            Object item = array[i];
+            if (item instanceof Map) {
+                resArray[i] = toScriptObject((Map<?, ?>) item);
+            } else {
+                resArray[i] = item;
             }
         }
+        return ScriptEngineUtils.newArray(resArray);
+    }
 
-        //
-        if (obj instanceof Value) {
-            return toJavaObject((Value) obj);
+//    public Collection<Value> collectionInMapToScript(Collection<?> collection) {
+//        if (collection == null) {
+//            return null;
+//        }
+//        Collection<Value> res;
+//        if (collection instanceof Set) {
+//            res = new HashSet<>(collection.size());
+//        } else {
+//            res = new ArrayList<>(collection.size());
+//        }
+//        Context context = null;
+//        for (Object item : collection) {
+//            if (item instanceof Map) {
+//                res.add(toScriptObject((Map<?, ?>) item));
+//            } else {
+//                if (context == null) {
+//                    context = Context.getCurrent();
+//                }
+//                res.add(context.asValue(item));
+//            }
+//        }
+//        return res;
+//    }
+
+    // ------------------------------------------------------------------------------------------------------------------ toJavaObject
+
+    /**
+     * 把JavaScript对象转换成Java对象 <br />
+     * 1. 只考虑简单对象和“数组”、“Object对象” <br />
+     * 2. 只做浅转换(一层转换) <br />
+     *
+     * @param value JavaScript对象
+     */
+    public Object toJavaObject(Value value) {
+        if (value == null) {
+            return null;
         }
-        String className = obj.getClass().getName();
-        if (className.startsWith("com.oracle.truffle.") || className.startsWith("org.graalvm.")) {
-            // TODO
-            return toJavaObject(Value.asValue(obj));
+        Object object = toJavaObjectForBase(value);
+        if (object != value) {
+            return object;
         }
-        return obj;
+        // 数组, 对象
+        if (value.hasArrayElements()) {
+            long size = value.getArraySize();
+            if (size > Integer.MAX_VALUE) {
+                throw new ClassCastException("数组 arg.length=" + size + " 太长无法转换");
+            }
+            Object[] array = new Object[(int) size];
+            for (int i = 0; i < size; i++) {
+                array[i] = toJavaObjectForBase(value.getArrayElement(i));
+            }
+            return array;
+        } else {
+            Set<String> keys = value.getMemberKeys();
+            Map<String, Object> map = new HashMap<>(keys.size());
+            for (String key : keys) {
+                map.put(key, toJavaObjectForBase(value.getMember(key)));
+            }
+            return map;
+        }
     }
 
-    public Object[] toJavaObject(Object[] array) {
-        Collection<?> collection = toJavaObject(Arrays.asList(array));
-        // TODO
-        return null;
-    }
-
-    public Collection<?> toJavaObject(Collection<?> collection) {
-        // TODO
-        return null;
-    }
-
-    public Map<?, ?> toJavaObject(Map<?, ?> map) {
-        // TODO
-        return null;
-    }
+//    public Object[] toJavaObject(Object[] array) {
+//        Collection<?> collection = toJavaObject(Arrays.asList(array));
+//        // TODO
+//        return null;
+//    }
+//
+//    public Collection<?> toJavaObject(Collection<?> collection) {
+//        // TODO
+//        return null;
+//    }
+//
+//    public Map<?, ?> toJavaObject(Map<?, ?> map) {
+//        // TODO
+//        return null;
+//    }
 
     /**
      * 把JavaScript对象转换成Java对象 <br />
@@ -296,7 +166,7 @@ public class JavaInteropUtils {
      *
      * @param value JavaScript对象
      */
-    public Object toJavaObject(Value value) {
+    protected Object toJavaObjectForBase(Value value) {
         if (value == null || value.isNull()) {
             return null;
         } else if (value.isHostObject()) {                                      // Java对象
@@ -340,18 +210,6 @@ public class JavaInteropUtils {
         } else if (value.isNativePointer()) {                                   // 本机指针
             return value;
         }
-//        // 数组, 对象
-//        if (!value.getMemberKeys().isEmpty()) {
-//            // TODO
-//        } else if (value.hasArrayElements()) {
-//            // TODO
-//            Object[] array = new Object[(int) value.getArraySize()];
-//            for (int i = 0; i < value.getArraySize(); i++) {
-//                // value.getArrayElement(i);
-//                // array[i] =
-//            }
-//            // value.getArraySize()
-//        }
         return value;
     }
 }

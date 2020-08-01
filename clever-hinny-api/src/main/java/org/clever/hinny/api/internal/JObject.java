@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.*;
 
 /**
  * 作者：lizw <br/>
@@ -125,19 +125,27 @@ public abstract class JObject<T> {
         return new BigDecimal(arg);
     }
 
-//    public List<Object> asJList(Object... args) {
-//        return null;
-//    }
-//
-//    public abstract List<Object> asJList(T arg);
-//
-//    public Set<Object> asJSet(Object... args) {
-//        return null;
-//    }
-//
-//    public abstract Set<Object> asJSet(T arg);
-//
-//    public abstract Map<Object, Object> asJMap(T arg);
+    public List<Object> asJList(Object... args) {
+        if (args == null) {
+            return null;
+        }
+        return Arrays.asList(args);
+    }
+
+    public abstract List<Object> asJList(T arg);
+
+    public Set<Object> asJSet(Object... args) {
+        if (args == null) {
+            return null;
+        }
+        Set<Object> set = new HashSet<>(args.length);
+        set.addAll(Arrays.asList(args));
+        return set;
+    }
+
+    public abstract Set<Object> asJSet(T arg);
+
+    public abstract Map<Object, Object> asJMap(T arg);
 
     // TODO 补充常用类型
 

@@ -5,7 +5,7 @@ import org.graalvm.polyglot.Value;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.*;
 
 /**
  * 作者：lizw <br/>
@@ -33,5 +33,68 @@ public class GraalJObject extends JObject<Value> {
             return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         }
         throw new ClassCastException("参数 arg=:" + arg.toString() + "不能转换成Date类型");
+    }
+
+    @Override
+    public List<Object> asJList(Value arg) {
+        if (arg == null) {
+            return null;
+        }
+        if (!arg.hasArrayElements()) {
+            throw new ClassCastException("参数 arg=:" + arg.toString() + "非数组类型，无法转换成List");
+        }
+        long size = arg.getArraySize();
+        if (size > Integer.MAX_VALUE) {
+            throw new ClassCastException("数组 arg.length=" + size + " 太长无法转换");
+        }
+        List<Object> list = new ArrayList<>((int) size);
+        for (int i = 0; i < arg.getArraySize(); i++) {
+            list.add(arg.getArrayElement(i));
+        }
+        return list;
+    }
+
+    @Override
+    public Set<Object> asJSet(Value arg) {
+        if (arg == null) {
+            return null;
+        }
+        if (!arg.hasArrayElements()) {
+            throw new ClassCastException("参数 arg=:" + arg.toString() + "非数组类型，无法转换成Set");
+        }
+        long size = arg.getArraySize();
+        if (size > Integer.MAX_VALUE) {
+            throw new ClassCastException("数组 arg.length=" + size + " 太长无法转换");
+        }
+        Set<Object> list = new HashSet<>((int) size);
+        for (int i = 0; i < arg.getArraySize(); i++) {
+            list.add(arg.getArrayElement(i));
+        }
+        return list;
+    }
+
+    @Override
+    public Map<Object, Object> asJMap(Value arg) {
+        if (arg == null) {
+            return null;
+        }
+        Map<Object, Object> map;
+        if (arg.hasArrayElements()) {
+            long size = arg.getArraySize();
+            if (size > Integer.MAX_VALUE) {
+                throw new ClassCastException("数组 arg.length=" + size + " 太长无法转换成Map");
+            }
+            map = new HashMap<>((int) size);
+            for (int i = 0; i < size; i++) {
+                map.put(i, arg.getArrayElement(i));
+            }
+        } else {
+            Set<String> keys = arg.getMemberKeys();
+            map = new HashMap<>(keys.size());
+            for (String key : keys) {
+                map.put(key, arg.getMember(key));
+            }
+        }
+        return map;
     }
 }

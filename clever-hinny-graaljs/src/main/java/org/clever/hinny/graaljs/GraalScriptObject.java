@@ -69,6 +69,13 @@ public class GraalScriptObject extends AbstractScriptObject<Context, Value> {
 
     @Override
     public int size() {
-        return original.hasArrayElements() ? (int) original.getArraySize() : original.getMemberKeys().size();
+        if (original.hasArrayElements()) {
+            long size = original.getArraySize();
+            if (size > Integer.MAX_VALUE) {
+                throw new ClassCastException("数组 length=" + size + " 太长(超出范围)");
+            }
+            return (int) size;
+        }
+        return original.getMemberKeys().size();
     }
 }

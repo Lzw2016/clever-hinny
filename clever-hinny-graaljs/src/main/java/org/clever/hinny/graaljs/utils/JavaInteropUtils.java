@@ -2,11 +2,11 @@ package org.clever.hinny.graaljs.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.api.utils.ExceptionUtils;
+import org.clever.hinny.graaljs.internal.GraalJObject;
 import org.graalvm.polyglot.Value;
 import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -290,72 +290,68 @@ public class JavaInteropUtils {
     }
 
     /**
-     * 只考虑把单个JavaScript对象转换成Java对象
+     * 把JavaScript对象转换成Java对象 <br />
+     * 1. 只考虑简单对象，不考虑“数组”、“Object对象” <br />
+     * 2. 只做浅转换(一层转换) <br />
      *
-     * @param value 单个JavaScript对象
+     * @param value JavaScript对象
      */
     public Object toJavaObject(Value value) {
         if (value == null || value.isNull()) {
             return null;
-        } else if (value.isHostObject()) {              // Java对象
+        } else if (value.isHostObject()) {                                      // Java对象
             return value.asHostObject();
-        } else if (value.isException()) {               // 异常
+        } else if (value.isException()) {                                       // 异常
             return value.throwException();
-        } else if (value.isBoolean()) {                 // boolean
+        } else if (value.isBoolean()) {                                         // boolean
             return value.asBoolean();
-        } else if (value.isNumber()) {                  // byte, short, int, long, float, double
-            if (value.fitsInByte()) {
+        } else if (value.isNumber()) {
+            if (value.fitsInByte()) {                                           // byte
                 return value.asByte();
             }
-            if (value.fitsInShort()) {
+            if (value.fitsInShort()) {                                          // short
                 return value.asShort();
             }
-            if (value.fitsInInt()) {
+            if (value.fitsInInt()) {                                            // int
                 return value.asInt();
             }
-            if (value.fitsInLong()) {
+            if (value.fitsInLong()) {                                           // long
                 return value.asLong();
             }
-            if (value.fitsInFloat()) {
+            if (value.fitsInFloat()) {                                          // float
                 return value.asFloat();
             }
-            if (value.fitsInDouble()) {
+            if (value.fitsInDouble()) {                                         // double
                 return value.asDouble();
             }
             return value.asDouble();
-        } else if (value.isString()) {                  // String
+        } else if (value.isString()) {                                          // String
             return value.asString();
-        } else if (value.isDate() && value.isTime()) {  // LocalDateTime 日期+时间
-            return LocalDateTime.of(value.asDate(), value.asTime());
-        } else if (value.isInstant()) {                 // Instant 时间搓
-            return value.asInstant();
-        } else if (value.isDate()) {                    // LocalDate 日期
-            return value.asDate();
-        } else if (value.isTime()) {                    // LocalTime 时间
-            return value.asTime();
-        } else if (value.isDuration()) {                // Duration 时间段
+        } else if (value.isDate() || value.isTime() || value.isInstant()) {     // Date 日期+时间
+            return GraalJObject.Instance.asJDate(value);
+        } else if (value.isDuration()) {                                        // Duration 时间段
             return value.asDuration();
-        } else if (value.isTimeZone()) {                // Duration 时间段
+        } else if (value.isTimeZone()) {                                        // Duration 时间段
             return value.asTimeZone();
-        } else if (value.isProxyObject()) {             // Proxy 对象
+        } else if (value.isProxyObject()) {                                     // Proxy 对象
             return value.asProxyObject();
-        } else if (value.isMetaObject()) {              // Class 类型
+        } else if (value.isMetaObject()) {                                      // Class 类型
             return value.getMetaObject();
-        } else if (value.isNativePointer()) {           // 本机指针
+        } else if (value.isNativePointer()) {                                   // 本机指针
             return value;
         }
-        // 数组, 对象
-        if (!value.getMemberKeys().isEmpty()) {
-            // TODO
-        } else if (value.hasArrayElements()) {
-            // TODO
-            Object[] array = new Object[(int) value.getArraySize()];
-            for (int i = 0; i < value.getArraySize(); i++) {
-                // value.getArrayElement(i);
-                // array[i] =
-            }
-            // value.getArraySize()
-        }
+//        // 数组, 对象
+//        if (!value.getMemberKeys().isEmpty()) {
+//            // TODO
+//        } else if (value.hasArrayElements()) {
+//            // TODO
+//            Object[] array = new Object[(int) value.getArraySize()];
+//            for (int i = 0; i < value.getArraySize(); i++) {
+//                // value.getArrayElement(i);
+//                // array[i] =
+//            }
+//            // value.getArraySize()
+//        }
         return value;
     }
 }

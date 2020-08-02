@@ -19,6 +19,7 @@ public class ScriptEngineUtils {
     public static final Map<String, String> Context_Default_Options = Map.of(
             "js.ecmascript-version", GraalConstant.ECMAScript_Version
             // "js.nashorn-compat", "true", // EXPERIMENTAL | js.nashorn-compat -> 实验性特性需要删除
+            // "js.experimental-foreign-object-prototype", "true" // 实验性特性需要删除
     );
 
     private static final Source Object_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "Object", "Unnamed").cached(true).buildLiteral();
@@ -67,6 +68,8 @@ public class ScriptEngineUtils {
         hostAccessBuilder.allowListAccess(true);
         hostAccessBuilder.allowPublicAccess(true);
         hostAccessBuilder.allowAllImplementations(true);
+        // TODO 计划支持 https://github.com/graalvm/graaljs/issues/143
+        // hostAccessBuilder.allowMapAccess(true);
         if (denyAccessClass == null) {
             denyAccessClass = GlobalConstant.Default_Deny_Access_Class;
         } else {

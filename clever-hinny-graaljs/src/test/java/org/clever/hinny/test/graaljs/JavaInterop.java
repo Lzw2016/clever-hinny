@@ -2,6 +2,7 @@ package org.clever.hinny.test.graaljs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.proxy.ProxyObject;
 
 import java.util.*;
 
@@ -88,6 +89,10 @@ public class JavaInterop {
             put("string", "aaa");
             put("boolean", false);
         }};
+    }
+
+    public ProxyObject getProxyMap() {
+        return ProxyObject.fromMap(getMap());
     }
 
     // ------------------------------------------------------------------------------------------------------------------ 接入JavaScript类型

@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.graaljs.internal.GraalJObject;
 import org.graalvm.polyglot.Value;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,7 +26,7 @@ public class JavaInteropUtils {
     private JavaInteropUtils() {
     }
 
-    // ------------------------------------------------------------------------------------------------------------------ toScriptObject
+    // ------------------------------------------------------------------------------------------------------------------ Java -> JS
 
     /**
      * 把Java Map对象转换成JavaScript Object对象<br />
@@ -51,7 +51,7 @@ public class JavaInteropUtils {
      *
      * @param list Java 集合对象
      */
-    public Value toScriptArray(Collection<?> list) {
+    public Value toScriptArray(List<?> list) {
         if (list == null) {
             return null;
         }
@@ -105,7 +105,7 @@ public class JavaInteropUtils {
 //        return res;
 //    }
 
-    // ------------------------------------------------------------------------------------------------------------------ toJavaObject
+    // ------------------------------------------------------------------------------------------------------------------ JS -> Java
 
     /**
      * 把JavaScript对象转换成Java对象 <br />

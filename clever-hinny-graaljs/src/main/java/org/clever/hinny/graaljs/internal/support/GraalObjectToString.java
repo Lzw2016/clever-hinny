@@ -35,15 +35,11 @@ public class GraalObjectToString extends ObjectToString {
             return null;
         }
         if (obj instanceof Value) {
-            //return JSTools.inspect((Value) obj);
             return obj.toString();
         }
         String className = obj.getClass().getName();
         if (obj instanceof TruffleObject || className.startsWith("com.oracle.truffle.") || className.startsWith("org.graalvm.")) {
             return obj.toString();
-            // Context context = Context.getCurrent();
-            // Value function = context.eval(GraalConstant.Js_Language_Id, "(function(obj) { return JSON.stringify(obj); });");
-            // return String.valueOf(function.execute(obj));
         }
         return super.toString(obj);
     }

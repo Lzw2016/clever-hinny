@@ -2,18 +2,15 @@ package org.clever.hinny.graaljs;
 
 import org.clever.hinny.api.AbstractScriptEngineContext;
 import org.clever.hinny.api.folder.Folder;
-import org.clever.hinny.api.internal.LoggerConsole;
 import org.clever.hinny.api.module.CompileModule;
 import org.clever.hinny.api.module.MemoryModuleCache;
 import org.clever.hinny.api.module.ModuleCache;
 import org.clever.hinny.api.require.Require;
 import org.clever.hinny.api.utils.Assert;
-import org.clever.hinny.graaljs.internal.GraalJObject;
-import org.clever.hinny.graaljs.internal.GraalLoggerFactory;
-import org.clever.hinny.graaljs.internal.support.GraalObjectToString;
 import org.clever.hinny.graaljs.module.GraalCompileModule;
 import org.clever.hinny.graaljs.module.GraalModule;
 import org.clever.hinny.graaljs.require.GraalRequire;
+import org.clever.hinny.graaljs.utils.EngineGlobalUtils;
 import org.clever.hinny.graaljs.utils.ScriptEngineUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
@@ -52,11 +49,7 @@ public class GraalScriptEngineContext extends AbstractScriptEngineContext<Contex
             super(rootPath);
             this.graalvmEngine = graalvmEngine;
             // 自定义 contextMap
-            LoggerConsole.Instance.setObjectToString(GraalObjectToString.Instance);
-            contextMap.put("console", LoggerConsole.Instance);
-            contextMap.put("print", LoggerConsole.Instance);
-            contextMap.put("LoggerFactory", GraalLoggerFactory.Instance);
-            contextMap.put("JObject", GraalJObject.Instance);
+            EngineGlobalUtils.putGlobalObjects(contextMap);
         }
 
         public static Builder create(Engine graalvmEngine, Folder rootPath) {

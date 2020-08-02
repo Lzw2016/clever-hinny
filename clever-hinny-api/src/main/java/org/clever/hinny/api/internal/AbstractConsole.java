@@ -33,7 +33,7 @@ public abstract class AbstractConsole implements PrintOutput, Console {
      */
     @Setter
     @Getter
-    protected boolean overflowEnable = true;
+    protected boolean overflowEnable = false;
 
     /**
      * toString实现

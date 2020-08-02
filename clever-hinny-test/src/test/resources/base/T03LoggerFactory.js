@@ -1,4 +1,4 @@
-var log = LoggerFactory.getLogger("/base/T03LoggerFactory.js");
+var log = LoggerFactory.getLogger(__filename);
 
 var logger_1 = function () {
     log.trace("#console.log Test");

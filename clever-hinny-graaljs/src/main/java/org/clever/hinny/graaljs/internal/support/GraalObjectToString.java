@@ -43,4 +43,23 @@ public class GraalObjectToString extends ObjectToString {
         }
         return super.toString(obj);
     }
+
+//    public static class GraalToStringSerializer extends JsonSerializer<Object> {
+//        public static final GraalToStringSerializer instance = new GraalToStringSerializer();
+//
+//        private GraalToStringSerializer() {
+//        }
+//
+//        @Override
+//        public void serialize(Object object, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+//            String json = null;
+//            if (object != null) {
+//                json = object.toString();
+//            }
+//            if (StringUtils.isNotBlank(json)) {
+//                gen.writeRawValue(json);
+//                // gen.writeObject(new JSONObject(json).toMap());
+//            }
+//        }
+//    }
 }

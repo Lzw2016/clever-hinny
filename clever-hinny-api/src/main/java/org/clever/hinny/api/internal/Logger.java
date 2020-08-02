@@ -31,25 +31,26 @@ public class Logger {
         this.objectToString = objectToString;
     }
 
-    public void trace(String msg) {
-        Object[] args = new Object[]{};
-        trace(msg, args);
-    }
-
-    public void trace(String format, Object arg) {
-        Object[] args = new Object[]{arg};
-        trace(format, args);
-    }
-
-    public void trace(String format, Object arg1, Object arg2) {
-        Object[] args = new Object[]{arg1, arg2};
-        trace(format, args);
-    }
-
-    public void trace(String msg, Throwable t) {
-        Object[] args = new Object[]{t};
-        trace(msg, args);
-    }
+//    TODO fixme https://github.com/graalvm/graaljs/issues/286
+//    public void trace(String msg) {
+//        Object[] args = new Object[]{};
+//        trace(msg, args);
+//    }
+//
+//    public void trace(String format, Object arg) {
+//        Object[] args = new Object[]{arg};
+//        trace(format, args);
+//    }
+//
+//    public void trace(String format, Object arg1, Object arg2) {
+//        Object[] args = new Object[]{arg1, arg2};
+//        trace(format, args);
+//    }
+//
+//    public void trace(String msg, Throwable t) {
+//        Object[] args = new Object[]{t};
+//        trace(msg, args);
+//    }
 
     /**
      * 打印输出
@@ -67,25 +68,25 @@ public class Logger {
         }
     }
 
-    public void debug(String msg) {
-        Object[] args = new Object[]{};
-        debug(msg, args);
-    }
-
-    public void debug(String format, Object arg) {
-        Object[] args = new Object[]{arg};
-        debug(format, args);
-    }
-
-    public void debug(String format, Object arg1, Object arg2) {
-        Object[] args = new Object[]{arg1, arg2};
-        debug(format, args);
-    }
-
-    public void debug(String msg, Throwable t) {
-        Object[] args = new Object[]{t};
-        debug(msg, args);
-    }
+//    public void debug(String msg) {
+//        Object[] args = new Object[]{};
+//        debug(msg, args);
+//    }
+//
+//    public void debug(String format, Object arg) {
+//        Object[] args = new Object[]{arg};
+//        debug(format, args);
+//    }
+//
+//    public void debug(String format, Object arg1, Object arg2) {
+//        Object[] args = new Object[]{arg1, arg2};
+//        debug(format, args);
+//    }
+//
+//    public void debug(String msg, Throwable t) {
+//        Object[] args = new Object[]{t};
+//        debug(msg, args);
+//    }
 
     /**
      * debug打印输出
@@ -103,25 +104,25 @@ public class Logger {
         }
     }
 
-    public void info(String msg) {
-        Object[] args = new Object[]{};
-        info(msg, args);
-    }
-
-    public void info(String format, Object arg) {
-        Object[] args = new Object[]{arg};
-        info(format, args);
-    }
-
-    public void info(String format, Object arg1, Object arg2) {
-        Object[] args = new Object[]{arg1, arg2};
-        info(format, args);
-    }
-
-    public void info(String msg, Throwable t) {
-        Object[] args = new Object[]{t};
-        info(msg, args);
-    }
+//    public void info(String msg) {
+//        Object[] args = new Object[]{};
+//        info(msg, args);
+//    }
+//
+//    public void info(String format, Object arg) {
+//        Object[] args = new Object[]{arg};
+//        info(format, args);
+//    }
+//
+//    public void info(String format, Object arg1, Object arg2) {
+//        Object[] args = new Object[]{arg1, arg2};
+//        info(format, args);
+//    }
+//
+//    public void info(String msg, Throwable t) {
+//        Object[] args = new Object[]{t};
+//        info(msg, args);
+//    }
 
     /**
      * info打印输出
@@ -139,25 +140,25 @@ public class Logger {
         }
     }
 
-    public void warn(String msg) {
-        Object[] args = new Object[]{};
-        warn(msg, args);
-    }
-
-    public void warn(String format, Object arg) {
-        Object[] args = new Object[]{arg};
-        warn(format, args);
-    }
-
-    public void warn(String format, Object arg1, Object arg2) {
-        Object[] args = new Object[]{arg1, arg2};
-        warn(format, args);
-    }
-
-    public void warn(String msg, Throwable t) {
-        Object[] args = new Object[]{t};
-        warn(msg, args);
-    }
+//    public void warn(String msg) {
+//        Object[] args = new Object[]{};
+//        warn(msg, args);
+//    }
+//
+//    public void warn(String format, Object arg) {
+//        Object[] args = new Object[]{arg};
+//        warn(format, args);
+//    }
+//
+//    public void warn(String format, Object arg1, Object arg2) {
+//        Object[] args = new Object[]{arg1, arg2};
+//        warn(format, args);
+//    }
+//
+//    public void warn(String msg, Throwable t) {
+//        Object[] args = new Object[]{t};
+//        warn(msg, args);
+//    }
 
     /**
      * warn打印输出
@@ -175,25 +176,25 @@ public class Logger {
         }
     }
 
-    public void error(String msg) {
-        Object[] args = new Object[]{};
-        error(msg, args);
-    }
-
-    public void error(String format, Object arg) {
-        Object[] args = new Object[]{arg};
-        error(format, args);
-    }
-
-    public void error(String format, Object arg1, Object arg2) {
-        Object[] args = new Object[]{arg1, arg2};
-        error(format, args);
-    }
-
-    public void error(String msg, Throwable t) {
-        Object[] args = new Object[]{t};
-        error(msg, args);
-    }
+//    public void error(String msg) {
+//        Object[] args = new Object[]{};
+//        error(msg, args);
+//    }
+//
+//    public void error(String format, Object arg) {
+//        Object[] args = new Object[]{arg};
+//        error(format, args);
+//    }
+//
+//    public void error(String format, Object arg1, Object arg2) {
+//        Object[] args = new Object[]{arg1, arg2};
+//        error(format, args);
+//    }
+//
+//    public void error(String msg, Throwable t) {
+//        Object[] args = new Object[]{t};
+//        error(msg, args);
+//    }
 
     /**
      * error打印输出

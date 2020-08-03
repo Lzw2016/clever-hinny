@@ -25,17 +25,20 @@ public class T03LoggerFactory {
 
     private ScriptEngineInstance<?, ?> engineInstance;
 
-    //@Before
-    public void before1() {
+    private ScriptObject<?> scriptObject;
+
+    @Before
+    public void before1() throws Exception {
         // clever-hinny-graaljs
         log.info("### rootFolder -> {}", rootFolder);
         Engine engine = Engine.newBuilder()
                 .useSystemProperties(true)
                 .build();
         engineInstance = GraalScriptEngineInstance.Builder.create(engine, rootFolder).build();
+        scriptObject = engineInstance.require("/T03LoggerFactory");
     }
 
-    @Before
+    //@Before
     public void before2() {
         // clever-hinny-nashorn
         engineInstance = NashornScriptEngineInstance.Builder.create(rootFolder).build();
@@ -47,10 +50,20 @@ public class T03LoggerFactory {
     }
 
     @Test
-    public void t01() throws Exception {
-        ScriptObject<?> scriptObject = engineInstance.require("/T03LoggerFactory");
+    public void t01() {
         scriptObject.callMember("logger_1");
         log.info("#-----------------------------------------------------------------------------------");
+    }
+
+    @Test
+    public void t02() {
         scriptObject.callMember("logger_2");
+        log.info("#-----------------------------------------------------------------------------------");
+    }
+
+    @Test
+    public void t03() {
+        scriptObject.callMember("logger_3");
+        log.info("#-----------------------------------------------------------------------------------");
     }
 }

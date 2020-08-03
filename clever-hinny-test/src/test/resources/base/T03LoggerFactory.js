@@ -27,6 +27,7 @@ var logger_3 = function () {
         "undefined": undefined,
         "function": fuc
     };
+    log.info("-----> 开始输出");
     log.info("打印JS变量 | undefined {} | 行尾", undefined);
     log.info("打印JS变量 | null {} | 行尾", null);
     log.info("打印JS变量 | int {} | 行尾", 1);

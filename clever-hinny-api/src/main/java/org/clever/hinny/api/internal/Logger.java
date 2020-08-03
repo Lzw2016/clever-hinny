@@ -31,12 +31,12 @@ public class Logger {
         this.objectToString = objectToString;
     }
 
+    public void trace(String msg) {
+        Object[] args = new Object[]{};
+        trace(msg, args);
+    }
+
 //    TODO fixme https://github.com/graalvm/graaljs/issues/286
-//    public void trace(String msg) {
-//        Object[] args = new Object[]{};
-//        trace(msg, args);
-//    }
-//
 //    public void trace(String format, Object arg) {
 //        Object[] args = new Object[]{arg};
 //        trace(format, args);
@@ -59,6 +59,9 @@ public class Logger {
      */
     public void trace(String format, Object... args) {
         if (logger.isTraceEnabled()) {
+            if (args == null) {
+                args = new Object[]{"null"};
+            }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {
                 logger.trace(tupleTow.getValue1());
@@ -68,11 +71,11 @@ public class Logger {
         }
     }
 
-//    public void debug(String msg) {
-//        Object[] args = new Object[]{};
-//        debug(msg, args);
-//    }
-//
+    public void debug(String msg) {
+        Object[] args = new Object[]{};
+        debug(msg, args);
+    }
+
 //    public void debug(String format, Object arg) {
 //        Object[] args = new Object[]{arg};
 //        debug(format, args);
@@ -95,6 +98,9 @@ public class Logger {
      */
     public void debug(String format, Object... args) {
         if (logger.isDebugEnabled()) {
+            if (args == null) {
+                args = new Object[]{"null"};
+            }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {
                 logger.debug(tupleTow.getValue1());
@@ -104,10 +110,10 @@ public class Logger {
         }
     }
 
-//    public void info(String msg) {
-//        Object[] args = new Object[]{};
-//        info(msg, args);
-//    }
+    public void info(String msg) {
+        Object[] args = new Object[]{};
+        info(msg, args);
+    }
 //
 //    public void info(String format, Object arg) {
 //        Object[] args = new Object[]{arg};
@@ -131,6 +137,9 @@ public class Logger {
      */
     public void info(String format, Object... args) {
         if (logger.isInfoEnabled()) {
+            if (args == null) {
+                args = new Object[]{"null"};
+            }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {
                 logger.info(tupleTow.getValue1());
@@ -140,11 +149,11 @@ public class Logger {
         }
     }
 
-//    public void warn(String msg) {
-//        Object[] args = new Object[]{};
-//        warn(msg, args);
-//    }
-//
+    public void warn(String msg) {
+        Object[] args = new Object[]{};
+        warn(msg, args);
+    }
+
 //    public void warn(String format, Object arg) {
 //        Object[] args = new Object[]{arg};
 //        warn(format, args);
@@ -167,6 +176,9 @@ public class Logger {
      */
     public void warn(String format, Object... args) {
         if (logger.isWarnEnabled()) {
+            if (args == null) {
+                args = new Object[]{"null"};
+            }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {
                 logger.warn(tupleTow.getValue1());
@@ -176,11 +188,11 @@ public class Logger {
         }
     }
 
-//    public void error(String msg) {
-//        Object[] args = new Object[]{};
-//        error(msg, args);
-//    }
-//
+    public void error(String msg) {
+        Object[] args = new Object[]{};
+        error(msg, args);
+    }
+
 //    public void error(String format, Object arg) {
 //        Object[] args = new Object[]{arg};
 //        error(format, args);
@@ -203,6 +215,9 @@ public class Logger {
      */
     public void error(String format, Object... args) {
         if (logger.isErrorEnabled()) {
+            if (args == null) {
+                args = new Object[]{"null"};
+            }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {
                 logger.error(tupleTow.getValue1());

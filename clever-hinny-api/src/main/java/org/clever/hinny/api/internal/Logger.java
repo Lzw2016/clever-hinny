@@ -60,7 +60,7 @@ public class Logger {
     public void trace(String format, Object... args) {
         if (logger.isTraceEnabled()) {
             if (args == null) {
-                args = new Object[]{"null"};
+                args = new Object[]{null};
             }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {
@@ -99,7 +99,7 @@ public class Logger {
     public void debug(String format, Object... args) {
         if (logger.isDebugEnabled()) {
             if (args == null) {
-                args = new Object[]{"null"};
+                args = new Object[]{null};
             }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {
@@ -138,7 +138,7 @@ public class Logger {
     public void info(String format, Object... args) {
         if (logger.isInfoEnabled()) {
             if (args == null) {
-                args = new Object[]{"null"};
+                args = new Object[]{null};
             }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {
@@ -177,7 +177,7 @@ public class Logger {
     public void warn(String format, Object... args) {
         if (logger.isWarnEnabled()) {
             if (args == null) {
-                args = new Object[]{"null"};
+                args = new Object[]{null};
             }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {
@@ -216,7 +216,7 @@ public class Logger {
     public void error(String format, Object... args) {
         if (logger.isErrorEnabled()) {
             if (args == null) {
-                args = new Object[]{"null"};
+                args = new Object[]{null};
             }
             TupleTow<String, Throwable> tupleTow = logString(format, args);
             if (tupleTow.getValue2() == null) {

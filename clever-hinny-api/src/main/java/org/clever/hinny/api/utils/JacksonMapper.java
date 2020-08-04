@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat;
 import com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -68,9 +66,9 @@ public class JacksonMapper {
         ObjectMapper.findModules(moduleClassLoader).forEach(mapper::registerModules);
         SimpleModule module = new SimpleModule();
         module.addSerializer(DateTime.class, new DateTimeSerializer(new JacksonJodaDateFormat(DateTimeFormat.forPattern(dateFormatPattern).withZoneUTC()), 0));
-        module.addSerializer(BigInteger.class, ToStringSerializer.instance);
-        module.addSerializer(Long.class, ToStringSerializer.instance);
-        module.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        // module.addSerializer(BigInteger.class, ToStringSerializer.instance);
+        // module.addSerializer(Long.class, ToStringSerializer.instance);
+        // module.addSerializer(Long.TYPE, ToStringSerializer.instance);
         mapper.registerModules(module);
     }
 

@@ -5,9 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.graaljs.internal.GraalJObject;
 import org.graalvm.polyglot.Value;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 作者：lizw <br/>
@@ -65,24 +63,65 @@ public class InteropScriptToJavaUtils {
 //        // TODO
 //        return null;
 //    }
-//
-//    public Collection<?> toJavaObject(Collection<?> collection) {
-//        // TODO
-//        return null;
-//    }
-//
 
+    /**
+     * 处理 Map
+     */
     public Map<String, Object> convertMap(Map<String, Object> map) {
         if (map == null) {
             return null;
         }
         for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
             Object object = entry.getValue();
-            entry.setValue(toJavaObjectForBase(object));
+            object = toJavaObject(object);
+            map.put(key, object);
         }
         return map;
     }
 
+    /**
+     * 处理 Collection Map
+     */
+    public Collection<Map<String, Object>> convertCollectionMap(Collection<Map<String, Object>> collection) {
+        if (collection == null) {
+            return null;
+        }
+        Collection<Map<String, Object>> res;
+        if (collection instanceof Set) {
+            res = new HashSet<>(collection.size());
+        } else {
+            res = new ArrayList<>(collection.size());
+        }
+        for (Map<String, Object> item : collection) {
+            res.add(convertMap(item));
+        }
+        return res;
+    }
+
+    /**
+     * 处理 Collection
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<Object> convertCollection(Collection<Object> collection) {
+        if (collection == null) {
+            return null;
+        }
+        Collection<Object> res;
+        if (collection instanceof Set) {
+            res = new HashSet<>(collection.size());
+        } else {
+            res = new ArrayList<>(collection.size());
+        }
+        for (Object item : collection) {
+            if (item instanceof Map) {
+                res.add(convertMap((Map<String, Object>) item));
+            } else {
+                res.add(toJavaObject(item));
+            }
+        }
+        return res;
+    }
 
     /**
      * 把JavaScript对象转换成Java对象 <br />
@@ -139,7 +178,7 @@ public class InteropScriptToJavaUtils {
         } else if (value.isNativePointer()) {                                   // 本机指针
             return value;
         }
-        return value;
+        return object;
     }
 
     protected Value toValue(Object object) {

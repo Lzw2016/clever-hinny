@@ -83,17 +83,12 @@ public class InteropScriptToJavaUtils {
     /**
      * 处理 Collection Map
      */
-    public Collection<Map<String, Object>> convertCollectionMap(Collection<Map<String, Object>> collection) {
-        if (collection == null) {
+    public List<Map<String, Object>> convertMapList(List<Map<String, Object>> mapList) {
+        if (mapList == null) {
             return null;
         }
-        Collection<Map<String, Object>> res;
-        if (collection instanceof Set) {
-            res = new HashSet<>(collection.size());
-        } else {
-            res = new ArrayList<>(collection.size());
-        }
-        for (Map<String, Object> item : collection) {
+        List<Map<String, Object>> res = new ArrayList<>(mapList.size());
+        for (Map<String, Object> item : mapList) {
             res.add(convertMap(item));
         }
         return res;
@@ -103,17 +98,12 @@ public class InteropScriptToJavaUtils {
      * 处理 Collection
      */
     @SuppressWarnings("unchecked")
-    public Collection<Object> convertCollection(Collection<Object> collection) {
-        if (collection == null) {
+    public List<Object> convertList(List<Object> list) {
+        if (list == null) {
             return null;
         }
-        Collection<Object> res;
-        if (collection instanceof Set) {
-            res = new HashSet<>(collection.size());
-        } else {
-            res = new ArrayList<>(collection.size());
-        }
-        for (Object item : collection) {
+        List<Object> res = new ArrayList<>(list.size());
+        for (Object item : list) {
             if (item instanceof Map) {
                 res.add(convertMap((Map<String, Object>) item));
             } else {

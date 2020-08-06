@@ -69,6 +69,14 @@ public abstract class JObject<T> {
         return Double.parseDouble(d);
     }
 
+    public float asJFloat(float d) {
+        return d;
+    }
+
+    public float asJFloat(String d) {
+        return Float.parseFloat(d);
+    }
+
     public boolean asJBoolean(boolean b) {
         return b;
     }

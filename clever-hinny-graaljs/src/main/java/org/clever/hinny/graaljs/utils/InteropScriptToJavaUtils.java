@@ -2,7 +2,7 @@ package org.clever.hinny.graaljs.utils;
 
 import com.oracle.truffle.api.interop.TruffleObject;
 import lombok.extern.slf4j.Slf4j;
-import org.clever.hinny.graaljs.internal.GraalJObject;
+import org.clever.hinny.graaljs.internal.GraalInterop;
 import org.graalvm.polyglot.Value;
 
 import java.util.*;
@@ -156,7 +156,7 @@ public class InteropScriptToJavaUtils {
         } else if (value.isString()) {                                          // String
             return value.asString();
         } else if (value.isDate() || value.isTime() || value.isInstant()) {     // Date 日期+时间
-            return GraalJObject.Instance.asJDate(value);
+            return GraalInterop.Instance.asJDate(value);
         } else if (value.isDuration()) {                                        // Duration 时间段
             return value.asDuration();
         } else if (value.isTimeZone()) {                                        // Duration 时间段

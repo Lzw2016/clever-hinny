@@ -1,7 +1,6 @@
 package org.clever.hinny.api;
 
 import org.clever.hinny.api.internal.CommonUtils;
-import org.clever.hinny.api.internal.Interop;
 import org.clever.hinny.api.internal.LoggerConsole;
 import org.clever.hinny.api.internal.LoggerFactory;
 
@@ -114,7 +113,6 @@ public interface GlobalConstant {
         put("console", LoggerConsole.Instance);
         put("print", LoggerConsole.Instance);
         put("LoggerFactory", LoggerFactory.Instance);
-        put("Interop", Interop.Instance);
     }});
 
     /**

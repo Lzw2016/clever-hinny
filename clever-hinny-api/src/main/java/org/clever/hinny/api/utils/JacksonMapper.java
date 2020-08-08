@@ -4,10 +4,15 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat;
 import com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.clever.hinny.api.folder.Folder;
+import org.clever.hinny.api.module.CompileModule;
+import org.clever.hinny.api.module.ModuleCache;
+import org.clever.hinny.api.require.Require;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
@@ -66,6 +71,11 @@ public class JacksonMapper {
         ObjectMapper.findModules(moduleClassLoader).forEach(mapper::registerModules);
         SimpleModule module = new SimpleModule();
         module.addSerializer(DateTime.class, new DateTimeSerializer(new JacksonJodaDateFormat(DateTimeFormat.forPattern(dateFormatPattern).withZoneUTC()), 0));
+        module.addSerializer(ModuleCache.class, ToStringSerializer.instance);
+        module.addSerializer(org.clever.hinny.api.module.Module.class, ToStringSerializer.instance);
+        module.addSerializer(CompileModule.class, ToStringSerializer.instance);
+        module.addSerializer(Require.class, ToStringSerializer.instance);
+        module.addSerializer(Folder.class, ToStringSerializer.instance);
         // module.addSerializer(BigInteger.class, ToStringSerializer.instance);
         // module.addSerializer(Long.class, ToStringSerializer.instance);
         // module.addSerializer(Long.TYPE, ToStringSerializer.instance);

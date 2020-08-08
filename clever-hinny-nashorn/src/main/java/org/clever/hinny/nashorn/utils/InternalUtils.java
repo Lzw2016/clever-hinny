@@ -1,4 +1,4 @@
-package org.clever.hinny.api.internal;
+package org.clever.hinny.nashorn.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -7,61 +7,22 @@ import org.clever.hinny.api.GlobalConstant;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 基本工具类
- * <p>
  * 作者：lizw <br/>
- * 创建时间：2019/08/24 12:32 <br/>
+ * 创建时间：2020/08/08 21:04 <br/>
  */
-public class CommonUtils {
+public class InternalUtils {
     /**
      * 时间格式
      */
     private static final Pattern Date_Pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z");
 
-    public static final CommonUtils Instance = new CommonUtils();
+    public static final InternalUtils Instance = new InternalUtils();
 
-    private CommonUtils() {
-    }
-
-    /**
-     * 休眠一段时间
-     *
-     * @param millis 毫秒
-     */
-    public void sleep(Number millis) throws InterruptedException {
-        Thread.sleep(millis.longValue());
-    }
-
-    /**
-     * 获取对象16进制的 hashcode
-     */
-    public String hexHashCode(Object object) {
-        if (object == null) {
-            return null;
-        }
-        return Integer.toHexString(object.hashCode());
-    }
-
-    /**
-     * 获取对象的 hashcode
-     */
-    public Integer hashCode(Object object) {
-        if (object == null) {
-            return null;
-        }
-        return object.hashCode();
-    }
-
-    /**
-     * 两个对象 equals
-     */
-    public boolean equals(Object a, Object b) {
-        return Objects.equals(a, b);
+    private InternalUtils() {
     }
 
     /**
@@ -94,19 +55,5 @@ public class CommonUtils {
         } catch (ParseException e) {
             return str;
         }
-    }
-
-    /**
-     * 获取当前时间搓(毫秒)
-     */
-    public long currentTimeMillis() {
-        return System.currentTimeMillis();
-    }
-
-    /**
-     * 获取当前时间 Date
-     */
-    public Date nowDate() {
-        return new Date();
     }
 }

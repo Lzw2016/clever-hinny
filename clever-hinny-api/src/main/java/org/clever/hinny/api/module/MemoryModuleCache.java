@@ -1,5 +1,6 @@
 package org.clever.hinny.api.module;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ public class MemoryModuleCache<T> implements ModuleCache<T> {
     /**
      * 缓存
      */
+    @JsonIgnore
     private final Cache<String, Module<T>> modulesCache;
 
     /**

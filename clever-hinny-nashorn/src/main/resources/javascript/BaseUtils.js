@@ -1,6 +1,6 @@
 // noinspection JSUnresolvedVariable
-// var CommonUtilsClass = Java.type("org.clever.hinny.api.internal.CommonUtils");
-// var CommonUtils = CommonUtilsClass.Instance;
+// var InternalUtilsClass = Java.type("org.clever.hinny.nashorn.utils.InternalUtils");
+// var InternalUtils = InternalUtilsClass.Instance;
 
 // -------------------------------------------------------------------------------------------------------
 
@@ -90,7 +90,7 @@ function indexOf(array, item) {
     for (var i = 0; i < array.length; i++) {
         var value = array[i];
         // noinspection JSUnresolvedFunction
-        if (CommonUtils.same(item, value)) {
+        if (InternalUtils.same(item, value)) {
             index = i;
             break;
         }
@@ -145,7 +145,7 @@ function inspect(object) {
         }
         if (isString(value)) {
             // noinspection JSUnresolvedFunction
-            return CommonUtils.formatDate(value);
+            return InternalUtils.formatDate(value);
         }
         return value;
     });

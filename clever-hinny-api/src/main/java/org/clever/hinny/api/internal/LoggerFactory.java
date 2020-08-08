@@ -9,7 +9,7 @@ import lombok.SneakyThrows;
  * 创建时间：2020/07/26 08:45 <br/>
  */
 public class LoggerFactory {
-    public static final Cache<String, Logger> Logger_Cache = CacheBuilder.newBuilder().initialCapacity(32).maximumSize(256).build();
+    protected static final Cache<String, Logger> Logger_Cache = CacheBuilder.newBuilder().initialCapacity(32).maximumSize(256).build();
 
     public static final LoggerFactory Instance = new LoggerFactory();
 

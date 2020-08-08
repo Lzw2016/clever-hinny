@@ -73,10 +73,6 @@ public abstract class Interop<T> {
         return Double.parseDouble(d);
     }
 
-    public float asJFloat(float d) {
-        return d;
-    }
-
     public float asJFloat(String d) {
         return Float.parseFloat(d);
     }
@@ -95,6 +91,10 @@ public abstract class Interop<T> {
 
     public String asJString(String str) {
         return str;
+    }
+
+    public String toJString(Object obj) {
+        return String.valueOf(obj);
     }
 
     /**

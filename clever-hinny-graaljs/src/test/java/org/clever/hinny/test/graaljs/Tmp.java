@@ -134,7 +134,7 @@ public class Tmp {
         Value value = ScriptEngineUtils.newArray(context, "aaa", 111, false);
         log.info("## -> {}", value);
 
-        Object[] object = new Object[]{"aaa", 111, false};
+        Object object = new Object[]{"aaa", 111, false};
         value = ScriptEngineUtils.newArray(context, object);
         log.info("## -> {}", value);
 

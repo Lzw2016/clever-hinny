@@ -26,14 +26,17 @@ public class T01Console {
 
     private ScriptEngineInstance<?, ?> engineInstance;
 
+    private ScriptObject<?> scriptObject;
+
     @Before
-    public void before1() {
+    public void before1() throws Exception {
         // clever-hinny-graaljs
         log.info("### rootFolder -> {}", rootFolder);
         Engine engine = Engine.newBuilder()
                 .useSystemProperties(true)
                 .build();
         engineInstance = GraalScriptEngineInstance.Builder.create(engine, rootFolder).build();
+        scriptObject = engineInstance.require("/T01Console");
     }
 
     //@Before
@@ -49,14 +52,25 @@ public class T01Console {
     }
 
     @Test
-    public void t01() throws Exception {
-        ScriptObject<?> scriptObject = engineInstance.require("/T01Console");
+    public void t01() {
         scriptObject.callMember("log_1");
         log.info("#-----------------------------------------------------------------------------------");
+    }
+
+    @Test
+    public void t02() {
         scriptObject.callMember("count_1");
         log.info("#-----------------------------------------------------------------------------------");
+    }
+
+    @Test
+    public void t03() {
         scriptObject.callMember("time_1");
         log.info("#-----------------------------------------------------------------------------------");
+    }
+
+    @Test
+    public void t04() {
         scriptObject.callMember("log_2");
         log.info("#-----------------------------------------------------------------------------------");
     }

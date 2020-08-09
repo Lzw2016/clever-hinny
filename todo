@@ -32,16 +32,22 @@ clever-hinny-graaljs 80%
 - 里程碑事件
 [OK] 01.clever-hinny-api稳定，并实现clever-hinny-graaljs、clever-hinny-j2v8、clever-hinny-nashorn。JavaScript引擎核心封装完成，JavaScript引擎达到基本可用状态
 [OK] 02.hinny-data-jdbc 项目基本完成，达到基本可用状态
-[  ] 03.接入hinny-data-jdbc
-[  ] 04.封装/接入Spring MVC
-[  ] 05.大整合(定义开发模式，调通)
-[  ] 06.打通前后端RPC调用
-[  ] 07.Web IDE 开发
-[  ] 08.
-[  ] 09.
-[  ] 10.
-[  ] 11.
-[  ] 12.
+[OK] 03.接入 hinny-data-jdbc
+[  ] 04.完成 hinny-core
+[  ] 05.接入 hinny-core
+[  ] 06.完成、接入hinny-data-mvc(封装/接入Spring MVC)
+[  ] 07.大整合(定义开发模式，调通)
+[  ] 08.打通前后端RPC调用
+[  ] 09.Web IDE 开发
+[  ] 10.完成 hinny-data-redis
+[  ] 11.接入 hinny-data-redis
+[  ] 12.完成 hinny-data-elasticsearch
+[  ] 13.接入 hinny-data-elasticsearch
+[  ] 14.完成 hinny-data-rabbitmq
+[  ] 15.接入 hinny-data-rabbitmq
+[  ] 16.完成 hinny-data-kafka
+[  ] 17.接入 hinny-data-kafka
+[  ] 18.
 
 
 

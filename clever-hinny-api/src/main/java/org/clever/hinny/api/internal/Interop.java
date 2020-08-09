@@ -29,6 +29,21 @@ public abstract class Interop<T> {
     protected Interop() {
     }
 
+    public Class<?> getClass(String className) {
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(className);
+        } catch (ClassNotFoundException ignored) {
+        }
+        return clazz;
+    }
+
+    @SneakyThrows
+    public Object newJObject(String className) {
+        Class<?> clazz = Class.forName(className);
+        return clazz.getDeclaredConstructor().newInstance();
+    }
+
     public byte asJByte(byte b) {
         return b;
     }

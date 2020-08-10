@@ -152,6 +152,10 @@ public abstract class Interop<T> {
         return new BigDecimal(arg);
     }
 
+    public BigInteger asJBigInteger(String arg) {
+        return new BigInteger(arg);
+    }
+
     public List<Object> asJList(Object... args) {
         if (args == null) {
             return null;

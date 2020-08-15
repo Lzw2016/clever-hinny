@@ -26,36 +26,7 @@ public class InteropScriptToJavaUtils {
      * @param object JavaScript对象
      */
     public Object toJavaObject(Object object) {
-        if (object == null) {
-            return null;
-        }
-        Object res = toJavaObjectForBase(object);
-        if (res != object) {
-            return object;
-        }
-        Value value = toValue(object);
-        if (value == null) {
-            return object;
-        }
-        // 数组, 对象
-        if (value.hasArrayElements()) {
-            long size = value.getArraySize();
-            if (size > Integer.MAX_VALUE) {
-                throw new ClassCastException("数组 arg.length=" + size + " 太长无法转换");
-            }
-            Object[] array = new Object[(int) size];
-            for (int i = 0; i < size; i++) {
-                array[i] = toJavaObjectForBase(value.getArrayElement(i));
-            }
-            return array;
-        } else {
-            Set<String> keys = value.getMemberKeys();
-            Map<String, Object> map = new HashMap<>(keys.size());
-            for (String key : keys) {
-                map.put(key, toJavaObjectForBase(value.getMember(key)));
-            }
-            return map;
-        }
+        return deepToJavaObject(object, 1);
     }
 
 //    public Object[] toJavaObject(Object[] array) {
@@ -114,6 +85,59 @@ public class InteropScriptToJavaUtils {
     }
 
     /**
+     * 把JavaScript对象转换成Java对象(深度转换) <br />
+     *
+     * @param object JavaScript对象
+     * @param deep   转换深度值(应该大于等于1)
+     */
+    public Object deepToJavaObject(Object object, int deep) {
+        if (deep <= 0) {
+            return object;
+        }
+        if (object == null) {
+            return null;
+        }
+        Object res = toJavaObjectForBase(object);
+        if (res != object) {
+            return object;
+        }
+        Value value = toValue(object);
+        if (value == null) {
+            return object;
+        }
+        // 数组, 对象
+        if (value.hasArrayElements()) {
+            long size = value.getArraySize();
+            if (size > Integer.MAX_VALUE) {
+                throw new ClassCastException("数组 arg.length=" + size + " 太长无法转换");
+            }
+            Object[] array = new Object[(int) size];
+            for (int i = 0; i < size; i++) {
+                Object tmp = toJavaObjectForBase(value.getArrayElement(i));
+                array[i] = deepToJavaObject(tmp, deep - 1);
+            }
+            return array;
+        } else {
+            Set<String> keys = value.getMemberKeys();
+            Map<String, Object> map = new HashMap<>(keys.size());
+            for (String key : keys) {
+                Object tmp = toJavaObjectForBase(value.getMember(key));
+                map.put(key, deepToJavaObject(tmp, deep - 1));
+            }
+            return map;
+        }
+    }
+
+    /**
+     * 把JavaScript对象转换成Java对象(深度转换，深度值为16) <br />
+     *
+     * @param object JavaScript对象
+     */
+    public Object deepToJavaObject(Object object) {
+        return deepToJavaObject(object, 16);
+    }
+
+    /**
      * 把JavaScript对象转换成Java对象 <br />
      * 1. 只考虑简单对象，不考虑“数组”、“Object对象” <br />
      * 2. 只做浅转换(一层转换) <br />
@@ -121,6 +145,13 @@ public class InteropScriptToJavaUtils {
      * @param object JavaScript对象
      */
     protected Object toJavaObjectForBase(Object object) {
+        if (object == null) {
+            return null;
+        }
+        final String className = object.getClass().getName();
+        if (!className.startsWith("com.oracle.truffle.") && !className.startsWith("org.graalvm.")) {
+            return object;
+        }
         Value value = toValue(object);
         if (value == null) {
             return object;
@@ -171,6 +202,9 @@ public class InteropScriptToJavaUtils {
         return object;
     }
 
+    /**
+     * 得到原始的JavaScript对象
+     */
     protected Value toValue(Object object) {
         if (object == null) {
             return null;

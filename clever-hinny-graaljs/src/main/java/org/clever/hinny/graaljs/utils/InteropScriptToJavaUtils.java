@@ -147,7 +147,7 @@ public class InteropScriptToJavaUtils {
      *
      * @param object JavaScript对象
      */
-    protected Object toJavaObjectForBase(Object object) {
+    public Object toJavaObjectForBase(Object object) {
         if (object == null) {
             return null;
         }

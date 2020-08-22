@@ -105,6 +105,9 @@ public class InteropScriptToJavaUtils {
         if (value == null) {
             return object;
         }
+        if (value.canExecute()) {
+            return object;
+        }
         // 数组, 对象
         if (value.hasArrayElements()) {
             long size = value.getArraySize();
@@ -194,7 +197,9 @@ public class InteropScriptToJavaUtils {
             return value.asTimeZone();
         } else if (value.isProxyObject()) {                                     // Proxy 对象
             return value.asProxyObject();
-        } else if (value.isMetaObject()) {                                      // Class 类型
+        } else if (value.canExecute()) {                                        // Js Function 类型
+            return value;
+        } else if (value.isMetaObject()) {                                     // Class 类型
             return value;
         } else if (value.isNativePointer()) {                                   // 本机指针
             return value;

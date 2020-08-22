@@ -195,7 +195,7 @@ public class InteropScriptToJavaUtils {
         } else if (value.isProxyObject()) {                                     // Proxy 对象
             return value.asProxyObject();
         } else if (value.isMetaObject()) {                                      // Class 类型
-            return value.getMetaObject();
+            return value;
         } else if (value.isNativePointer()) {                                   // 本机指针
             return value;
         }

@@ -80,14 +80,14 @@ public class Pool2Test {
     @SneakyThrows
     @Test
     public void t01() {
-        final int threadCount = 1000;
+        final int threadCount = 10000;
         final Semaphore semaphore = new Semaphore(threadCount);
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(256, 256, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1024));
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(256, 256, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(102400));
         final long startTime = System.currentTimeMillis();
         for (int i = 0; i < threadCount; i++) {
             semaphore.acquire();
             executor.execute(() -> {
-                usePool(10000);
+                usePool(1000);
                 semaphore.release();
                 // log.info("# --> release");
             });
@@ -98,7 +98,8 @@ public class Pool2Test {
         for (TupleOne<Long> tupleOne : TupleOneFactory.allObj) {
             sum += tupleOne.getValue();
         }
-        log.info("# --> 耗时: {}ms | sum -> {}", endTime - startTime, sum); // 耗时: 20708ms | sum -> 10000000
+        log.info("# --> 耗时: {}ms | sum -> {}", endTime - startTime, sum); // 耗时: 19988ms | sum -> 10000000
+        // synchronized 耗时: 2102ms | sum -> 10000000
     }
 }
 

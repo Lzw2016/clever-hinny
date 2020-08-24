@@ -94,7 +94,7 @@ public class ScriptEngineUtils {
     /**
      * 定义JavaScript不允许访问的Class
      */
-    private static void addDenyAccess(HostAccess.Builder builder, Set<Class<?>> denyAccessClass) {
+    public static void addDenyAccess(HostAccess.Builder builder, Set<Class<?>> denyAccessClass) {
         for (Class<?> aClass : denyAccessClass) {
             if (aClass == null) {
                 continue;

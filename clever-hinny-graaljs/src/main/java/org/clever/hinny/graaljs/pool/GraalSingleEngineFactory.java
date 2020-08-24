@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.clever.hinny.api.AbstractBuilder;
 import org.clever.hinny.api.GlobalConstant;
 import org.clever.hinny.api.ScriptEngineInstance;
 import org.clever.hinny.api.folder.Folder;
@@ -16,6 +17,7 @@ import org.graalvm.polyglot.*;
 import java.io.Closeable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 单个Engine对象的 GraalScriptEngineInstance 创建工厂
@@ -25,35 +27,43 @@ import java.util.Set;
  */
 @Slf4j
 public class GraalSingleEngineFactory extends BasePooledObjectFactory<ScriptEngineInstance<Context, Value>> implements Closeable {
-    private final Folder rootFolder;
-    private final Engine engine;
-    private final HostAccess hostAccess;
+    private final static String COUNTER_NAME = "org.clever.hinny.graaljs.GraalScriptEngineInstance#COUNTER";
+    private final static AtomicLong COUNTER = new AtomicLong(0);
+
+    protected final Folder rootFolder;
+    protected final Engine engine;
+    protected final HostAccess hostAccess;
 
     public GraalSingleEngineFactory(Folder rootFolder, Engine engine) {
         Assert.notNull(rootFolder, "参数rootFolder不能为空");
         Assert.notNull(engine, "参数engine不能为空");
         this.rootFolder = rootFolder;
         this.engine = engine;
-        this.hostAccess = creatHostAccess();
+        this.hostAccess = getHostAccessBuilder().build();
     }
 
-    // TODO 子类可扩展
-    protected HostAccess creatHostAccess() {
+    /**
+     * 返回 HostAccess.Builder 对象
+     */
+    protected HostAccess.Builder getHostAccessBuilder() {
         // 沙箱环境控制 - 定义JavaScript可以访问的Class(使用黑名单机制)
         HostAccess.Builder hostAccessBuilder = HostAccess.newBuilder();
         hostAccessBuilder.allowArrayAccess(true);
         hostAccessBuilder.allowListAccess(true);
         hostAccessBuilder.allowPublicAccess(true);
         hostAccessBuilder.allowAllImplementations(true);
-        // 计划支持 https://github.com/graalvm/graaljs/issues/143
+        // TODO 计划支持 https://github.com/graalvm/graaljs/issues/143
         // hostAccessBuilder.allowMapAccess(true);
         Set<Class<?>> denyAccessClass = new HashSet<>(GlobalConstant.Default_Deny_Access_Class);
         ScriptEngineUtils.addDenyAccess(hostAccessBuilder, denyAccessClass);
-        return hostAccessBuilder.build();
+        return hostAccessBuilder;
     }
 
-    // TODO 子类可扩展
-    protected Context creatContext() {
+
+    /**
+     * 返回 Context.Builder 对象
+     */
+    protected Context.Builder getContextBuilder() {
         Assert.notNull(engine, "参数engine不能为空");
         Context.Builder contextBuilder = Context.newBuilder(GraalConstant.Js_Language_Id)
                 .engine(engine)
@@ -87,7 +97,15 @@ public class GraalSingleEngineFactory extends BasePooledObjectFactory<ScriptEngi
         contextBuilder.allowHostAccess(hostAccess);
         // 沙箱环境控制 - 限制JavaScript的资源使用
         // ResourceLimits resourceLimits = ResourceLimits.newBuilder().statementLimit()
-        return contextBuilder.build();
+        return contextBuilder;
+    }
+
+    /**
+     * 返回ScriptEngineInstance Builder对象
+     */
+    protected AbstractBuilder<Context, Value, ScriptEngineInstance<Context, Value>> getScriptEngineInstanceBuilder() {
+        return GraalScriptEngineInstance.Builder.create(engine, rootFolder)
+                .setEngine(getContextBuilder().build());
     }
 
     /**
@@ -95,11 +113,10 @@ public class GraalSingleEngineFactory extends BasePooledObjectFactory<ScriptEngi
      */
     @Override
     public ScriptEngineInstance<Context, Value> create() {
-        // TODO 子类可扩展
-        ScriptEngineInstance<Context, Value> instance = GraalScriptEngineInstance.Builder.create(engine, rootFolder)
-                .setEngine(creatContext())
-                .build();
-        log.info("# create");
+        ScriptEngineInstance<Context, Value> instance = getScriptEngineInstanceBuilder().build();
+        long counter = COUNTER.incrementAndGet();
+        instance.getContext().getContextMap().put(COUNTER_NAME, counter);
+        log.info("创建 GraalScriptEngineInstance | counter={}", counter);
         // instance.getContext().getEngine().leave();
         return instance;
     }
@@ -117,26 +134,24 @@ public class GraalSingleEngineFactory extends BasePooledObjectFactory<ScriptEngi
      */
     @Override
     public boolean validateObject(PooledObject<ScriptEngineInstance<Context, Value>> p) {
-        log.info("# validateObject");
-        return super.validateObject(p);
+        // log.info("# validateObject");
+        return true;
     }
 
     /**
      * 激活对象，从池中取对象时会调用此方法
      */
     @Override
-    public void activateObject(PooledObject<ScriptEngineInstance<Context, Value>> p) throws Exception {
-        log.info("# activateObject");
-        super.activateObject(p);
+    public void activateObject(PooledObject<ScriptEngineInstance<Context, Value>> p) {
+        // log.info("# activateObject");
     }
 
     /**
      * 钝化对象，向池中返还对象时会调用此方法
      */
     @Override
-    public void passivateObject(PooledObject<ScriptEngineInstance<Context, Value>> p) throws Exception {
-        log.info("# passivateObject");
-        super.passivateObject(p);
+    public void passivateObject(PooledObject<ScriptEngineInstance<Context, Value>> p) {
+        // log.info("# passivateObject");
     }
 
     /**
@@ -144,8 +159,11 @@ public class GraalSingleEngineFactory extends BasePooledObjectFactory<ScriptEngi
      */
     @Override
     public void destroyObject(PooledObject<ScriptEngineInstance<Context, Value>> p) throws Exception {
-        log.info("# destroyObject");
-        p.getObject().close();
+        if (p.getObject() != null) {
+            p.getObject().close();
+            Object counter = p.getObject().getContext().getContextMap().get(COUNTER_NAME);
+            log.info("关闭 GraalScriptEngineInstance | counter={}", counter);
+        }
     }
 
     /**

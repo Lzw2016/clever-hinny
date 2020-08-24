@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class GraalSingleEngineFactoryTest {
 
     private GenericEngineInstancePool<Context, Value> pool;
+    private GraalSingleEngineFactory factory;
 
     @Before
     public void init() {
@@ -42,7 +43,7 @@ public class GraalSingleEngineFactoryTest {
         Engine engine = Engine.newBuilder()
                 .useSystemProperties(true)
                 .build();
-        GraalSingleEngineFactory factory = new GraalSingleEngineFactory(rootFolder, engine);
+        factory = new GraalSingleEngineFactory(rootFolder, engine);
         // 创建对象池
         pool = new GenericEngineInstancePool<>(factory, config);
     }
@@ -50,6 +51,7 @@ public class GraalSingleEngineFactoryTest {
     @After
     public void close() {
         pool.close();
+        factory.close();
     }
 
     public void usePool() {

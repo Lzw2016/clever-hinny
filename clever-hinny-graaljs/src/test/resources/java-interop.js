@@ -24,6 +24,7 @@ console.log("# -> Set:          | ", JavaInterop.getSet().contains("ccc"));
 console.log("# -> Map:          | ", JavaInterop.getMap().keySet().contains("string"));
 console.log("# -> Map:          | ", JavaInterop.getMap().string);
 console.log("# -> getProxyMap:  | ", JavaInterop.getProxyMap().string);
+console.log("# -> getProxyMap:  | ", JavaInterop.getProxyMap());
 // 结论：Java对象在JavaScript环境中仍然是Java对象，只能调用Java对象存在的方法
 
 console.log("----------------------------------------------------------------------------------------")

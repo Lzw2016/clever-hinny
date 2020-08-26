@@ -48,6 +48,7 @@ JavaInterop.setMap({
         return a + b;
     }
 });
+JavaInterop.setMap(JavaInterop.getProxyMap());
 console.log("----------------------------------------------------------------------------------------")
 JavaInterop.setValue(new Date());
 JavaInterop.setValue(["aaa", "bbb", "ccc"]);

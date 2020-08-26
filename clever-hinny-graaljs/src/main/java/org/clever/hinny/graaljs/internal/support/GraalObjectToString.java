@@ -8,10 +8,6 @@ import org.clever.hinny.api.internal.support.ObjectToString;
 import org.clever.hinny.api.utils.JacksonMapper;
 import org.graalvm.polyglot.Value;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/07/26 15:21 <br/>
@@ -26,7 +22,7 @@ public class GraalObjectToString extends ObjectToString {
         module.addSerializer(TruffleObject.class, ToStringSerializer.instance);
         try {
             Class<?> clazz = Class.forName("com.oracle.truffle.polyglot.HostWrapper");
-            module.addSerializer(clazz, ToStringSerializer.instance);
+            module.addSerializer(clazz, HostWrapperSerializer.instance);
         } catch (ClassNotFoundException e) {
             log.warn("类型com.oracle.truffle.polyglot.HostWrapper加载失败", e);
         }
@@ -38,16 +34,11 @@ public class GraalObjectToString extends ObjectToString {
         if (null == obj) {
             return null;
         }
-        String className = obj.getClass().getName();
-        if (Objects.equals("com.oracle.truffle.polyglot.PolyglotMap", className) && obj instanceof Map) {
-            // noinspection rawtypes
-            obj = Map.copyOf((Map) obj);
-            className = HashMap.class.getName();
-        }
         if (obj instanceof Value) {
             return obj.toString();
         }
-        if (obj instanceof TruffleObject || className.startsWith("com.oracle.truffle.") || className.startsWith("org.graalvm.")) {
+        String className = obj.getClass().getName();
+        if (!HostWrapperSerializer.isSupport(className) && (obj instanceof TruffleObject || className.startsWith("com.oracle.truffle.") || className.startsWith("org.graalvm."))) {
             return obj.toString();
         }
         return super.toString(obj);

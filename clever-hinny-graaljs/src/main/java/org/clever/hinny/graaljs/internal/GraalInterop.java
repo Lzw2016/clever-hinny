@@ -58,26 +58,41 @@ public class GraalInterop extends Interop<Value> {
 
     @Override
     public ProxyArray fromJList(List<Object> values) {
+        if (values == null) {
+            return null;
+        }
         return ProxyArray.fromList(values);
     }
 
     @Override
     public ProxyArray fromJArray(Object... values) {
+        if (values == null) {
+            return null;
+        }
         return ProxyArray.fromArray(values);
     }
 
     @Override
     public ProxyObject fromJMap(Map<String, Object> values) {
+        if (values == null) {
+            return null;
+        }
         return ProxyObject.fromMap(values);
     }
 
     @Override
     public ProxyDate fromJDate(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
         return ProxyDate.from(date);
     }
 
     @Override
     public ProxyDate fromJDate(Date date) {
+        if (date == null) {
+            return null;
+        }
         Instant instant = date.toInstant();
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDate localDate = instant.atZone(zoneId).toLocalDate();
@@ -86,6 +101,9 @@ public class GraalInterop extends Interop<Value> {
 
     @Override
     public ProxyDate fromJDate(java.sql.Date date) {
+        if (date == null) {
+            return null;
+        }
         Instant instant = date.toInstant();
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDate localDate = instant.atZone(zoneId).toLocalDate();
@@ -94,21 +112,33 @@ public class GraalInterop extends Interop<Value> {
 
     @Override
     public ProxyDuration fromJDate(Duration duration) {
+        if (duration == null) {
+            return null;
+        }
         return ProxyDuration.from(duration);
     }
 
     @Override
     public ProxyInstant fromJDate(Instant instant) {
+        if (instant == null) {
+            return null;
+        }
         return ProxyInstant.from(instant);
     }
 
     @Override
     public ProxyTime fromJDate(LocalTime localTime) {
+        if (localTime == null) {
+            return null;
+        }
         return ProxyTime.from(localTime);
     }
 
     @Override
     public ProxyTimeZone fromJDate(ZoneId zoneId) {
+        if (zoneId == null) {
+            return null;
+        }
         return ProxyTimeZone.from(zoneId);
     }
 

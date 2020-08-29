@@ -98,13 +98,16 @@ public class InteropScriptToJavaUtils {
             return null;
         }
         Object res = toJavaObjectForBase(object);
+        // 转换成功
         if (res != object) {
-            return object;
+            return res;
         }
         Value value = toValue(object);
+        // 不是 Value 类型
         if (value == null) {
             return object;
         }
+        // 是一个 Value Function 对象
         if (value.canExecute()) {
             return object;
         }

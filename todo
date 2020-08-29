@@ -19,11 +19,11 @@ clever-hinny-graaljs 80%
 [  ] 13.根据Java代码自动生成d.ts文件工具
 [  ] 14.Java与JavaScript的Date格式统一(值也要统一)
 [  ] 15.代码同步工具组件
-[  ] 16.JavaScript引擎对象池实现
-[  ] 17.@types/clever-hinny-api(@types/clever-hinny-core)
-[  ] 18.clever-hinny-data模块(@types/clever-hinny-data)
-[  ] 19.clever-hinny-server模块(@types/clever-hinny-server)
-[  ] 20.
+[OK] 16.JavaScript引擎对象池实现
+[OK] 17.clever-hinny-js/types
+[OK] 18.hinny-core模块(clever-hinny-js/core)
+[OK] 19.hinny-data-jdbc模块(clever-hinny-js/data-jdbc)
+[OK] 20.hinny-mvc模块(clever-hinny-js/mvc)
 [  ] 21.
 [  ] 22.
 [  ] 23.
@@ -33,9 +33,9 @@ clever-hinny-graaljs 80%
 [OK] 01.clever-hinny-api稳定，并实现clever-hinny-graaljs、clever-hinny-j2v8、clever-hinny-nashorn。JavaScript引擎核心封装完成，JavaScript引擎达到基本可用状态
 [OK] 02.hinny-data-jdbc 项目基本完成，达到基本可用状态
 [OK] 03.接入 hinny-data-jdbc
-[  ] 04.完成 hinny-core
-[  ] 05.接入 hinny-core
-[  ] 06.完成、接入hinny-data-mvc(封装/接入Spring MVC)
+[OK] 04.完成 hinny-core
+[OK] 05.接入 hinny-core
+[OK] 06.完成、接入hinny-data-mvc(封装/接入Spring MVC)
 [  ] 07.大整合(定义开发模式，调通)
 [  ] 08.打通前后端RPC调用
 [  ] 09.Web IDE 开发

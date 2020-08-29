@@ -21,6 +21,6 @@ public class ValueSerializer extends JsonSerializer<Value> {
             gen.writeNull();
             return;
         }
-        gen.writeObject(InteropScriptToJavaUtils.Instance.toJavaObjectForBase(value));
+        gen.writeObject(InteropScriptToJavaUtils.Instance.toJavaObject(value));
     }
 }

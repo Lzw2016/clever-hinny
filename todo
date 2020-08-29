@@ -35,7 +35,7 @@ clever-hinny-graaljs 80%
 [OK] 03.接入 hinny-data-jdbc
 [OK] 04.完成 hinny-core
 [OK] 05.接入 hinny-core
-[OK] 06.完成、接入hinny-data-mvc(封装/接入Spring MVC)
+[OK] 06.完成、接入hinny-mvc(封装/接入Spring MVC)
 [  ] 07.大整合(定义开发模式，调通)
 [  ] 08.打通前后端RPC调用
 [  ] 09.Web IDE 开发

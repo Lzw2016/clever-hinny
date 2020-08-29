@@ -18,7 +18,7 @@ public class GraalObjectToString extends ObjectToString {
 
     protected GraalObjectToString() {
         SimpleModule module = new SimpleModule();
-        module.addSerializer(Value.class, ToStringSerializer.instance);
+        module.addSerializer(Value.class, ValueSerializer.instance);
         module.addSerializer(TruffleObject.class, ToStringSerializer.instance);
         try {
             Class<?> clazz = Class.forName("com.oracle.truffle.polyglot.HostWrapper");

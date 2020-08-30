@@ -32,17 +32,17 @@ public class DebouncedFileListener implements FileAlterationListener {
 
     @Override
     public void onDirectoryCreate(File directory) {
-        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.OnDirectoryCreate, directory));
+        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.DirectoryCreate, directory));
     }
 
     @Override
     public void onDirectoryChange(File directory) {
-        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.OnDirectoryChange, directory));
+        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.DirectoryChange, directory));
     }
 
     @Override
     public void onDirectoryDelete(File directory) {
-        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.OnDirectoryDelete, directory));
+        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.DirectoryDelete, directory));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class DebouncedFileListener implements FileAlterationListener {
         if (fileFilter != null && !fileFilter.accept(file)) {
             return;
         }
-        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.OnFileCreate, file));
+        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.FileCreate, file));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DebouncedFileListener implements FileAlterationListener {
         if (fileFilter != null && !fileFilter.accept(file)) {
             return;
         }
-        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.OnFileChange, file));
+        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.FileChange, file));
     }
 
     @Override
@@ -66,6 +66,6 @@ public class DebouncedFileListener implements FileAlterationListener {
         if (fileFilter != null && !fileFilter.accept(file)) {
             return;
         }
-        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.OnFileDelete, file));
+        debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.FileDelete, file));
     }
 }

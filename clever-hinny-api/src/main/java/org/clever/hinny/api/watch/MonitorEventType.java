@@ -8,33 +8,33 @@ public enum MonitorEventType {
 //    /**
 //     * 文件系统观察器开始检查事件
 //     */
-//    OnStart,
+//    Start,
 //    /**
 //     * 文件系统观察程序完成了检查事件
 //     */
-//    OnStop,
+//    Stop,
     /**
      * 目录创建事件
      */
-    OnDirectoryCreate,
+    DirectoryCreate,
     /**
      * 目录已更改事件
      */
-    OnDirectoryChange,
+    DirectoryChange,
     /**
      * 目录删除事件
      */
-    OnDirectoryDelete,
+    DirectoryDelete,
     /**
      * 文件创建事件
      */
-    OnFileCreate,
+    FileCreate,
     /**
      * 文件更改事件
      */
-    OnFileChange,
+    FileChange,
     /**
      * 文件删除事件
      */
-    OnFileDelete,
+    FileDelete,
 }

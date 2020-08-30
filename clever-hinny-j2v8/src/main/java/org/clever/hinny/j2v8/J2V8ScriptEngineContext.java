@@ -52,27 +52,35 @@ public class J2V8ScriptEngineContext extends AbstractScriptEngineContext<V8, V8O
          */
         public J2V8ScriptEngineContext build() {
             J2V8ScriptEngineContext context = new J2V8ScriptEngineContext();
+            // engine
             if (engine == null) {
                 engine = V8.createV8Runtime();
             }
             context.engine = engine;
+            // contextMap
             if (contextMap == null) {
                 contextMap = Collections.emptyMap();
             }
             context.contextMap = contextMap;
+            // rootPath
+            context.rootPath = rootPath;
+            // moduleCache
             if (moduleCache == null) {
                 moduleCache = new MemoryModuleCache<>();
             }
             context.moduleCache = moduleCache;
+            // require
             if (require == null) {
                 J2V8Module mainModule = J2V8Module.createMainModule(context);
                 require = new J2V8Require(context, mainModule, rootPath);
             }
             context.require = require;
+            // compileModule
             if (compileModule == null) {
                 compileModule = new J2V8CompileModule(context);
             }
             context.compileModule = compileModule;
+            // global
             if (global == null) {
                 global = ScriptEngineUtils.newObject(engine);
             }

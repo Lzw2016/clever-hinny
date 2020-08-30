@@ -79,28 +79,36 @@ public class GraalScriptEngineContext extends AbstractScriptEngineContext<Contex
          */
         public GraalScriptEngineContext build() {
             GraalScriptEngineContext context = new GraalScriptEngineContext();
+            // engine
             if (engine == null) {
                 Assert.notNull(graalvmEngine, "参数graalvmEngine或者engine不能为空");
                 engine = ScriptEngineUtils.creatEngine(graalvmEngine, denyAccessClass);
             }
             context.engine = engine;
+            // contextMap
             if (contextMap == null) {
                 contextMap = Collections.emptyMap();
             }
             context.contextMap = contextMap;
+            // rootPath
+            context.rootPath = rootPath;
+            // moduleCache
             if (moduleCache == null) {
                 moduleCache = new MemoryModuleCache<>();
             }
             context.moduleCache = moduleCache;
+            // require
             if (require == null) {
                 GraalModule mainModule = GraalModule.createMainModule(context);
                 require = new GraalRequire(context, mainModule, rootPath);
             }
             context.require = require;
+            // compileModule
             if (compileModule == null) {
                 compileModule = new GraalCompileModule(context);
             }
             context.compileModule = compileModule;
+            // global
             if (global == null) {
                 global = ScriptEngineUtils.newObject(engine);
             }

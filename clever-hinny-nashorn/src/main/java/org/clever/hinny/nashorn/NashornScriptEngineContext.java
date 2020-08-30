@@ -81,27 +81,35 @@ public class NashornScriptEngineContext extends AbstractScriptEngineContext<Nash
          */
         public NashornScriptEngineContext build() {
             NashornScriptEngineContext context = new NashornScriptEngineContext();
+            // engine
             if (engine == null) {
                 engine = ScriptEngineUtils.creatEngine(denyAccessClass);
             }
             context.engine = engine;
+            // contextMap
             if (contextMap == null) {
                 contextMap = Collections.emptyMap();
             }
             context.contextMap = contextMap;
+            // rootPath
+            context.rootPath = rootPath;
+            // moduleCache
             if (moduleCache == null) {
                 moduleCache = new MemoryModuleCache<>();
             }
             context.moduleCache = moduleCache;
+            // require
             if (require == null) {
                 NashornModule mainModule = NashornModule.createMainModule(context);
                 require = new NashornRequire(context, mainModule, rootPath);
             }
             context.require = require;
+            // compileModule
             if (compileModule == null) {
                 compileModule = new NashornCompileModule(context);
             }
             context.compileModule = compileModule;
+            // global
             if (global == null) {
                 global = ScriptEngineUtils.newObject();
             }

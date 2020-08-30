@@ -19,7 +19,7 @@ public class FileSystemWatcherTest {
     @Test
     public void t01() throws InterruptedException {
         FileSystemWatcher fileSystemWatcher = new FileSystemWatcher(
-                "D:\\SourceCode\\clever\\clever-hinny-js",
+                "D:\\SourceCode\\clever\\clever-hinny-js\\",
                 new String[]{"*.js"},
                 new String[]{},
                 IOCase.SYSTEM,
@@ -38,8 +38,9 @@ public class FileSystemWatcherTest {
     public void t02() {
         // ？匹配一个字符
         // *匹配0个或多个字符
-        boolean res = FilenameUtils.wildcardMatch("D:\\SourceCode\\clever\\clever-hinny-js\\01Base.ts", "*.ts", IOCase.SYSTEM);
-        log.info("res -> {}", res);
+        String path = "D:\\SourceCode\\clever\\clever-hinny-js\\01Base.ts";
+        log.info("res -> {}", FilenameUtils.wildcardMatch(path, "*.ts", IOCase.SYSTEM));
+        log.info("res -> {}", FilenameUtils.wildcardMatch(path, "*\\clever\\*", IOCase.SYSTEM));
     }
 
     @Test

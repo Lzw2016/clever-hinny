@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.api.internal.support.ObjectToString;
 import org.clever.hinny.api.utils.JacksonMapper;
 import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.proxy.Proxy;
 
 /**
  * 作者：lizw <br/>
@@ -20,6 +21,7 @@ public class GraalObjectToString extends ObjectToString {
         SimpleModule module = new SimpleModule();
         module.addSerializer(Value.class, ValueSerializer.instance);
         module.addSerializer(TruffleObject.class, ToStringSerializer.instance);
+        module.addSerializer(Proxy.class, HostWrapperSerializer.instance);
         try {
             Class<?> clazz = Class.forName("com.oracle.truffle.polyglot.HostWrapper");
             module.addSerializer(clazz, HostWrapperSerializer.instance);

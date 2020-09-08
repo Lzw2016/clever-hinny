@@ -8,75 +8,20 @@ import org.graalvm.polyglot.Value;
 import java.util.*;
 
 /**
+ * Script 对象转 Java 对象
  * 作者：lizw <br/>
  * 创建时间：2020/08/03 10:42 <br/>
  */
 @Slf4j
 public class InteropScriptToJavaUtils {
+    public static final int Default_Deep = 16;
+
     public static final InteropScriptToJavaUtils Instance = new InteropScriptToJavaUtils();
 
     private InteropScriptToJavaUtils() {
     }
 
-    /**
-     * 把JavaScript对象转换成Java对象 <br />
-     * 1. 只考虑简单对象和“数组”、“Object对象” <br />
-     * 2. 只做浅转换(一层转换) <br />
-     *
-     * @param object JavaScript对象
-     */
-    public Object toJavaObject(Object object) {
-        return deepToJavaObject(object, 1);
-    }
-
-    /**
-     * 装换Map(只做一层装换)
-     */
-    public Map<String, Object> convertMap(Map<String, Object> map) {
-        if (map == null) {
-            return null;
-        }
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = entry.getKey();
-            Object object = entry.getValue();
-            object = toJavaObject(object);
-            map.put(key, object);
-        }
-        return map;
-    }
-
-    /**
-     * 装换{@code Collection<Map>}
-     */
-    public List<Map<String, Object>> convertMapList(List<Map<String, Object>> mapList) {
-        if (mapList == null) {
-            return null;
-        }
-        List<Map<String, Object>> res = new ArrayList<>(mapList.size());
-        for (Map<String, Object> item : mapList) {
-            res.add(convertMap(item));
-        }
-        return res;
-    }
-
-    /**
-     * 装换{@code Collection<Object>}
-     */
-    @SuppressWarnings("unchecked")
-    public List<Object> convertList(List<Object> list) {
-        if (list == null) {
-            return null;
-        }
-        List<Object> res = new ArrayList<>(list.size());
-        for (Object item : list) {
-            if (item instanceof Map) {
-                res.add(convertMap((Map<String, Object>) item));
-            } else {
-                res.add(toJavaObject(item));
-            }
-        }
-        return res;
-    }
+    // ---------------------------------------------------------------------------------------------------------------------------------------- Object
 
     /**
      * 把JavaScript对象转换成Java对象(深度转换) <br />
@@ -134,8 +79,21 @@ public class InteropScriptToJavaUtils {
      * @param object JavaScript对象
      */
     public Object deepToJavaObject(Object object) {
-        return deepToJavaObject(object, 16);
+        return deepToJavaObject(object, Default_Deep);
     }
+
+    /**
+     * 把JavaScript对象转换成Java对象 <br />
+     * 1. 只考虑简单对象和“数组”、“Object对象” <br />
+     * 2. 只做浅转换(一层转换) <br />
+     *
+     * @param object JavaScript对象
+     */
+    public Object toJavaObject(Object object) {
+        return deepToJavaObject(object, 1);
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------- Map
 
     /**
      * 深度装换Map
@@ -162,8 +120,90 @@ public class InteropScriptToJavaUtils {
      * @param map map对象
      */
     public Map<String, Object> deepConvertMap(Map<String, Object> map) {
-        return deepConvertMap(map, 16);
+        return deepConvertMap(map, Default_Deep);
     }
+
+    /**
+     * 装换Map(只做一层装换)
+     */
+    public Map<String, Object> convertMap(Map<String, Object> map) {
+        return deepConvertMap(map, 1);
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------- List
+
+    /**
+     * 深度装换List
+     *
+     * @param list list对象
+     * @param deep 转换深度值(应该大于等于1)
+     */
+    @SuppressWarnings("unchecked")
+    public List<Object> deepConvertList(List<Object> list, int deep) {
+        if (list == null) {
+            return null;
+        }
+        List<Object> res = new ArrayList<>(list.size());
+        for (Object item : list) {
+            if (item instanceof Map) {
+                res.add(deepConvertMap((Map<String, Object>) item, deep));
+            } else {
+                res.add(deepToJavaObject(item, deep));
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 深度装换List(深度转换，深度值为16)
+     */
+    public List<Object> deepConvertList(List<Object> list) {
+        return deepConvertList(list, Default_Deep);
+    }
+
+    /**
+     * 装换List(只做一层装换)
+     */
+    public List<Object> convertList(List<Object> list) {
+        return deepConvertList(list, 1);
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------- List<Map>
+
+    /**
+     * 深度装换{@code List<Map>}
+     *
+     * @param mapList mapList对象
+     * @param deep    转换深度值(应该大于等于1)
+     */
+    public List<Map<String, Object>> deepConvertMapList(List<Map<String, Object>> mapList, int deep) {
+        if (mapList == null) {
+            return null;
+        }
+        List<Map<String, Object>> res = new ArrayList<>(mapList.size());
+        for (Map<String, Object> item : mapList) {
+            res.add(deepConvertMap(item, deep));
+        }
+        return res;
+    }
+
+    /**
+     * 深度装换{@code List<Map>}(深度转换，深度值为16)
+     *
+     * @param mapList mapList对象
+     */
+    public List<Map<String, Object>> deepConvertMapList(List<Map<String, Object>> mapList) {
+        return deepConvertMapList(mapList, Default_Deep);
+    }
+
+    /**
+     * 装换{@code List<Map>}(只做一层装换)
+     */
+    public List<Map<String, Object>> convertMapList(List<Map<String, Object>> mapList) {
+        return deepConvertMapList(mapList, 1);
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------- 基础类型
 
     /**
      * 把JavaScript对象转换成Java对象 <br />

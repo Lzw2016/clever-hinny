@@ -34,7 +34,7 @@ public class GraalInterop extends Interop<Value> {
     @Override
     public Map<Object, Object> asJMap(Value arg) {
         if (arg == null) {
-            return null;
+            return new HashMap<>();
         }
         Map<Object, Object> map;
         if (arg.hasArrayElements()) {

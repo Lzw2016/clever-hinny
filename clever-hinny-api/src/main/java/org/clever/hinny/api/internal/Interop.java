@@ -158,43 +158,51 @@ public abstract class Interop<T> {
 
     public List<Object> asJList(Object... args) {
         if (args == null) {
-            return null;
+            return new ArrayList<>();
         }
-        return Arrays.asList(args);
+        List<Object> list = new ArrayList<>(args.length);
+        Collections.addAll(list, args);
+        return list;
     }
 
     public List<Object> asJList(Object arg) {
         if (arg == null) {
-            return null;
+            return new ArrayList<>();
         }
         if (arg.getClass().isArray()) {
             Object[] array = (Object[]) arg;
-            return Arrays.asList(array);
+            List<Object> list = new ArrayList<>(array.length);
+            Collections.addAll(list, array);
+            return list;
         } else {
-            return Collections.singletonList(arg);
+            List<Object> list = new ArrayList<>(1);
+            list.add(arg);
+            return list;
         }
     }
 
     public Set<Object> asJSet(Object... args) {
         if (args == null) {
-            return null;
+            return new HashSet<>();
         }
         Set<Object> set = new HashSet<>(args.length);
-        set.addAll(Arrays.asList(args));
+        Collections.addAll(set, args);
         return set;
     }
 
     public Set<Object> asJSet(Object arg) {
         if (arg == null) {
-            return null;
+            return new HashSet<>();
         }
         if (arg.getClass().isArray()) {
             Object[] array = (Object[]) arg;
             Set<Object> set = new HashSet<>(array.length);
-            set.addAll(Arrays.asList(array));
+            Collections.addAll(set, array);
             return set;
         } else {
-            return Collections.singleton(arg);
+            Set<Object> set = new HashSet<>(1);
+            set.add(arg);
+            return set;
         }
     }
 

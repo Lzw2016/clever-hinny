@@ -29,14 +29,8 @@ public class InteropScriptToJavaUtils {
         return deepToJavaObject(object, 1);
     }
 
-//    public Object[] toJavaObject(Object[] array) {
-//        Collection<?> collection = toJavaObject(Arrays.asList(array));
-//        // TODO
-//        return null;
-//    }
-
     /**
-     * 处理 Map
+     * 装换Map(只做一层装换)
      */
     public Map<String, Object> convertMap(Map<String, Object> map) {
         if (map == null) {
@@ -52,7 +46,7 @@ public class InteropScriptToJavaUtils {
     }
 
     /**
-     * 处理 Collection Map
+     * 装换{@code Collection<Map>}
      */
     public List<Map<String, Object>> convertMapList(List<Map<String, Object>> mapList) {
         if (mapList == null) {
@@ -66,7 +60,7 @@ public class InteropScriptToJavaUtils {
     }
 
     /**
-     * 处理 Collection
+     * 装换{@code Collection<Object>}
      */
     @SuppressWarnings("unchecked")
     public List<Object> convertList(List<Object> list) {
@@ -141,6 +135,34 @@ public class InteropScriptToJavaUtils {
      */
     public Object deepToJavaObject(Object object) {
         return deepToJavaObject(object, 16);
+    }
+
+    /**
+     * 深度装换Map
+     *
+     * @param map  map对象
+     * @param deep 转换深度值(应该大于等于1)
+     */
+    public Map<String, Object> deepConvertMap(Map<String, Object> map, int deep) {
+        if (map == null) {
+            return null;
+        }
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object object = entry.getValue();
+            object = deepToJavaObject(object, deep);
+            map.put(key, object);
+        }
+        return map;
+    }
+
+    /**
+     * 深度装换Map(深度转换，深度值为16)
+     *
+     * @param map map对象
+     */
+    public Map<String, Object> deepConvertMap(Map<String, Object> map) {
+        return deepConvertMap(map, 16);
     }
 
     /**

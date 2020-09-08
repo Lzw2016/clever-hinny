@@ -10,6 +10,12 @@ import java.util.Map;
  * 创建时间：2020/09/08 16:02 <br/>
  */
 public class InteropJavaToScriptUtils {
+
+    public static final InteropJavaToScriptUtils Instance = new InteropJavaToScriptUtils();
+
+    private InteropJavaToScriptUtils() {
+    }
+
     // ---------------------------------------------------------------------------------------------------------------------------------------- Map
 
     /**

@@ -42,7 +42,7 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
 
     public final static HostWrapperSerializer instance = new HostWrapperSerializer();
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (value == null) {
@@ -65,10 +65,10 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
             if (val.hasArrayElements() || val.canExecute()) {
                 gen.writeObject(val);
             } else {
-                gen.writeObject(Map.copyOf((Map) value));
+                gen.writeObject(new HashMap<>((Map) value));
             }
         } else if (Objects.equals(PolyglotMapAndFunction_Class, className) && value instanceof Map) {
-            gen.writeObject(Map.copyOf((Map) value));
+            gen.writeObject(new HashMap<>((Map) value));
         } else if (value instanceof ProxyObject) {
             if (gotProxyObjectValues == null && Objects.equals("org.graalvm.polyglot.proxy.ProxyObject$1", className)) {
                 try {

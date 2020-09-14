@@ -42,6 +42,7 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
 
     public final static HostWrapperSerializer instance = new HostWrapperSerializer();
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (value == null) {
@@ -56,17 +57,18 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
         } else if (Objects.equals(PolyglotFunction_Class, className)) {
             gen.writeString(String.valueOf(value));
         } else if (Objects.equals(PolyglotList_Class, className)) {
-            // gen.writeString(String.valueOf(value));
-            gen.writeObject(Value.asValue(value));
+            gen.writeString(String.valueOf(value));
         } else if (Objects.equals(PolyglotListAndFunction_Class, className)) {
-            // gen.writeString(String.valueOf(value));
-            gen.writeObject(Value.asValue(value));
+            gen.writeString(String.valueOf(value));
         } else if (Objects.equals(PolyglotMap_Class, className) && value instanceof Map) {
-            // gen.writeObject(Map.copyOf((Map) value));
-            gen.writeObject(Value.asValue(value));
+            Value val = Value.asValue(value);
+            if (val.hasArrayElements() || val.canExecute()) {
+                gen.writeObject(val);
+            } else {
+                gen.writeObject(Map.copyOf((Map) value));
+            }
         } else if (Objects.equals(PolyglotMapAndFunction_Class, className) && value instanceof Map) {
-            // gen.writeObject(Map.copyOf((Map) value));
-            gen.writeObject(Value.asValue(value));
+            gen.writeObject(Map.copyOf((Map) value));
         } else if (value instanceof ProxyObject) {
             if (gotProxyObjectValues == null && Objects.equals("org.graalvm.polyglot.proxy.ProxyObject$1", className)) {
                 try {

@@ -88,7 +88,12 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
                 }
             }
             ProxyObject proxyObject = (ProxyObject) value;
-            Object[] keys = (Object[]) reflectGetValue(proxyObject.getMemberKeys(), "keys");
+            Object[] keys;
+            try {
+                keys = (Object[]) reflectGetValue(proxyObject.getMemberKeys(), "keys");
+            } catch (Exception ignored) {
+                keys = Value.asValue(value).getMemberKeys().toArray(new Object[0]);
+            }
             Map<String, Object> map = new HashMap<>(keys.length);
             for (Object key : keys) {
                 if (key == null) {

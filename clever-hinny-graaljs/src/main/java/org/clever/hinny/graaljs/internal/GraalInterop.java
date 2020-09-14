@@ -1,6 +1,7 @@
 package org.clever.hinny.graaljs.internal;
 
 import org.clever.hinny.api.internal.Interop;
+import org.clever.hinny.graaljs.utils.InteropScriptToJavaUtils;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.*;
 
@@ -44,13 +45,13 @@ public class GraalInterop extends Interop<Value> {
             }
             map = new HashMap<>((int) size);
             for (int i = 0; i < size; i++) {
-                map.put(i, arg.getArrayElement(i));
+                map.put(i, InteropScriptToJavaUtils.Instance.deepToJavaObject(arg.getArrayElement(i)));
             }
         } else {
             Set<String> keys = arg.getMemberKeys();
             map = new HashMap<>(keys.size());
             for (String key : keys) {
-                map.put(key, arg.getMember(key));
+                map.put(key, InteropScriptToJavaUtils.Instance.deepToJavaObject(arg.getMember(key)));
             }
         }
         return map;

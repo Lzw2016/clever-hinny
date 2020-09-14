@@ -3,6 +3,8 @@ package org.clever.hinny.graaljs.internal.support;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.oracle.truffle.api.interop.TruffleObject;
+import org.apache.commons.lang3.StringUtils;
 import org.clever.hinny.graaljs.utils.InteropScriptToJavaUtils;
 import org.graalvm.polyglot.Value;
 
@@ -22,7 +24,10 @@ public class ValueSerializer extends JsonSerializer<Value> {
             return;
         }
         Object obj = InteropScriptToJavaUtils.Instance.toJavaObject(value);
-        if (obj != null && (obj.getClass().getName().startsWith("com.oracle.truffle.") || obj.getClass().getName().startsWith("org.graalvm."))) {
+        final String className = obj == null ? null : obj.getClass().getName();
+        if (StringUtils.isNotBlank(className)
+                && !HostWrapperSerializer.isSupport(className)
+                && (obj instanceof TruffleObject || className.startsWith("com.oracle.truffle.") || className.startsWith("org.graalvm."))) {
             gen.writeString(String.valueOf(obj));
         } else {
             gen.writeObject(obj);

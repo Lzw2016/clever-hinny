@@ -70,15 +70,6 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
         } else if (Objects.equals(PolyglotMapAndFunction_Class, className) && value instanceof Map) {
             gen.writeObject(new HashMap<>((Map) value));
         } else if (value instanceof ProxyObject) {
-            Value val = Value.asValue(value);
-            if (val.isProxyObject()) {
-                gen.writeObject(val.asProxyObject());
-                return;
-            }
-            if (val.isHostObject()) {
-                gen.writeObject(val.asHostObject());
-                return;
-            }
             if (gotProxyObjectValues == null && Objects.equals("org.graalvm.polyglot.proxy.ProxyObject$1", className)) {
                 try {
                     Field field = value.getClass().getDeclaredField("val$values");

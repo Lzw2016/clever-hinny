@@ -233,17 +233,17 @@ public class InteropScriptToJavaUtils {
         } else if (value.isBoolean()) {                                         // boolean
             return value.asBoolean();
         } else if (value.isNumber()) {
-            if (value.fitsInByte()) {                                           // byte
-                return value.asByte();
-            }
-            if (value.fitsInShort()) {                                          // short
-                return value.asShort();
-            }
             if (value.fitsInInt()) {                                            // int
                 return value.asInt();
             }
             if (value.fitsInLong()) {                                           // long
                 return value.asLong();
+            }
+            if (value.fitsInShort()) {                                          // short
+                return value.asShort();
+            }
+            if (value.fitsInByte()) {                                           // byte
+                return value.asByte();
             }
             if (value.fitsInFloat()) {                                          // float
                 return value.asFloat();

@@ -80,20 +80,24 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
                 }
             }
             if (gotProxyObjectValues != null && gotProxyObjectValues) {
-                gen.writeObject(reflectGetValue(value, "val$values"));
-            } else {
-                ProxyObject proxyObject = (ProxyObject) value;
-                Object[] keys = (Object[]) reflectGetValue(proxyObject.getMemberKeys(), "keys");
-                Map<String, Object> map = new HashMap<>(keys.length);
-                for (Object key : keys) {
-                    if (key == null) {
-                        continue;
-                    }
-                    String name = String.valueOf(key);
-                    map.put(name, proxyObject.getMember(name));
+                try {
+                    gen.writeObject(reflectGetValue(value, "val$values"));
+                    return;
+                } catch (Exception ignored) {
+                    gotProxyObjectValues = false;
                 }
-                gen.writeObject(map);
             }
+            ProxyObject proxyObject = (ProxyObject) value;
+            Object[] keys = (Object[]) reflectGetValue(proxyObject.getMemberKeys(), "keys");
+            Map<String, Object> map = new HashMap<>(keys.length);
+            for (Object key : keys) {
+                if (key == null) {
+                    continue;
+                }
+                String name = String.valueOf(key);
+                map.put(name, proxyObject.getMember(name));
+            }
+            gen.writeObject(map);
         } else {
             gen.writeString(String.valueOf(value));
         }

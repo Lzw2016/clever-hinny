@@ -40,6 +40,8 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
 
     private static Boolean gotProxyObjectValues;
 
+    private static Boolean canSetAccessible;
+
     public final static HostWrapperSerializer instance = new HostWrapperSerializer();
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -88,10 +90,15 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
                 }
             }
             ProxyObject proxyObject = (ProxyObject) value;
-            Object[] keys;
-            try {
-                keys = (Object[]) reflectGetValue(proxyObject.getMemberKeys(), "keys");
-            } catch (Exception ignored) {
+            Object[] keys = null;
+            if (canSetAccessible == null || canSetAccessible) {
+                try {
+                    keys = (Object[]) reflectGetValue(proxyObject.getMemberKeys(), "keys");
+                } catch (Exception ignored) {
+                    canSetAccessible = false;
+                }
+            }
+            if (keys == null) {
                 keys = Value.asValue(value).getMemberKeys().toArray(new Object[0]);
             }
             Map<String, Object> map = new HashMap<>(keys.length);
@@ -112,6 +119,7 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
     private static Object reflectGetValue(Object instance, String fieldName) {
         Field field = instance.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
+        canSetAccessible = true;
         return field.get(instance);
     }
 

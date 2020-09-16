@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import lombok.SneakyThrows;
-import org.clever.hinny.graaljs.utils.InteropScriptToJavaUtils;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyObject;
 
@@ -65,10 +64,8 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
             gen.writeString(String.valueOf(value));
         } else if (Objects.equals(PolyglotMap_Class, className) && value instanceof Map) {
             Value val = Value.asValue(value);
-            if (val.hasArrayElements() || val.canExecute()) {
+            if (val.hasArrayElements() || val.canExecute() || val.isDate() || val.isTime() || val.isInstant() || val.isDuration() || val.isTimeZone()) {
                 gen.writeObject(val);
-            } else if (val.isDate() || val.isTime() || val.isInstant() || val.isDuration() || val.isTimeZone()) {
-                gen.writeObject(InteropScriptToJavaUtils.Instance.toJavaObjectForBase(val));
             } else {
                 gen.writeObject(new HashMap<>((Map) value));
             }

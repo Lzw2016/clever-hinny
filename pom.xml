@@ -59,11 +59,9 @@
 
     <properties>
         <revision>1.0.0-SNAPSHOT</revision>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <JAVA_HOME>C:/Program Files/Java/jdk-11.0.6</JAVA_HOME>
-        <compiler.dir>${project.build.directory}/compiler</compiler.dir>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <clever-common.version>2.0.0-SNAPSHOT</clever-common.version>
         <graalvm.version>20.2.0</graalvm.version>
         <j2v8-win.version>4.6.0</j2v8-win.version>
@@ -215,19 +213,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

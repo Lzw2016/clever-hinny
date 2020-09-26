@@ -60,6 +60,7 @@ public class Tmp {
         log.info("### end");
     }
 
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     @Test
     public void t03() {
         Logger logger = LoggerFactory.getLogger(StringUtils.EMPTY);
@@ -97,17 +98,17 @@ public class Tmp {
         String h = "abcd";
         Date i = new Date();
         BigDecimal j = new BigDecimal("1354741344987654323456765434567564564568989.564948989745189789454894894864");
-        List<String> k = new ArrayList<>() {{
+        List<String> k = new ArrayList<String>() {{
             add("111");
             add("222");
             add("333");
         }};
-        Set<String> l = new HashSet<>() {{
+        Set<String> l = new HashSet<String>() {{
             add("111");
             add("222");
             add("333");
         }};
-        Map<String, Object> m = new HashMap<>() {{
+        Map<String, Object> m = new HashMap<String, Object>() {{
             put("int", 1);
             put("boolean", false);
             put("str", "asdfghjkl");

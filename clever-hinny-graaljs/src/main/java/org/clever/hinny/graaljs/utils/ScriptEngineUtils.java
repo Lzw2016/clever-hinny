@@ -5,6 +5,7 @@ import org.clever.hinny.api.utils.Assert;
 import org.clever.hinny.graaljs.GraalConstant;
 import org.graalvm.polyglot.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,11 +17,11 @@ public class ScriptEngineUtils {
     /**
      * Context 默认选项
      */
-    public static final Map<String, String> Context_Default_Options = Map.of(
-            "js.ecmascript-version", GraalConstant.ECMAScript_Version
-            // "js.nashorn-compat", "true", // EXPERIMENTAL | js.nashorn-compat -> 实验性特性需要删除
-            // "js.experimental-foreign-object-prototype", "true" // 实验性特性需要删除
-    );
+    public static final Map<String, String> Context_Default_Options = new HashMap<String, String>() {{
+        put("js.ecmascript-version", GraalConstant.ECMAScript_Version);
+        // "js.nashorn-compat", "true", // EXPERIMENTAL | js.nashorn-compat -> 实验性特性需要删除
+        // "js.experimental-foreign-object-prototype", "true" // 实验性特性需要删除
+    }};
 
     private static final Source Object_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "Object", "Unnamed").cached(true).buildLiteral();
     private static final Source Array_Constructor_Source = Source.newBuilder(GraalConstant.Js_Language_Id, "Array", "Unnamed").cached(true).buildLiteral();

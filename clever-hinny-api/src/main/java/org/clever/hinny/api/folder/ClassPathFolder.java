@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * 作者：lizw <br/>
@@ -28,9 +29,9 @@ public class ClassPathFolder implements Folder {
      */
     private static final PathMatchingResourcePatternResolver Path_Matching_Resolver = new PathMatchingResourcePatternResolver();
     /**
-     * 文件资源集合{@code Map<locationPattern, Map<资源路径, Resource>>}
+     * 文件资源集合{@code Map<locationPattern, Set<资源路径>>}
      */
-    private static final ConcurrentHashMap<String, ConcurrentHashMap<String, Resource>> Multiple_Resource_Map = new ConcurrentHashMap<>(8);
+    private static final ConcurrentHashMap<String, CopyOnWriteArraySet<String>> Multiple_Resource_Map = new ConcurrentHashMap<>(8);
 
     /**
      * 当前应用的Class Path路径
@@ -80,23 +81,27 @@ public class ClassPathFolder implements Folder {
      * @param basePath        基础路径
      */
     private ClassPathFolder(String locationPattern, String basePath) {
+        basePath = concatPath(Folder.Root_Path, basePath);
         this.locationPattern = locationPattern;
-        this.basePath = concatPath(Folder.Root_Path, basePath);
+        this.basePath = StringUtils.isBlank(basePath) ? Folder.Root_Path : basePath;
         this.fullPath = Folder.Root_Path;
         init();
         this.absolutePath = Current_ClassPath;
     }
 
     /**
-     * @param basePath 基础路径
-     * @param path     当前路径(相当路径或者绝对路径)
+     * @param locationPattern classpath路径模式
+     * @param basePath        基础路径
+     * @param path            当前路径(相当路径或者绝对路径)
      */
     private ClassPathFolder(String locationPattern, String basePath, String path) {
+        basePath = concatPath(Folder.Root_Path, basePath);
+        path = concatPath(Folder.Root_Path, path);
         this.locationPattern = locationPattern;
-        this.basePath = concatPath(Folder.Root_Path, basePath);
-        this.fullPath = concatPath(Folder.Root_Path, path);
+        this.basePath = StringUtils.isBlank(basePath) ? Folder.Root_Path : basePath;
+        this.fullPath = StringUtils.isBlank(path) ? Folder.Root_Path : path;
         init();
-        this.absolutePath = getAbsolutePath(locationPattern, basePath, path);
+        this.absolutePath = getAbsolutePath(locationPattern, this.basePath, this.fullPath);
     }
 
     @Override
@@ -171,8 +176,16 @@ public class ClassPathFolder implements Folder {
 
     @Override
     public List<Folder> getChildren() {
-        // TODO getChildren
-        return null;
+        List<String> children = getChildren(this);
+        if (children == null) {
+            return null;
+        }
+        List<Folder> folders = new ArrayList<>(children.size());
+        for (String child : children) {
+            Folder folder = this.create(child);
+            folders.add(folder);
+        }
+        return folders;
     }
 
     @Override
@@ -186,8 +199,15 @@ public class ClassPathFolder implements Folder {
 
     @Override
     public Folder create(String path) {
-        // TODO create
-        return null;
+        return new ClassPathFolder(locationPattern, basePath, path);
+    }
+
+    /**
+     * @param locationPattern classpath路径模式
+     * @param basePath        基础路径
+     */
+    public static ClassPathFolder createRootPath(String locationPattern, String basePath) {
+        return new ClassPathFolder(locationPattern, basePath);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -200,26 +220,44 @@ public class ClassPathFolder implements Folder {
             }
             // 加载资源
             Resource[] resources = Path_Matching_Resolver.getResources(locationPattern);
-            ConcurrentHashMap<String, Resource> resourceMap = new ConcurrentHashMap<>(resources.length);
+            CopyOnWriteArraySet<String> resourceSet = new CopyOnWriteArraySet<>();
             for (Resource resource : resources) {
                 if (resource.exists()) {
-                    resourceMap.put(resource.getURL().toExternalForm(), resource);
+                    resourceSet.add(resource.getURL().toExternalForm());
                 }
             }
-            Multiple_Resource_Map.put(locationPattern, resourceMap);
-            log.info("Resource加载完成! locationPattern={} | size={}", locationPattern, resourceMap.size());
+            Multiple_Resource_Map.put(locationPattern, resourceSet);
+            log.info("Resource加载完成! locationPattern={} | size={}", locationPattern, resourceSet.size());
         }
     }
 
-    protected static String getAbsolutePath(String locationPattern, String basePath, String path) {
-        ConcurrentHashMap<String, Resource> resourceMap = Multiple_Resource_Map.get(locationPattern);
-        if (resourceMap == null || resourceMap.isEmpty()) {
+    protected static List<String> getChildren(ClassPathFolder parent) {
+        if (parent == null) {
             return null;
         }
-        Enumeration<String> enumeration = resourceMap.keys();
-        Set<String> resourceSet = new HashSet<>();
-        while (enumeration.hasMoreElements()) {
-            resourceSet.add(enumeration.nextElement());
+        Set<String> children = new HashSet<>();
+        if (StringUtils.isNotBlank(parent.absolutePath)) {
+            Set<String> resourceSet = Multiple_Resource_Map.get(parent.locationPattern);
+            if (resourceSet == null || resourceSet.isEmpty()) {
+                return Collections.emptyList();
+            }
+            for (String resource : resourceSet) {
+                if (resource.startsWith(parent.absolutePath)) {
+                    String childPath = resource.substring(parent.absolutePath.length());
+                    String[] childArr = StringUtils.split(childPath, Folder.Path_Separate);
+                    if (childArr.length > 0) {
+                        children.add(childArr[0]);
+                    }
+                }
+            }
+        }
+        return new ArrayList<>(children);
+    }
+
+    protected static String getAbsolutePath(String locationPattern, String basePath, String path) {
+        Set<String> resourceSet = Multiple_Resource_Map.get(locationPattern);
+        if (resourceSet == null || resourceSet.isEmpty()) {
+            return null;
         }
         List<String> pathMatchResourceList = new ArrayList<>(1);
         if (!Current_ClassPath_Is_Jar_File) {

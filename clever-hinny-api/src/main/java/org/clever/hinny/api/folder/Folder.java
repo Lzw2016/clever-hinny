@@ -25,6 +25,10 @@ public interface Folder {
      * 当前目录
      */
     String Current_Path = "./";
+    /**
+     * 当前位置
+     */
+    String Current = ".";
 
     /**
      * 获取根路径

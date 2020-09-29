@@ -167,7 +167,7 @@ public class ClassPathFolder implements Folder {
                 log.warn("Resource.getFile异常", e);
             }
         }
-        return resource.isReadable();
+        return !resource.isReadable();
     }
 
     @SneakyThrows

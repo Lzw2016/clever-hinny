@@ -131,12 +131,38 @@ public class ClassPathFolder implements Folder {
 
     @Override
     public boolean isFile() {
-        return StringUtils.isNotBlank(absolutePath) && Path_Matching_Resolver.getResource(absolutePath).exists();
+        if (StringUtils.isBlank(absolutePath)) {
+            return false;
+        }
+        Resource resource = Path_Matching_Resolver.getResource(absolutePath);
+        if (resource.isFile()) {
+            try {
+                if (!resource.getFile().isFile()) {
+                    return false;
+                }
+            } catch (Exception e) {
+                log.warn("Resource.getFile异常", e);
+            }
+        }
+        return resource.exists();
     }
 
     @Override
     public boolean isDir() {
-        return StringUtils.isNotBlank(absolutePath) && !Path_Matching_Resolver.getResource(absolutePath).exists();
+        if (StringUtils.isBlank(absolutePath)) {
+            return false;
+        }
+        Resource resource = Path_Matching_Resolver.getResource(absolutePath);
+        if (resource.isFile()) {
+            try {
+                if (!resource.getFile().isDirectory()) {
+                    return false;
+                }
+            } catch (Exception e) {
+                log.warn("Resource.getFile异常", e);
+            }
+        }
+        return resource.exists();
     }
 
     @SneakyThrows

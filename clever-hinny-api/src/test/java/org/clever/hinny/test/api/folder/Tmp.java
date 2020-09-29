@@ -3,6 +3,8 @@ package org.clever.hinny.test.api.folder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.clever.hinny.api.folder.Folder;
 import org.junit.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -12,6 +14,7 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -135,5 +138,11 @@ public class Tmp {
         String jarFullPath = "!/";
         String pathMatchResource = path.substring(0, path.lastIndexOf(jarFullPath) + jarFullPath.length());
         log.info("--> {}", pathMatchResource);
+
+        pathMatchResource = "jar:file:/D:/hinny-spring-example-1.0.0-SNAPSHOT.jar!/BOOT-INF/classes!/file";
+        String childPath = path.substring(pathMatchResource.length());
+        log.info("--> {}", childPath);
+        String[] childArr = StringUtils.split(childPath, Folder.Path_Separate);
+        log.info("--> {}", Arrays.toString(childArr));
     }
 }

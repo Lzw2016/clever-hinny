@@ -66,9 +66,15 @@ public class EngineInstancePool2Test {
             // 从池中获取对象
             instance = pool.borrowObject();
             // 使用对象
-            instance.getContext().getEngine().enter();
-            instance.require("/pool2-test").callMember("t01");
-            instance.getContext().getEngine().leave();
+            Context engine = instance.getContext().getEngine();
+            try {
+                engine.enter();
+                instance.require("/pool2-test").callMember("t01");
+            } finally {
+                if (engine != null) {
+                    engine.leave();
+                }
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             if (instance != null) {

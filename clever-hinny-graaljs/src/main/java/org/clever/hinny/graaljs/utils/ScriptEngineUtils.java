@@ -115,9 +115,13 @@ public class ScriptEngineUtils {
      */
     public static Value newObject(Context context, Object... args) {
         Assert.notNull(context, "参数context不能为空");
-        context.enter();
-        Value constructor = context.eval(Object_Constructor_Source);
-        context.leave();
+        Value constructor;
+        try {
+            context.enter();
+            constructor = context.eval(Object_Constructor_Source);
+        } finally {
+            context.leave();
+        }
         return constructor.newInstance(args);
     }
 
@@ -136,9 +140,13 @@ public class ScriptEngineUtils {
      */
     public static Value newArray(Context context, Object... args) {
         Assert.notNull(context, "参数context不能为空");
-        context.enter();
-        Value constructor = context.eval(Array_Constructor_Source);
-        context.leave();
+        Value constructor;
+        try {
+            context.enter();
+            constructor = context.eval(Array_Constructor_Source);
+        } finally {
+            context.leave();
+        }
         return constructor.newInstance(args);
     }
 
@@ -157,9 +165,13 @@ public class ScriptEngineUtils {
      */
     public static Value parseJson(Context context, String json) {
         Assert.notNull(context, "参数context不能为空");
-        context.enter();
-        Value constructor = context.eval(Json_Constructor_Source);
-        context.leave();
+        Value constructor;
+        try {
+            context.enter();
+            constructor = context.eval(Json_Constructor_Source);
+        } finally {
+            context.leave();
+        }
         return constructor.invokeMember("parse", json);
     }
 }

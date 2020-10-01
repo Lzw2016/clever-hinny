@@ -62,8 +62,14 @@ public class GraalRequire extends AbstractRequire<Context, Value> {
             String filename,
             String dirname) {
         Assert.isTrue(function.canExecute(), "参数function必须是一个可执行函数ScriptObject");
-        context.getEngine().enter();
-        function.executeVoid(exports, require, module, filename, dirname);
-        context.getEngine().leave();
+        Context engine = context.getEngine();
+        try {
+            engine.enter();
+            function.executeVoid(exports, require, module, filename, dirname);
+        } finally {
+            if (engine != null) {
+                engine.leave();
+            }
+        }
     }
 }

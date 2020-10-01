@@ -38,9 +38,16 @@ public class GraalCompileModule extends AbstractCompileModule<Context, Value> {
         }
         final String moduleScriptCode = getModuleScriptCode(code);
         Source source = Source.newBuilder(GraalConstant.Js_Language_Id, moduleScriptCode, path.getFullPath()).cached(true).buildLiteral();
-        context.getEngine().enter();
-        Value modelFunction = context.getEngine().eval(source);
-        context.getEngine().leave();
+        Context engine = context.getEngine();
+        Value modelFunction;
+        try {
+            engine.enter();
+            modelFunction = context.getEngine().eval(source);
+        } finally {
+            if (engine != null) {
+                engine.leave();
+            }
+        }
         return modelFunction;
     }
 }

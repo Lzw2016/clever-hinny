@@ -51,9 +51,16 @@ public class GraalScriptObject extends AbstractScriptObject<Context, Value> {
 
     @Override
     public Object callMember(String functionName, Object... args) {
-        context.getEngine().enter();
-        Object res = original.invokeMember(functionName, args);
-        context.getEngine().leave();
+        Context engine = context.getEngine();
+        Object res;
+        try {
+            engine.enter();
+            res = original.invokeMember(functionName, args);
+        } finally {
+            if (engine != null) {
+                engine.leave();
+            }
+        }
         return res;
     }
 

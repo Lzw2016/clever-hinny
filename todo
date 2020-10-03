@@ -1,7 +1,7 @@
 
 clever-hinny-j2v8    45%
 clever-hinny-nashorn 80%
-clever-hinny-graaljs 80%
+clever-hinny-graaljs 100%
 
 - 2020-07-24
 [OK] 01.解决所有TODO
@@ -36,7 +36,7 @@ clever-hinny-graaljs 80%
 [OK] 04.完成 hinny-core
 [OK] 05.接入 hinny-core
 [OK] 06.完成、接入hinny-mvc(封装/接入Spring MVC)
-[  ] 07.大整合(定义开发模式，调通)
+[OK] 07.大整合(定义开发模式，调通)
 [  ] 08.打通前后端RPC调用
 [  ] 09.Web IDE 开发
 [  ] 10.完成 hinny-data-redis

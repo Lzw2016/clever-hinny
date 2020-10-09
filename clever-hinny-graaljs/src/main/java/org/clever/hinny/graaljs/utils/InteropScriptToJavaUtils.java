@@ -104,16 +104,15 @@ public class InteropScriptToJavaUtils {
      * @param map  map对象
      * @param deep 转换深度值(应该大于等于1)
      */
-    @SuppressWarnings("unchecked")
-    public Map<String, ?> deepConvertMap(Map<String, ?> map, int deep) {
+    public Map<String, Object> deepConvertMap(Map<String, Object> map, int deep) {
         if (map == null) {
             return null;
         }
-        for (Map.Entry<String, ?> entry : map.entrySet()) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
             Object object = entry.getValue();
             object = deepToJavaObject(object, deep);
-            ((Map<String, Object>) map).put(key, object);
+            map.put(key, object);
         }
         return map;
     }
@@ -123,14 +122,14 @@ public class InteropScriptToJavaUtils {
      *
      * @param map map对象
      */
-    public Map<String, ?> deepConvertMap(Map<String, ?> map) {
+    public Map<String, Object> deepConvertMap(Map<String, Object> map) {
         return deepConvertMap(map, Default_Deep);
     }
 
     /**
      * 装换Map(只做一层装换)
      */
-    public Map<String, ?> convertMap(Map<String, ?> map) {
+    public Map<String, Object> convertMap(Map<String, Object> map) {
         return deepConvertMap(map, 1);
     }
 
@@ -180,12 +179,12 @@ public class InteropScriptToJavaUtils {
      * @param mapList mapList对象
      * @param deep    转换深度值(应该大于等于1)
      */
-    public List<Map<String, ?>> deepConvertMapList(List<Map<String, ?>> mapList, int deep) {
+    public List<Map<String, Object>> deepConvertMapList(List<Map<String, Object>> mapList, int deep) {
         if (mapList == null) {
             return null;
         }
-        List<Map<String, ?>> res = new ArrayList<>(mapList.size());
-        for (Map<String, ?> item : mapList) {
+        List<Map<String, Object>> res = new ArrayList<>(mapList.size());
+        for (Map<String, Object> item : mapList) {
             res.add(deepConvertMap(item, deep));
         }
         return res;
@@ -196,14 +195,14 @@ public class InteropScriptToJavaUtils {
      *
      * @param mapList mapList对象
      */
-    public List<Map<String, ?>> deepConvertMapList(List<Map<String, ?>> mapList) {
+    public List<Map<String, Object>> deepConvertMapList(List<Map<String, Object>> mapList) {
         return deepConvertMapList(mapList, Default_Deep);
     }
 
     /**
      * 装换{@code List<Map>}(只做一层装换)
      */
-    public List<Map<String, ?>> convertMapList(List<Map<String, ?>> mapList) {
+    public List<Map<String, Object>> convertMapList(List<Map<String, Object>> mapList) {
         return deepConvertMapList(mapList, 1);
     }
 

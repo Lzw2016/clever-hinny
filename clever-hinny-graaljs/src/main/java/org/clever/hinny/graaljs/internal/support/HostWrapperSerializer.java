@@ -3,12 +3,11 @@ package org.clever.hinny.graaljs.internal.support;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import lombok.SneakyThrows;
+import org.clever.hinny.graaljs.utils.InteropScriptToJavaUtils;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyObject;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -25,7 +24,6 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
     public static final String PolyglotMapAndFunction_Class = "com.oracle.truffle.polyglot.PolyglotMapAndFunction";
     public static final String ProxyObject_Class = "org.graalvm.polyglot.proxy.ProxyObject";
 
-    @SuppressWarnings("Java9CollectionFactory")
     public static final Set<String> Support_Class = Collections.unmodifiableSet(new HashSet<>(
             Arrays.asList(
                     FunctionProxyHandler_Class,
@@ -37,10 +35,6 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
                     PolyglotMapAndFunction_Class
             )
     ));
-
-    private static Boolean gotProxyObjectValues;
-
-    private static Boolean canSetAccessible;
 
     public final static HostWrapperSerializer instance = new HostWrapperSerializer();
 
@@ -72,57 +66,14 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
         } else if (Objects.equals(PolyglotMapAndFunction_Class, className) && value instanceof Map) {
             gen.writeObject(new HashMap<>((Map) value));
         } else if (value instanceof ProxyObject) {
-            if (gotProxyObjectValues == null && Objects.equals("org.graalvm.polyglot.proxy.ProxyObject$1", className)) {
-                try {
-                    Field field = value.getClass().getDeclaredField("val$values");
-                    // noinspection ConstantConditions
-                    gotProxyObjectValues = (field != null);
-                } catch (Exception ignored) {
-                    gotProxyObjectValues = false;
-                }
-            }
-            if (gotProxyObjectValues != null && gotProxyObjectValues) {
-                try {
-                    gen.writeObject(reflectGetValue(value, "val$values"));
-                    return;
-                } catch (Exception ignored) {
-                    gotProxyObjectValues = false;
-                }
-            }
-            ProxyObject proxyObject = (ProxyObject) value;
-            Object[] keys = null;
-            if (canSetAccessible == null || canSetAccessible) {
-                try {
-                    keys = (Object[]) reflectGetValue(proxyObject.getMemberKeys(), "keys");
-                } catch (Exception ignored) {
-                    canSetAccessible = false;
-                }
-            }
-            if (keys == null) {
-                keys = Value.asValue(value).getMemberKeys().toArray(new Object[0]);
-            }
-            Map<String, Object> map = new HashMap<>(keys.length);
-            for (Object key : keys) {
-                if (key == null) {
-                    continue;
-                }
-                String name = String.valueOf(key);
-                map.put(name, proxyObject.getMember(name));
-            }
-            gen.writeObject(map);
+            value = InteropScriptToJavaUtils.unWrapProxyObject((ProxyObject) value);
+            gen.writeObject(value);
         } else {
             gen.writeString(String.valueOf(value));
         }
     }
 
-    @SneakyThrows
-    private static Object reflectGetValue(Object instance, String fieldName) {
-        Field field = instance.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        canSetAccessible = true;
-        return field.get(instance);
-    }
-
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isSupport(final String className) {
         return Support_Class.contains(className) || className.startsWith(ProxyObject_Class);
     }

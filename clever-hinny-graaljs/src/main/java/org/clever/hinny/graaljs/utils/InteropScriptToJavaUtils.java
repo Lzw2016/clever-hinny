@@ -1,10 +1,13 @@
 package org.clever.hinny.graaljs.utils;
 
 import com.oracle.truffle.api.interop.TruffleObject;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.graaljs.internal.GraalInterop;
 import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.proxy.ProxyObject;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -216,6 +219,9 @@ public class InteropScriptToJavaUtils {
         if (object == null) {
             return null;
         }
+        if (object instanceof ProxyObject) {
+            return unWrapProxyObject((ProxyObject) object);
+        }
         final String className = object.getClass().getName();
         if (!className.startsWith("com.oracle.truffle.") && !className.startsWith("org.graalvm.")) {
             return object;
@@ -288,5 +294,56 @@ public class InteropScriptToJavaUtils {
             value = Value.asValue(object);
         }
         return value;
+    }
+
+    private static Boolean gotProxyObjectValues;
+    private static Boolean canSetAccessible;
+
+    public static Object unWrapProxyObject(ProxyObject proxyObject) {
+        final String className = proxyObject.getClass().getName();
+        if (gotProxyObjectValues == null && Objects.equals("org.graalvm.polyglot.proxy.ProxyObject$1", className)) {
+            try {
+                Field field = proxyObject.getClass().getDeclaredField("val$values");
+                // noinspection ConstantConditions
+                gotProxyObjectValues = (field != null);
+            } catch (Exception ignored) {
+                gotProxyObjectValues = false;
+            }
+        }
+        if (gotProxyObjectValues != null && gotProxyObjectValues) {
+            try {
+                return reflectGetValue(proxyObject, "val$values");
+            } catch (Exception ignored) {
+                gotProxyObjectValues = false;
+            }
+        }
+        Object[] keys = null;
+        if (canSetAccessible == null || canSetAccessible) {
+            try {
+                keys = (Object[]) reflectGetValue(proxyObject.getMemberKeys(), "keys");
+            } catch (Exception ignored) {
+                canSetAccessible = false;
+            }
+        }
+        if (keys == null) {
+            keys = Value.asValue(proxyObject).getMemberKeys().toArray(new Object[0]);
+        }
+        Map<String, Object> map = new HashMap<>(keys.length);
+        for (Object key : keys) {
+            if (key == null) {
+                continue;
+            }
+            String name = String.valueOf(key);
+            map.put(name, proxyObject.getMember(name));
+        }
+        return map;
+    }
+
+    @SneakyThrows
+    private static Object reflectGetValue(Object instance, String fieldName) {
+        Field field = instance.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        canSetAccessible = true;
+        return field.get(instance);
     }
 }

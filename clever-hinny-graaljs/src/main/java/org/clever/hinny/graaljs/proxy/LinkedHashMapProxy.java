@@ -3,29 +3,34 @@ package org.clever.hinny.graaljs.proxy;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyObject;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * 作者：lizw <br/>
- * 创建时间：2020/10/10 17:06 <br/>
+ * 创建时间：2020/10/10 16:57 <br/>
  */
-public class HashMapProxy extends HashMap<String, Object> implements ProxyObject {
+public class LinkedHashMapProxy extends LinkedHashMap<String, Object> implements ProxyObject {
     protected final MapProxy mapProxy = new MapProxy(this);
 
-    public HashMapProxy() {
+    public LinkedHashMapProxy() {
     }
 
-    public HashMapProxy(int initialCapacity) {
-        super(initialCapacity);
-    }
-
-    public HashMapProxy(int initialCapacity, float loadFactor) {
+    public LinkedHashMapProxy(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
 
-    public HashMapProxy(Map<? extends String, ?> m) {
+    public LinkedHashMapProxy(int initialCapacity) {
+        super(initialCapacity);
+    }
+
+
+    public LinkedHashMapProxy(Map<? extends String, ?> m) {
         super(m);
+    }
+
+    public LinkedHashMapProxy(int initialCapacity, float loadFactor, boolean accessOrder) {
+        super(initialCapacity, loadFactor, accessOrder);
     }
 
     @Override

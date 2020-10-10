@@ -4,40 +4,43 @@ import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyArray;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * 作者：lizw <br/>
  * 创建时间：2020/10/10 15:02 <br/>
  */
 public class ArrayListProxy extends ArrayList<Object> implements ProxyArray {
+    protected final ListProxy listProxy = new ListProxy(this);
+
+    public ArrayListProxy() {
+    }
+
+    public ArrayListProxy(int initialCapacity) {
+        super(initialCapacity);
+    }
+
+    public ArrayListProxy(Collection<?> c) {
+        super(c);
+    }
+
     @Override
     public Object get(long index) {
-        checkIndex(index);
-        return this.get((int) index);
+        return listProxy.get(index);
     }
 
     @Override
     public void set(long index, Value value) {
-        checkIndex(index);
-        Object element = value.isHostObject() ? value.asHostObject() : value;
-        this.set((int) index, element);
+        listProxy.set(index, value);
     }
 
     @Override
     public boolean remove(long index) {
-        checkIndex(index);
-        this.remove((int) index);
-        return true;
+        return listProxy.remove(index);
     }
 
     @Override
     public long getSize() {
-        return this.size();
-    }
-
-    protected void checkIndex(long index) {
-        if (index > Integer.MAX_VALUE || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("invalid index. index=" + index);
-        }
+        return listProxy.getSize();
     }
 }

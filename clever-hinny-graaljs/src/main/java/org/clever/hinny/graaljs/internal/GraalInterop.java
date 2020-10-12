@@ -1,6 +1,8 @@
 package org.clever.hinny.graaljs.internal;
 
 import org.clever.hinny.api.internal.Interop;
+import org.clever.hinny.graaljs.proxy.ArrayListProxy;
+import org.clever.hinny.graaljs.proxy.HashMapProxy;
 import org.clever.hinny.graaljs.utils.InteropScriptToJavaUtils;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.*;
@@ -13,6 +15,8 @@ public class GraalInterop extends Interop<Value> {
 
     private GraalInterop() {
     }
+
+    // --------------------------------------------------------------------------------------------------- Date
 
     @Override
     public Date asJDate(Value arg) {
@@ -31,6 +35,8 @@ public class GraalInterop extends Interop<Value> {
         }
         throw new ClassCastException("参数 arg=:" + arg.toString() + "不能转换成Date类型");
     }
+
+    // --------------------------------------------------------------------------------------------------- Map
 
     @Override
     public Map<Object, Object> asJMap(Value arg) {
@@ -57,29 +63,7 @@ public class GraalInterop extends Interop<Value> {
         return map;
     }
 
-    @Override
-    public ProxyArray fromJList(List<Object> values) {
-        if (values == null) {
-            return null;
-        }
-        return ProxyArray.fromList(values);
-    }
-
-    @Override
-    public ProxyArray fromJArray(Object... values) {
-        if (values == null) {
-            return null;
-        }
-        return ProxyArray.fromArray(values);
-    }
-
-    @Override
-    public ProxyObject fromJMap(Map<String, Object> values) {
-        if (values == null) {
-            return null;
-        }
-        return ProxyObject.fromMap(values);
-    }
+    // --------------------------------------------------------------------------------------------------- fromJDate
 
     @Override
     public ProxyDate fromJDate(LocalDate date) {
@@ -143,9 +127,53 @@ public class GraalInterop extends Interop<Value> {
         return ProxyTimeZone.from(zoneId);
     }
 
-//    public ProxyInstantiable fromJDate() {
-//    }
+    // --------------------------------------------------------------------------------------------------- fromJList
 
-//    public ProxyExecutable fromJDate(Duration duration) {
-//    }
+    @Override
+    public ArrayListProxy fromJList(List<Object> values) {
+        if (values == null) {
+            return null;
+        }
+        return new ArrayListProxy(values);
+    }
+
+    @Override
+    public ArrayListProxy fromJList(Object... values) {
+        List<Object> list;
+        if (values == null) {
+            list = new ArrayList<>();
+        } else {
+            list = new ArrayList<>(values.length);
+            Collections.addAll(list, values);
+        }
+        return new ArrayListProxy(list);
+    }
+
+    // --------------------------------------------------------------------------------------------------- fromJArray
+
+    @Override
+    public ArrayListProxy fromJArray(List<Object> values) {
+        return new ArrayListProxy(values);
+    }
+
+    @Override
+    public ProxyArray fromJArray(Object... values) {
+        if (values == null) {
+            return null;
+        }
+        return ProxyArray.fromArray(values);
+    }
+
+    // --------------------------------------------------------------------------------------------------- fromJMap
+
+    @Override
+    public HashMapProxy fromJMap(Map<String, Object> values) {
+        if (values == null) {
+            return null;
+        }
+        return new HashMapProxy(values);
+    }
+
+//    ProxyInstantiable
+//    ProxyExecutable
 }

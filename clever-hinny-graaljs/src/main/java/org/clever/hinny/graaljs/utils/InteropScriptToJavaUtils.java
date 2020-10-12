@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.graaljs.internal.GraalInterop;
 import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.proxy.ProxyArray;
 import org.graalvm.polyglot.proxy.ProxyObject;
 
 import java.lang.reflect.Field;
@@ -222,6 +223,9 @@ public class InteropScriptToJavaUtils {
         if (object instanceof ProxyObject) {
             return unWrapProxyObject((ProxyObject) object);
         }
+        if (object instanceof ProxyArray) {
+            return unWrapProxyArray((ProxyArray) object);
+        }
         final String className = object.getClass().getName();
         if (!className.startsWith("com.oracle.truffle.") && !className.startsWith("org.graalvm.")) {
             return object;
@@ -297,6 +301,7 @@ public class InteropScriptToJavaUtils {
     }
 
     private static Boolean gotProxyObjectValues;
+    private static Boolean gotProxyArrayValues;
     private static Boolean canSetAccessible;
 
     @SuppressWarnings("unchecked")
@@ -341,6 +346,35 @@ public class InteropScriptToJavaUtils {
             map.put(name, proxyObject.getMember(name));
         }
         return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Object unWrapProxyArray(ProxyArray proxyArray) {
+        if (proxyArray instanceof List) {
+            return new ArrayList<>((List<Object>) proxyArray);
+        }
+        final String className = proxyArray.getClass().getName();
+        if (gotProxyArrayValues == null && (Objects.equals("org.graalvm.polyglot.proxy.ProxyArray$1", className) || Objects.equals("org.graalvm.polyglot.proxy.ProxyArray$2", className))) {
+            try {
+                Field field = proxyArray.getClass().getDeclaredField("val$values");
+                // noinspection ConstantConditions
+                gotProxyArrayValues = (field != null);
+            } catch (Exception ignored) {
+                gotProxyArrayValues = false;
+            }
+        }
+        if (gotProxyArrayValues != null && gotProxyArrayValues) {
+            try {
+                return reflectGetValue(proxyArray, "val$values");
+            } catch (Exception ignored) {
+                gotProxyArrayValues = false;
+            }
+        }
+        List<Object> list = new ArrayList<>((int) proxyArray.getSize());
+        for (int i = 0; i < proxyArray.getSize(); i++) {
+            list.add(proxyArray.get(i));
+        }
+        return list;
     }
 
     @SneakyThrows

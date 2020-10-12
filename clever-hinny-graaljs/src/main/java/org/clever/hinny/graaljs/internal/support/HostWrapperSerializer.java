@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import org.clever.hinny.graaljs.utils.InteropScriptToJavaUtils;
 import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.proxy.ProxyArray;
 import org.graalvm.polyglot.proxy.ProxyObject;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
     public static final String PolyglotMap_Class = "com.oracle.truffle.polyglot.PolyglotMap";
     public static final String PolyglotMapAndFunction_Class = "com.oracle.truffle.polyglot.PolyglotMapAndFunction";
     public static final String ProxyObject_Class = "org.graalvm.polyglot.proxy.ProxyObject";
+    public static final String ProxyArray_Class = "org.graalvm.polyglot.proxy.ProxyArray";
 
     public static final Set<String> Support_Class = Collections.unmodifiableSet(new HashSet<>(
             Arrays.asList(
@@ -68,6 +70,9 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
         } else if (value instanceof ProxyObject) {
             value = InteropScriptToJavaUtils.unWrapProxyObject((ProxyObject) value);
             gen.writeObject(value);
+        } else if (value instanceof ProxyArray) {
+            value = InteropScriptToJavaUtils.unWrapProxyArray((ProxyArray) value);
+            gen.writeObject(value);
         } else {
             gen.writeString(String.valueOf(value));
         }
@@ -75,6 +80,6 @@ public class HostWrapperSerializer extends JsonSerializer<Object> {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isSupport(final String className) {
-        return Support_Class.contains(className) || className.startsWith(ProxyObject_Class);
+        return Support_Class.contains(className) || className.startsWith(ProxyObject_Class) || className.startsWith(ProxyArray_Class);
     }
 }

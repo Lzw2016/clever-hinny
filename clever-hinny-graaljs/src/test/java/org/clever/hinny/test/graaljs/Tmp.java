@@ -3,9 +3,12 @@ package org.clever.hinny.test.graaljs;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.hinny.graaljs.GraalConstant;
+import org.clever.hinny.graaljs.proxy.ArrayListProxy;
+import org.clever.hinny.graaljs.utils.InteropScriptToJavaUtils;
 import org.clever.hinny.graaljs.utils.ScriptEngineUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.proxy.ProxyArray;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,5 +147,23 @@ public class Tmp {
 //        Map<Integer, Boolean> map = new HashMap<>();
 //        TypeVariable<? extends Class<?>>[] parameters = map.getClass().getTypeParameters();
 //        log.info("## parameters -> {}", parameters);
+    }
+
+    @Test
+    public void t07() {
+        List<Object> list = new ArrayList<>();
+        list.add("111");
+        list.add("222");
+        list.add("333");
+        ProxyArray proxyArray = ProxyArray.fromList(list);
+        log.info("## -> {}", InteropScriptToJavaUtils.unWrapProxyArray(proxyArray));
+
+        proxyArray = ProxyArray.fromArray("444", "555", "666");
+        log.info("## -> {}", InteropScriptToJavaUtils.unWrapProxyArray(proxyArray));
+
+        proxyArray = new ArrayListProxy(list);
+        log.info("## -> {}", InteropScriptToJavaUtils.unWrapProxyArray(proxyArray));
+
+        log.info("## -> {}", proxyArray);
     }
 }

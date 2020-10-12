@@ -299,9 +299,10 @@ public class InteropScriptToJavaUtils {
     private static Boolean gotProxyObjectValues;
     private static Boolean canSetAccessible;
 
+    @SuppressWarnings("unchecked")
     public static Object unWrapProxyObject(ProxyObject proxyObject) {
         if (proxyObject instanceof Map) {
-            return proxyObject;
+            return new HashMap<>((Map<String, Object>) proxyObject);
         }
         final String className = proxyObject.getClass().getName();
         if (gotProxyObjectValues == null && Objects.equals("org.graalvm.polyglot.proxy.ProxyObject$1", className)) {

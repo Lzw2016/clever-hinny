@@ -44,4 +44,10 @@ public class JavaInteropTest {
         ScriptObject<?> scriptObject = engineInstance.require("/java-interop");
         log.info("# -------> {}", scriptObject);
     }
+
+    @Test
+    public void t02() throws Exception {
+        ScriptObject<?> scriptObject = engineInstance.require("/java-interop2");
+        log.info("# -------> {}", scriptObject);
+    }
 }

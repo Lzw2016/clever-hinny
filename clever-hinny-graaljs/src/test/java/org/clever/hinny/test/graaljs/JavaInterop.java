@@ -1,6 +1,7 @@
 package org.clever.hinny.test.graaljs;
 
 import lombok.extern.slf4j.Slf4j;
+import org.clever.hinny.graaljs.proxy.HashMapProxy;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyObject;
 
@@ -95,6 +96,10 @@ public class JavaInterop {
         return ProxyObject.fromMap(getMap());
     }
 
+    public ProxyObject getProxyMap2() {
+        return new HashMapProxy(getMap());
+    }
+
     // ------------------------------------------------------------------------------------------------------------------ 接入JavaScript类型
 
     public void setByte(byte b) {
@@ -173,5 +178,17 @@ public class JavaInterop {
 
     public void setTestBean(TestBean bean) {
         log.info("# bean -> {}", bean);
+    }
+
+    public List<ProxyObject> getProxyMap3() {
+        List<ProxyObject> list = new ArrayList<>();
+        list.add(new HashMapProxy(getMap()));
+        list.add(new HashMapProxy(getMap()));
+        list.add(new HashMapProxy(getMap()));
+        return list;
+    }
+
+    public void setList2(List<Object> list) {
+        log.info("# list -> {}", list);
     }
 }

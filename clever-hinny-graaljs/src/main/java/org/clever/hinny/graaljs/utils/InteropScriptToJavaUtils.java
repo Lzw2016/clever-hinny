@@ -300,6 +300,9 @@ public class InteropScriptToJavaUtils {
     private static Boolean canSetAccessible;
 
     public static Object unWrapProxyObject(ProxyObject proxyObject) {
+        if (proxyObject instanceof Map) {
+            return proxyObject;
+        }
         final String className = proxyObject.getClass().getName();
         if (gotProxyObjectValues == null && Objects.equals("org.graalvm.polyglot.proxy.ProxyObject$1", className)) {
             try {

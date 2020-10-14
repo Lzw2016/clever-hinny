@@ -368,6 +368,6 @@ public class ClassPathFolder implements Folder {
             contentLength = resource.contentLength();
         } catch (Exception ignored) {
         }
-        return resource != null && resource.exists() && resource.isReadable() && contentLength >= 0;
+        return resource != null && resource.exists() && resource.isReadable() && contentLength > 0;
     }
 }

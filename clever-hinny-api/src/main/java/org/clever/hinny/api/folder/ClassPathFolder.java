@@ -149,7 +149,7 @@ public class ClassPathFolder implements Folder {
                 log.warn("Resource.getFile异常", e);
             }
         }
-        return resource.isReadable();
+        return resourceExists(resource);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class ClassPathFolder implements Folder {
                 log.warn("Resource.getFile异常", e);
             }
         }
-        return !resource.isReadable();
+        return !resourceExists(resource);
     }
 
     @SneakyThrows
@@ -178,7 +178,7 @@ public class ClassPathFolder implements Folder {
             return null;
         }
         Resource resource = Path_Matching_Resolver.getResource(filePath);
-        if (resource.isReadable()) {
+        if (resourceExists(resource)) {
             try (InputStream inputStream = resource.getInputStream()) {
                 return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             }
@@ -191,7 +191,7 @@ public class ClassPathFolder implements Folder {
     public String getFileContent() {
         if (StringUtils.isNotBlank(absolutePath)) {
             Resource resource = Path_Matching_Resolver.getResource(absolutePath);
-            if (resource.isReadable()) {
+            if (resourceExists(resource)) {
                 try (InputStream inputStream = resource.getInputStream()) {
                     return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
                 }
@@ -360,5 +360,14 @@ public class ClassPathFolder implements Folder {
             return path;
         }
         return path.replaceAll("\\\\", Folder.Path_Separate);
+    }
+
+    protected static boolean resourceExists(Resource resource) {
+        long contentLength = -1;
+        try {
+            contentLength = resource.contentLength();
+        } catch (Exception ignored) {
+        }
+        return resource != null && resource.exists() && resource.isReadable() && contentLength >= 0;
     }
 }

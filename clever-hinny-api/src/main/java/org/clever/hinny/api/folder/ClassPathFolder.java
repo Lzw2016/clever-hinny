@@ -363,11 +363,15 @@ public class ClassPathFolder implements Folder {
     }
 
     protected static boolean resourceExists(Resource resource) {
+        boolean exists = resource != null && resource.exists() && resource.isReadable();
+        if (!exists) {
+            return false;
+        }
         long contentLength = -1;
         try {
             contentLength = resource.contentLength();
         } catch (Exception ignored) {
         }
-        return resource != null && resource.exists() && resource.isReadable() && contentLength > 0;
+        return contentLength > 0;
     }
 }

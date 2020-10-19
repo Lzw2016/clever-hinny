@@ -1,13 +1,11 @@
 package org.clever.hinny.graaljs.internal.support;
 
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.oracle.truffle.api.interop.TruffleObject;
 import lombok.extern.slf4j.Slf4j;
 import org.clever.hinny.api.internal.support.ObjectToString;
-import org.clever.hinny.api.utils.JacksonMapper;
+import org.clever.hinny.graaljs.jackson.HostWrapperSerializer;
+import org.clever.hinny.graaljs.jackson.JacksonMapperSupport;
 import org.graalvm.polyglot.Value;
-import org.graalvm.polyglot.proxy.Proxy;
 
 /**
  * 作者：lizw <br/>
@@ -18,17 +16,7 @@ public class GraalObjectToString extends ObjectToString {
     public static final GraalObjectToString Instance = new GraalObjectToString();
 
     protected GraalObjectToString() {
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Value.class, ValueSerializer.instance);
-        module.addSerializer(TruffleObject.class, ToStringSerializer.instance);
-        module.addSerializer(Proxy.class, HostWrapperSerializer.instance);
-        try {
-            Class<?> clazz = Class.forName("com.oracle.truffle.polyglot.HostWrapper");
-            module.addSerializer(clazz, HostWrapperSerializer.instance);
-        } catch (ClassNotFoundException e) {
-            log.warn("类型com.oracle.truffle.polyglot.HostWrapper加载失败", e);
-        }
-        JacksonMapper.getInstance().getMapper().registerModules(module);
+        JacksonMapperSupport.initGraalModule();
     }
 
     @Override
@@ -45,23 +33,4 @@ public class GraalObjectToString extends ObjectToString {
         }
         return super.toString(obj);
     }
-
-//    public static class GraalToStringSerializer extends JsonSerializer<Object> {
-//        public static final GraalToStringSerializer instance = new GraalToStringSerializer();
-//
-//        private GraalToStringSerializer() {
-//        }
-//
-//        @Override
-//        public void serialize(Object object, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-//            String json = null;
-//            if (object != null) {
-//                json = object.toString();
-//            }
-//            if (StringUtils.isNotBlank(json)) {
-//                gen.writeRawValue(json);
-//                // gen.writeObject(new JSONObject(json).toMap());
-//            }
-//        }
-//    }
 }

@@ -49,37 +49,7 @@ public class JacksonMapper {
      * 通用配置,参考 Jackson2ObjectMapperBuilder
      */
     private JacksonMapper() {
-        final String dateFormatPattern = "yyyy-MM-dd HH:mm:ss";
-        final ClassLoader moduleClassLoader = getClass().getClassLoader();
-        // 创建 ObjectMapper
-        mapper = new ObjectMapper();
-        // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        // 允许单引号、允许不带引号的字段名称
-        mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        // 使用枚举的的toString函数来读写枚举
-        // mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
-        // mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
-        // 设置时区 getTimeZone("GMT+8")
-        mapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        // locale: zh_CN
-        mapper.setLocale(Locale.CHINA);
-        // 设置时间格式
-        mapper.setDateFormat(new SimpleDateFormat(dateFormatPattern));
-        // 注册 Module
-        ObjectMapper.findModules(moduleClassLoader).forEach(mapper::registerModules);
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(DateTime.class, new DateTimeSerializer(new JacksonJodaDateFormat(DateTimeFormat.forPattern(dateFormatPattern).withZoneUTC()), 0));
-        module.addSerializer(ModuleCache.class, ToStringSerializer.instance);
-        module.addSerializer(org.clever.hinny.api.module.Module.class, ToStringSerializer.instance);
-        module.addSerializer(CompileModule.class, ToStringSerializer.instance);
-        module.addSerializer(Require.class, ToStringSerializer.instance);
-        module.addSerializer(Folder.class, ToStringSerializer.instance);
-        // module.addSerializer(BigInteger.class, ToStringSerializer.instance);
-        // module.addSerializer(Long.class, ToStringSerializer.instance);
-        // module.addSerializer(Long.TYPE, ToStringSerializer.instance);
-        mapper.registerModules(module);
+        mapper = newObjectMapper();
     }
 
     /**
@@ -144,6 +114,41 @@ public class JacksonMapper {
      * 返回当前 Jackson 对应的 ObjectMapper
      */
     public ObjectMapper getMapper() {
+        return mapper;
+    }
+
+    public static ObjectMapper newObjectMapper() {
+        final String dateFormatPattern = "yyyy-MM-dd HH:mm:ss";
+        final ClassLoader moduleClassLoader = JacksonMapper.class.getClassLoader();
+        // 创建 ObjectMapper
+        ObjectMapper mapper = new ObjectMapper();
+        // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        // 允许单引号、允许不带引号的字段名称
+        mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        // 使用枚举的的toString函数来读写枚举
+        // mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
+        // mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+        // 设置时区 getTimeZone("GMT+8")
+        mapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        // locale: zh_CN
+        mapper.setLocale(Locale.CHINA);
+        // 设置时间格式
+        mapper.setDateFormat(new SimpleDateFormat(dateFormatPattern));
+        // 注册 Module
+        ObjectMapper.findModules(moduleClassLoader).forEach(mapper::registerModules);
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(DateTime.class, new DateTimeSerializer(new JacksonJodaDateFormat(DateTimeFormat.forPattern(dateFormatPattern).withZoneUTC()), 0));
+        module.addSerializer(ModuleCache.class, ToStringSerializer.instance);
+        module.addSerializer(org.clever.hinny.api.module.Module.class, ToStringSerializer.instance);
+        module.addSerializer(CompileModule.class, ToStringSerializer.instance);
+        module.addSerializer(Require.class, ToStringSerializer.instance);
+        module.addSerializer(Folder.class, ToStringSerializer.instance);
+        // module.addSerializer(BigInteger.class, ToStringSerializer.instance);
+        // module.addSerializer(Long.class, ToStringSerializer.instance);
+        // module.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        mapper.registerModules(module);
         return mapper;
     }
 }

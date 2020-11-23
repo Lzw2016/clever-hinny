@@ -19,6 +19,7 @@ import java.math.BigInteger;
 public class JacksonMapperSupport {
     private static volatile boolean initialized = false;
     private static JacksonMapper Http_Api_Jackson_Mapper;
+    private static JacksonMapper Redis_Jackson_Mapper;
 
     /**
      * 初始化内部使用的 JacksonMapper
@@ -57,6 +58,24 @@ public class JacksonMapperSupport {
         objectMapper.registerModules(module);
         Http_Api_Jackson_Mapper = new JacksonMapper(objectMapper);
         return Http_Api_Jackson_Mapper;
+    }
+
+    /**
+     * Redis客户端数据序列化使用的JacksonMapper
+     */
+    public static synchronized JacksonMapper getRedisJacksonMapper() {
+        if (Redis_Jackson_Mapper != null) {
+            return Redis_Jackson_Mapper;
+        }
+        initGraalModule();
+        ObjectMapper objectMapper = JacksonMapper.getInstance().getMapper().copy();
+        // SimpleModule module = new SimpleModule();
+        // module.addSerializer(BigInteger.class, ToStringSerializer.instance);
+        // module.addSerializer(Long.class, ToStringSerializer.instance);
+        // module.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        // objectMapper.registerModules(module);
+        Redis_Jackson_Mapper = new JacksonMapper(objectMapper);
+        return Redis_Jackson_Mapper;
     }
 }
 

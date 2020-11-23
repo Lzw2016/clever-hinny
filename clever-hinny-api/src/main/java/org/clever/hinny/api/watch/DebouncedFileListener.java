@@ -32,16 +32,25 @@ public class DebouncedFileListener implements FileAlterationListener {
 
     @Override
     public void onDirectoryCreate(File directory) {
+        if (fileFilter != null && !fileFilter.accept(directory)) {
+            return;
+        }
         debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.DirectoryCreate, directory));
     }
 
     @Override
     public void onDirectoryChange(File directory) {
+        if (fileFilter != null && !fileFilter.accept(directory)) {
+            return;
+        }
         debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.DirectoryChange, directory));
     }
 
     @Override
     public void onDirectoryDelete(File directory) {
+        if (fileFilter != null && !fileFilter.accept(directory)) {
+            return;
+        }
         debounced.execute(new FileSystemWatcher.MonitorEvent(MonitorEventType.DirectoryDelete, directory));
     }
 

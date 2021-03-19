@@ -41,11 +41,11 @@
         </repository>
         <repository>
             <id>nexus-snapshots</id>
-            <url>http://nexus.msvc.top:8081/repository/maven-snapshots/</url>
+            <url>http://nexus.msvc.top/repository/maven-snapshots/</url>
         </repository>
         <repository>
             <id>nexus-releases</id>
-            <url>http://nexus.msvc.top:8081/repository/maven-releases/</url>
+            <url>http://nexus.msvc.top/repository/maven-releases/</url>
         </repository>
     </repositories>
 
@@ -63,7 +63,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <clever-common.version>2.0.0-SNAPSHOT</clever-common.version>
-        <graalvm.version>20.3.0</graalvm.version>
+        <graalvm.version>20.3.1.2</graalvm.version>
         <j2v8-win.version>4.6.0</j2v8-win.version>
         <j2v8-macosx.version>4.6.0</j2v8-macosx.version>
         <j2v8-linux.version>4.8.0</j2v8-linux.version>

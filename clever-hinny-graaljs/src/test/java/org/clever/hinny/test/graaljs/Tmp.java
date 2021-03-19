@@ -84,6 +84,13 @@ public class Tmp {
         Value value = context_1.eval(GraalConstant.Js_Language_Id, "new Date()");
         Context context_2 = Context.newBuilder(GraalConstant.Js_Language_Id).build();
         Value fuc = context_2.eval(GraalConstant.Js_Language_Id, "(function(obj) { return JSON.stringify(obj); });");
+        try {
+            Object object = fuc.execute(value);
+            log.info("# -> {}", object);
+        } catch (Exception e) {
+            log.info("# 不能把一个Context中的对象传给另一个Context-> ", e);
+        }
+        value = context_2.eval(GraalConstant.Js_Language_Id, "new Date()");
         Object object = fuc.execute(value);
         log.info("# -> {}", object);
     }

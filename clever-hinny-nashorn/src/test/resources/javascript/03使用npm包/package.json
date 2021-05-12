@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "underscore": "^1.10.2",
     "sugar": "^2.0.6",
     "lazy.js": "^0.5.1",

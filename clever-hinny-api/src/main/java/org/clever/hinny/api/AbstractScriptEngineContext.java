@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractScriptEngineContext<E, T> implements ScriptEngineContext<E, T> {
     /**
-     * NashornScriptEngine
+     * ScriptEngine
      */
     protected E engine;
     /**
